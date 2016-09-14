@@ -67,6 +67,12 @@
 \end{abstract}
 }
 
+\newcommand{\nl}{
+
+\medskip
+\noindent
+}
+
 %----------------------------------------------------------------------------------------
 
 \begin{document}
@@ -104,8 +110,10 @@ The methods used in this projects are the following:
 \item Gaussian elimination
 \item LU-decomposition
 \end{itemize}
+
 \subsection{Dirichlet boundary condition}
 Dirichlet boundary conditions - also refered to as fixed boundary condition - specifies the value of a given function on a surface $T=f(r,t)$. In a one-dimentional problem it translates to defining an interval of $x$ - $x\in [x_{min},x_{max}]$ - and the function values $f(x_{min})=f_l$ and $f(x_{max})=f_h$ at the edges of the intervall.
+
 \subsection{Nummerical derivarion}
 The derivative of a discrete funtion may be found by nummerical derivation. The principle of nummerical derivation is a result of Taylor expansion. By expanding a function from   a point $x$ with a step $h$, two equations form depending on the direction:
 \begin{equation}
@@ -123,6 +131,7 @@ Where $f_+ = f(x+h)$, $f=f(x)$, $f_-=f(x-h)$ and $f^{IV}$ is the fourth derivati
 f''_i = \frac{f_{i+1}-2f_i+f_{i-1}}{h^2}\label{eq:sec_der_discrete}
 \end{equation}
 In eq. \ref{eq:sec_der_discrete} the mathematical error $\mathcal{O}(h^2)$ is neglected.
+
 \subsection{Gaussian elimination}
 Gaussian elimination is a method for simplifying a set of linear equations. It is easly visualized through a matrix notation of $Ax = y$ where $A$ and $y$ is known.
 \begin{equation}
@@ -139,6 +148,7 @@ y_0 \\ y_1 \\ y_2
 \end{bmatrix}
 \end{equation}
 Gaussian elimination is often divided into two main parts, forward and backward substitution.
+
 \subsubsection{Forward substitution}
 The forward substitution is focusing on reducing the number of variables in the set of linear equations to a minimum. In other words, row reduction is used on the matrix $A$ to eliminate all elements $a_{i1}$ where $i<1$. Turning the matrix equation to $Bx=\hat{y}$:
 \begin{equation}
@@ -156,8 +166,25 @@ x_0 \\ x_1 \\ x_2
 \end{equation}
 where $\hat{y}$ is affected by the row reduction.
 The process is repeated until the 
+
+\subsection{Numerical error estimate}
+
+Since we are using numerical derivation this gives us an approximation to the analytical answer.
+Therfore it is interesting to see how good our approximation is.    
+A good way to do this is to look at the difference between the two.
+\nl
+At small step lenghts ($h$) we will have a good approximation if the theori is correct and therfore it is convenient too look at the logaritme of the difference we also use the absolute walue since we dont care if we are over or under the analytical answer. To avoid the logaritme of zero we also devide by the analytical value.
+\nl
+So we get the relative error $\varepsilon$ and for each step ve get:
+
+\begin{equation}
+\varepsilon_i = log\left(\left|\frac{u_i - v_i}{v_i}\right|\right)
+\end{equation}
+
+Here $u_i$ is the numerical value and $v_i$ is the analytical value at step $i$. And $log$ is the base 10 logaritme.
+
 \subsection{LU-decompostition}
-BALLE TEST
+
 
 
 \end{document}
