@@ -145,20 +145,35 @@ In eq. \ref{eq:sec_der_discrete} the mathematical error $\mathcal{O}(h^2)$ is ne
 Gaussian elimination is a method for simplifying a set of linear equations. It is easly visualized through a matrix notation of $Ax = y$ where $A$ and $y$ is known.
 \begin{equation}
 \begin{bmatrix}
-a_11 & a_12 & a_13\\
-a_21 & a_22 & a_23\\
-a_31 & a_32 & a_33
+a_00 & a_01 & a_02\\
+a_10 & a_11 & a_12\\
+a_20 & a_21 & a_22
 \end{bmatrix} 
 \begin{bmatrix}
-x_1 \\ x_2 \\ x_3
+x_0 \\ x_1 \\ x_2
 \end{bmatrix}=
 \begin{bmatrix}
-y_1 \\ y_2 \\ y_3
+y_0 \\ y_1 \\ y_2
 \end{bmatrix}
 \end{equation}
 Gaussian elimination is often divided into two main parts, forward and backward substitution.
 \subsubsection{Forward substitution}
-The forward substitution is focusing to 
+The forward substitution is focusing on reducing the number of variables in the set of linear equations to a minimum. In other words, row reduction is used on the matrix $A$ to eliminate all elements $a_{i1}$ where $i<1$. Turning the matrix equation to $Bx=\hat{y}$:
+\begin{equation}
+\begin{bmatrix}
+b_00 & b_01 & b_02\\
+0 & b_11 & b_12\\
+0 & b_21 & b_22
+\end{bmatrix} 
+\begin{bmatrix}
+x_0 \\ x_1 \\ x_2
+\end{bmatrix}=
+\begin{bmatrix}
+\hat{y}_0 \\ \hat{y}_1 \\ \hat{y}_2
+\end{bmatrix}
+\end{equation}
+where $\hat{y}$ is affected by the row reduction.
+The process is repeated until the 
 \subsection{LU-decompostition}
 
 Text requiring further explanation\footnote{Example footnote}.
