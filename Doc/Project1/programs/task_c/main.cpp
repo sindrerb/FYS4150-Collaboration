@@ -81,6 +81,7 @@ int main() {
 */
 
     //Open file and write results to file
+    if(N<1E5){
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     ofile <<"Time to run matrix of size "<<N<<" was:"<<
@@ -92,6 +93,7 @@ int main() {
         ofile << setw(15) << setprecision(8) << vec_f_solution[i] << endl;
     }
     ofile.close();
+    }
 
     delete [] x;
     delete [] vec_f_approx;
