@@ -155,9 +155,25 @@ x_0 \\ x_1 \\ x_2
 \end{bmatrix}
 \end{equation}
 where $\hat{y}$ is affected by the row reduction.
-The process is repeated until the 
+The process is repeated until matrix $A$ is transformed to an upper triangular matrix $A'$
+\begin{equation}
+\begin{bmatrix}
+a_00 & a_01 & a_02\\
+0& a_11 & a_12\\
+0 & 0 & a_22
+\end{bmatrix} 
+\begin{bmatrix}
+x_0 \\ x_1 \\ x_2
+\end{bmatrix}=
+\begin{bmatrix}
+\hat{y}_0 \\ \hat{y}_1 \\ \hat{y}_2
+\end{bmatrix}
+\end{equation}
+This set of linear equations is the basis for backward substitution.
+\subsubsection{Backward substitution}
+The concept of backwars substitution is to solve the the set of equations from bsnto the equation above. In the end, all elements of $x$ is known.
 \subsection{LU-decompostition}
 BALLE TEST
-
+\
 
 \end{document}
