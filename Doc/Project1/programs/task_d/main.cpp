@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <math.h>
 #include "time.h"
 
 using namespace std;
@@ -39,16 +40,16 @@ int main() {
     //declare vectors
     double* x = new double[N+2];
     double* vec_f_approx = new double[N+2];
-    double* vec_f_solution = new double[N+2];
-    double* vec_u = new double[N+2];
-    double* vec_error = new double[N+2];
+    double* vec_u_exact = new double[N+2];
+    double* vec_u_nummerical = new double[N+2];
+
 
     //Set initial values to vectors
     x[0] = 0;
     for(int i=0;i<N+1;i++){
         x[i] = i*h;
         vec_f_approx[i] = hh*f(x[i]);
-        vec_f_solution[i] = f_solution(x[i]);
+        vec_u_exact[i] = f_solution(x[i]);
     }
 
     //initialize clock
@@ -64,10 +65,10 @@ int main() {
     }
 
     //Backwards substitution
-    vec_u[N] = (vec_f_approx[N]*N)/(N+1);
-    vec_u[0] = 0;
+    vec_u_nummerical[N] = (vec_f_approx[N]*N)/(N+1);
+    vec_u_nummerical[0] = 0;
     for(int i = N-1;i>=1;i--){
-        vec_u[i] = i*(vec_f_approx[i]+vec_u[i+1])/(i+1);
+        vec_u_nummerical[i] = i*(vec_f_approx[i]+vec_u_nummerical[i+1])/(i+1);
     }
 
     //clock stops here
@@ -75,14 +76,19 @@ int main() {
     cout << "Time in sec:" << ((float)time)/CLOCKS_PER_SEC << endl;
 
 
-    //The error estimate
-    for(int i = 0;i<N;i++){
-        double error = (vec_f_solution[i] - vec_f_approx[i])/vec_f_approx[i];
-        vec_error[i] = log10(error);
-        cout<<"The error = "<<vec_error[i]<<" solution = "<<vec_f_solution[i]
-              <<"approx = "<<vec_f_approx[i]<<endl;
-    }
 
+    //The error estimate
+    double relative_error;
+    double max_error=0;
+    for(int i = 1;i<N;i++){
+        relative_error = fabs((vec_u_exact[i] - vec_u_nummerical[i])/vec_u_exact[i]);
+        if(relative_error>max_error){
+            max_error = relative_error;
+        }
+
+    }
+    max_error = log10(max_error);
+    cout << "Maximal relative error is: 1e("<< max_error <<") " << endl;
 
 /*
     //Prints out final values
@@ -98,16 +104,16 @@ int main() {
     ofile << "      x:      approx:     exact:  " << endl;
     for(int i=0;i<N;i++){
         ofile << setw(15) << setprecision(8) << x[i];
-        ofile << setw(15) << setprecision(8) << vec_u[i];
-        ofile << setw(15) << setprecision(8) << vec_f_solution[i] << endl;
+        ofile << setw(15) << setprecision(8) << vec_u_nummerical[i];
+        ofile << setw(15) << setprecision(8) << vec_u_exact[i] << endl;
     }
     ofile.close();
 
     delete [] x;
     delete [] vec_f_approx;
-    delete [] vec_f_solution;
+    delete [] vec_u_exact;
 
     //the end
-    cout<<"FYS4150_ex1_task_b_ver2 DONE"<<endl;
+    cout<<"task_d DONE"<<endl;
     return 0;
 }

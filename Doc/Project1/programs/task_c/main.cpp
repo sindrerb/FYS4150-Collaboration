@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <math.h>
 #include "time.h"
 
 using namespace std;
@@ -97,6 +98,6 @@ int main() {
     delete [] vec_f_solution;
 
     //the end
-    cout<<"FYS4150_ex1_task_b_ver2 DONE"<<endl;
+    cout<<"task_c DONE"<<endl;
     return 0;
 }
