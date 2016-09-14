@@ -54,7 +54,8 @@
 \author{%
 \textsc{Heine H. Ness \& Sindre R. Bilden}\thanks{A thank you or further information} \\[1ex] % Your name
 \normalsize University of Oslo \\ % Your institution
-\normalsize \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}% Your email address
+\normalsize \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}\\% Your email address
+\normalsize \href{https://github.com/sindrerb/FYS4150-Collaboration}{github.com/sindrerb/FYS4150-Collaboration}
 %\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
 %\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
 %\normalsize University of Utah \\ % Second author's institution
@@ -133,12 +134,18 @@ f''_i = \frac{f_{i+1}-2f_i+f_{i-1}}{h^2}\label{eq:sec_der_discrete}
 In eq. \ref{eq:sec_der_discrete} the mathematical error $\mathcal{O}(h^2)$ is neglected.
 
 \subsection{Gaussian elimination}
-Gaussian elimination is a method for simplifying a set of linear equations. It is easly visualized through a matrix notation of $Ax = y$ where $A$ and $y$ is known.
+Gaussian elimination is a method for simplifying a set of $N$ linear equations with $n$ unknown variables $x_i$ $i=0,1,\ldots,n-1$: 
+\begin{align*}
+a_{00}x_0+a_{01}x_1+a_{02}x_2&=y_0\\
+a_{10}x_0+a_{11}x_1+a_{12}x_2&=y_1\\
+a_{20}x_0+a_{21}x_1+a_{22}x_2&=y_2
+\end{align*}
+It is easly visualized through a matrix notation of $Ax = y$ where $A$ and $y$ is known.
 \begin{equation}
 \begin{bmatrix}
-a_00 & a_01 & a_02\\
-a_10 & a_11 & a_12\\
-a_20 & a_21 & a_22
+a_{00} & a_{01} & a_{02}\\
+a_{10} & a_{11} & a_{12}\\
+a_{20} & a_{21} & a_{22}
 \end{bmatrix} 
 \begin{bmatrix}
 x_0 \\ x_1 \\ x_2
@@ -153,9 +160,9 @@ Gaussian elimination is often divided into two main parts, forward and backward 
 The forward substitution is focusing on reducing the number of variables in the set of linear equations to a minimum. In other words, row reduction is used on the matrix $A$ to eliminate all elements $a_{i1}$ where $i<1$. Turning the matrix equation to $Bx=\hat{y}$:
 \begin{equation}
 \begin{bmatrix}
-b_00 & b_01 & b_02\\
-0 & b_11 & b_12\\
-0 & b_21 & b_22
+b_{00} & b_{01} & b_{02}\\
+0 & b_{11} & b_{12}\\
+0 & b_{21} & b_{22}
 \end{bmatrix} 
 \begin{bmatrix}
 x_0 \\ x_1 \\ x_2
@@ -165,13 +172,12 @@ x_0 \\ x_1 \\ x_2
 \end{bmatrix}
 \end{equation}
 where $\hat{y}$ is affected by the row reduction.
-<<<<<<< HEAD
 The process is repeated until matrix $A$ is transformed to an upper triangular matrix $A'$
 \begin{equation}
 \begin{bmatrix}
-a_00 & a_01 & a_02\\
-0& a_11 & a_12\\
-0 & 0 & a_22
+a_{00} & a_{01} & a_{02}\\
+0& a_{11} & a_{12}\\
+0 & 0 & a_{22}
 \end{bmatrix} 
 \begin{bmatrix}
 x_0 \\ x_1 \\ x_2
@@ -184,10 +190,7 @@ This set of linear equations is the basis for backward substitution.
 \subsubsection{Backward substitution}
 The concept of backwars substitution is to solve the the set of equations from bsnto the equation above. In the end, all elements of $x$ is known.
 \subsection{LU-decompostition}
-BALLE TEST
-\
-=======
-The process is repeated until the 
+
 
 \subsection{Numerical error estimate}
 
@@ -205,9 +208,39 @@ So we get the relative error $\varepsilon$ and for each step ve get:
 
 Here $u_i$ is the numerical value and $v_i$ is the analytical value at step $i$. And $log$ is the base 10 logaritme.
 
-\subsection{LU-decompostition}
+\section{Implementation}
+By discretizing the simplified and generalized Poiison equation (eq. \ref{eq:sec_der}) in steps of $h$, we may approximate eq. \ref{eq:sec_der} with eq. \ref{eq:sec_der_num} where $v_i$ is the discrete values of the continium $u(x)$.
+\begin{equation}
+-\frac{v_{i+1}-2v_i+v_{i-1}}{h^2}=f_i \label{eq:sec_der_num}
+\end{equation}
+The equation may be rewritten into a linear equation
+\begin{equation*}
+av_{i-1}+bv_i+cv_{i+1}=\tilde{b}_i 
+\end{equation*}
+where $a=-1$, $b=2$, $c=-1$ and $\tilde{b}_i=f_ih^2$. By introducing dirichlet boundary conditions, $v_0=v_{n+1}=0$, the linear equations may be written in terms of matrix multiplication without loss of information. This results in $Av=\tilde{b}$:
+\begin{equation*}
+\begin{bmatrix}
+b&c&0&0&0&\cdots &0\\
+a&b&c&0&0& \cdots & 0\\
+0&a&b&c&0& \cdots & 0\\
+0&0&a&b&c& \cdots & 0\\
+\vdots&\vdots&\vdots&\vdots&\vdots&\ddots&c\\
+0&0&0&0&0&a&b
+\end{bmatrix}
+\begin{bmatrix}
+v_1\\v_2\\v_3\\\vdots\\v_{n-1}\\v_{n}
+\end{bmatrix}=
+\begin{bmatrix}
+\tilde{b}_0\\\tilde{b}_1\\\tilde{b}_2\\\vdots\\\tilde{b}_{n-2}\\\tilde{b}_{n-1}
+\end{bmatrix}
+\end{equation*}
+The problem is now solvable by both Gaussian elimination and LU-decomposition. For all programs, divided in task $b$, $c$ and $d$ see the github repository: 
+
+\begin{center}
+ \href{https://github.com/sindrerb/FYS4150-Collaboration}{github.com/sindrerb/FYS4150-Collaboration}
+\end{center}
 
 
->>>>>>> ed9c3019c7ef176672855bacc8012251b21aef5e
+
 
 \end{document}
