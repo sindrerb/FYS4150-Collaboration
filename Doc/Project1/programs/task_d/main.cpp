@@ -46,17 +46,11 @@ int main() {
 
     //Set initial values to vectors
     x[0] = 0;
-    for(int i=0;i<N+1;i++){
+    for(int i=0;i<N+2;i++){
         x[i] = i*h;
         vec_f_approx[i] = hh*f(x[i]);
         vec_u_exact[i] = f_solution(x[i]);
     }
-
-    //initialize clock
-    clock_t time;
-
-    //start clock
-    time = clock();
 
     //Special algoritme for unique matix
     //Forward substitution
@@ -70,11 +64,6 @@ int main() {
     for(int i = N-1;i>=1;i--){
         vec_u_nummerical[i] = i*(vec_f_approx[i]+vec_u_nummerical[i+1])/(i+1);
     }
-
-    //clock stops here
-    time = clock() - time;
-    cout << "Time in sec:" << ((float)time)/CLOCKS_PER_SEC << endl;
-
 
 
     //The error estimate
@@ -100,10 +89,8 @@ int main() {
     if(N<1E5){
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile <<"Time to run matrix of size "<<N<<" was:"<<
-            ((float)time)/CLOCKS_PER_SEC<< endl;
     ofile << "      x:      approx:     exact:  " << endl;
-    for(int i=0;i<N;i++){
+    for(int i=0;i<N+2;i++){
         ofile << setw(15) << setprecision(8) << x[i];
         ofile << setw(15) << setprecision(8) << vec_u_nummerical[i];
         ofile << setw(15) << setprecision(8) << vec_u_exact[i] << endl;

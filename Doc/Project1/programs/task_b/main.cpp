@@ -69,9 +69,9 @@ int main(){
     }
 
     //initialize clock
-    clock_t time;
+    clock_t start,finish;
     //start clock
-    time = clock();
+    start = clock();
 
     //Gauss elemination for tridigonal matrix
 
@@ -88,8 +88,9 @@ int main(){
     }
 
     //clock stops here
-    time = clock() - time;
-    cout << "Time in sec:" << ((float)time)/CLOCKS_PER_SEC << endl;
+    finish = clock();
+    double time = (double) (finish - start)/CLOCKS_PER_SEC;
+    cout << "Time in sec:" << time << endl;
 /*
     //Prints out final values
     for(int i =0;i<n+1;i++){
@@ -100,8 +101,7 @@ int main(){
     if(n<1E5){
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile <<"Time to run matrix of size "<<n<<" was:"<<
-            ((float)time)/CLOCKS_PER_SEC<< endl;
+    ofile <<"Time to run matrix of size "<<n<<" was:"<< time << endl;
     ofile << "       x:             approx:          solution:  " << endl;
     for (int i=0;i<=n+1;i++) {
        ofile << setw(15) << setprecision(8) << x[i];

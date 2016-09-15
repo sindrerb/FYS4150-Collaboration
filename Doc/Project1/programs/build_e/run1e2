@@ -1,4 +1,4 @@
-Time to run matrix of size 100 was:0.00472600
+Time to run matrix of size 100 was:0.00462200
       x:      approx:     exact:  
    0.0099009901    0.084296833    0.084365719
     0.019801980     0.15971479     0.15984531
