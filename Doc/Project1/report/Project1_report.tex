@@ -2,7 +2,7 @@
 \documentclass[twoside,twocolumn]{article}
 \usepackage{amsmath}
 \usepackage{blindtext} % Package to generate dummy text throughout this template 
-
+\usepackage{graphicx}
 \usepackage{natbib}
 
 \usepackage[sc]{mathpazo} % Use the Palatino font
@@ -188,7 +188,7 @@ x_0 \\ x_1 \\ x_2
 \end{equation}
 This set of linear equations is the basis for backward substitution.
 \subsubsection{Backward substitution}
-The concept of backwars substitution is to solve the the set of equations from bsnto the equation above. In the end, all elements of $x$ is known.
+The concept of backwars substitution is to solve the the set of equations from bsnto the equation above. In the end, all elements of $x$ is known. Gaussian elimination optimized for a tridiagonal matrix is called Thomas algoritm. [kilde?]
 \subsection{LU-decompostition}
 
 
@@ -218,29 +218,83 @@ The equation may be rewritten into a linear equation
 av_{i-1}+bv_i+cv_{i+1}=\tilde{b}_i 
 \end{equation*}
 where $a=-1$, $b=2$, $c=-1$ and $\tilde{b}_i=f_ih^2$. By introducing dirichlet boundary conditions, $v_0=v_{n+1}=0$, the linear equations may be written in terms of matrix multiplication without loss of information. This results in $Av=\tilde{b}$:
-\begin{equation*}
+\begin{equation}
 \begin{bmatrix}
-b&c&0&0&0&\cdots &0\\
-a&b&c&0&0& \cdots & 0\\
-0&a&b&c&0& \cdots & 0\\
-0&0&a&b&c& \cdots & 0\\
-\vdots&\vdots&\vdots&\vdots&\vdots&\ddots&c\\
-0&0&0&0&0&a&b
+b&c&0&0&\cdots &0\\
+a&b&c&0& \cdots & 0\\
+0&a&b&c& \cdots & 0\\
+\vdots&\vdots&\vdots&\vdots&\ddots&c\\
+0&0&0&0&a&b
 \end{bmatrix}
 \begin{bmatrix}
-v_1\\v_2\\v_3\\\vdots\\v_{n-1}\\v_{n}
+v_1\\v_2\\\vdots\\v_{n-1}\\v_{n}
 \end{bmatrix}=
 \begin{bmatrix}
-\tilde{b}_0\\\tilde{b}_1\\\tilde{b}_2\\\vdots\\\tilde{b}_{n-2}\\\tilde{b}_{n-1}
-\end{bmatrix}
+\tilde{b}_0\\\tilde{b}_1\\\vdots\\\tilde{b}_{n-2}\\\tilde{b}_{n-1}
+\end{bmatrix} \label{eq:problem}
+\end{equation}
+The problem is now solvable by both Thomas algoritm and LU-decomposition. Since matrix $A$ has a constant value along it's diagonals, an optimized Thomas algoritm was constructed to this spesific matrix. All codes are tested with a reference function $f(x)$ with the known solution $u(x)$ where
+\begin{equation*}
+f(x)=100\exp[-10x]
 \end{equation*}
-The problem is now solvable by both Gaussian elimination and LU-decomposition. For all programs, divided in task $b$, $c$ and $d$ see the github repository: 
+\begin{equation*}
+u(x)=1-\exp[-10]x-10\exp[-10x]
+\end{equation*}
+For all programs, divided in task $b$, $c$ and $d$ see the github repository: 
 
 \begin{center}
  \href{https://github.com/sindrerb/FYS4150-Collaboration}{github.com/sindrerb/FYS4150-Collaboration}
 \end{center}
 
+\section{Results}
+\subsection{LU-decomposition}
+
+\subsection{General Thomas algoritm}
+Solving eq. \ref{eq:problem} using Thomas algoritm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
+
+\begin{figure}[htp]
+\includegraphics[width=0.5\textwidth]{../figures/b-run1e2.png} 
+\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 100 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas1E2}
+\end{figure}
+
+\begin{figure}[htp]
+\includegraphics[width=0.5\textwidth]{../figures/b-run10.png} 
+\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
+\end{figure}
+
+\subsection{Specialized Thomas algoritm}
+Solving eq. \ref{eq:problem} with a specialized Thomas algorithm gave the same results as the general algoritm, but reduced the number floating operations from $9n$ in the general algoritm to $4n$ in the specialized algoritm. The reduction in number of floating operations shorted the comutation time. A difference is hard to spot at a low numer of iterations, but higher number of iterations reveals a difference. A comparation of the timeusage by the two algoritms is found in Table \ref{tbl:ThompsonTime}.
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|l|l|} \hline
+Iterations & \multicolumn{2}{|c|}{Timeusage [s]}\\ \hline
+ 	& General 	& Special\\ \hline
+1e1	& 1.0e-6	& 1.0E-6\\
+1e2 & 9.0e-6	& 5.0e-6\\
+1e3 & 5.1e-5	& 4.5e-5\\
+1e4 & 7.66e-4	& 7.95e-4\\
+1e5 & 5.021e-3	& 3.075e-3\\
+1e6 & 2.6094e-2	&2.277e-2\\
+1e7 & 2.7316e-1	& 2.26463e-1 \\ \hline
+\end{tabular}
+\caption{Table showing timeusage - in seconds - by the special and the general Thomson algoritm for a set of iterations.} \label{tbl:ThompsonTime}
+\end{table}
 
 
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|l|} \hline
+Iterations & Relative error\\ \hline
+1e1 & 1e(-1.17970)\\
+1e2 & 1e(-3.08804)\\
+1e3 & 1e(-5.08005)\\
+1e4 & 1e(-7.07927)\\
+1e5 & 1e(-9.07909)\\
+1e6 & 1e(-10.7943)\\
+1e7 & 1e(-9.54215)\\ \hline
+\end{tabular}
+\caption{Table showing the relative error for a set op iterations.}
+\end{table}
 
 \end{document}
