@@ -45,7 +45,7 @@ int main() {
 
     //Set initial values to vectors
     x[0] = 0;
-    for(int i=0;i<N+1;i++){
+    for(int i=0;i<N+2;i++){
         x[i] = i*h;
         vec_f_approx[i] = hh*f(x[i]);
         vec_f_solution[i] = f_solution(x[i]);
