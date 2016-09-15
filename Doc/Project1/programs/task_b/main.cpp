@@ -103,7 +103,7 @@ int main(){
     ofile <<"Time to run matrix of size "<<n<<" was:"<<
             ((float)time)/CLOCKS_PER_SEC<< endl;
     ofile << "       x:             approx:          solution:  " << endl;
-    for (int i=1;i<=n;i++) {
+    for (int i=0;i<=n+1;i++) {
        ofile << setw(15) << setprecision(8) << x[i];
        ofile << setw(15) << setprecision(8) << vec_u[i];
        ofile << setw(15) << setprecision(8) << vec_f_solution[i] << endl;
