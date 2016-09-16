@@ -194,7 +194,7 @@ The concept of backwars substitution is to solve the the set of equations from b
 LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important properties such as the determinant.
 \nl
 Most importantly it reduces the number of floating point operations (FLOPS) used to solve linear algebra problems.
-A regular gaussian elimination to reach row ec reduction requires 
+A regular gaussian elimination to reach row ec reduction requires forward substitution 
 \nl
 LU as the name suggests decomposes a matrix $\hat{A}$ into  two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
 
