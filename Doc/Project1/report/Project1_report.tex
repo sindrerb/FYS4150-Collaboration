@@ -189,8 +189,14 @@ x_0 \\ x_1 \\ x_2
 This set of linear equations is the basis for backward substitution.
 \subsubsection{Backward substitution}
 The concept of backwars substitution is to solve the the set of equations from bsnto the equation above. In the end, all elements of $x$ is known. Gaussian elimination optimized for a tridiagonal matrix is called Thomas algoritm. [kilde?]
+
 \subsection{LU-decompostition}
-blabla \cite{linalg:lay}
+LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important properties such as the determinant.
+\nl
+Most importantly it reduces the number of floating point operations (FLOPS) used to solve linear algebra problems.
+A regular gaussian elimination to reach row ec reduction requires 
+\nl
+LU as the name suggests decomposes a matrix $\hat{A}$ into  two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
 
 \subsection{Numerical error estimate}
 
@@ -248,12 +254,6 @@ For all programs, divided in task $b$, $c$ and $d$ see the github repository:
 
 \section{Results}
 \subsection{LU-decomposition}
-LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important properties such as the determinant.
-\nl
-Most importantly it reduces the number of floating point operations (FLOPS) used to solve linear algebra problems.
-A regular gaussian elimination to reach row ec reduction requires 
-\nl
-LU as the name suggests decomposes a matrix $\hat{A}$ into  two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
 
 \subsection{General Thomas algoritm}
 Solving eq. \ref{eq:problem} using Thomas algoritm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
