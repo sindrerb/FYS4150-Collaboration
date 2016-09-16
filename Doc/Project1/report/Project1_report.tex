@@ -177,7 +177,7 @@ where $\tilde{b}$ and $\tilde{y}$ is affected by the row reduction. The new set 
 The concept of backwars substitution is to solve the the set of equations from bottom to top. The bottom $x$ can be expressed as $x_n=\frac{\tilde{y}_n}{\tilde{b}_n}$ and may be used in the equation above. In the end, all elements of $x$ is known. In total, the Thomas algoritm is using $9n$ floating point operations (FLOPS). If the matrix elements is constant through every diagonal, the number of FLOPS may be reduced to $4n$.
 
 \subsection{LU-decompostition}
-
+blabla \cite{linalg:lay}
 
 \subsection{Numerical error estimate}
 
@@ -235,6 +235,7 @@ For all programs, divided in task $b$, $c$ and $d$ see the github repository:
 
 \section{Results}
 \subsection{LU-decomposition}
+<<<<<<< HEAD
 Solving eq. \ref{eq:problem} using LU-decomposition is a time consuming process. Even though the method reduces the numper of 
 \subsection{General Thomas algorithm}
 Solving eq. \ref{eq:problem} using Thomas algorithm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
@@ -247,6 +248,26 @@ Solving eq. \ref{eq:problem} using Thomas algorithm gave a - by eye - satisfying
 \begin{figure}[htp]
 \includegraphics[width=0.5\textwidth]{./figures/b-run10.png} 
 \caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algorithm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
+=======
+LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important properties such as the determinant.
+\nl
+Most importantly it reduces the number of floating point operations (FLOPS) used to solve linear algebra problems.
+A regular gaussian elimination to reach row ec reduction requires 
+\nl
+LU as the name suggests decomposes a matrix $\hat{A}$ into  two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
+
+\subsection{General Thomas algoritm}
+Solving eq. \ref{eq:problem} using Thomas algoritm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
+
+\begin{figure}[htp]
+\includegraphics[width=0.5\textwidth]{figures/b-run1e2.png} 
+\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 100 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas1E2}
+\end{figure}
+
+\begin{figure}[htp]
+\includegraphics[width=0.5\textwidth]{figures/b-run10.png} 
+\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
+>>>>>>> 7dc3221fa5b50f0c575acbf92721215d501023d2
 \end{figure}
 
 \subsection{Specialized Thomas algorithm}
@@ -284,4 +305,8 @@ Iterations & Relative error\\ \hline
 \caption{Table showing the relative error for a set op iterations.}
 \end{table}
 
+\twocolumn[{%
+\bibliography{ref}{}
+\bibliographystyle{plain}
+}]
 \end{document}
