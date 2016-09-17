@@ -281,7 +281,9 @@ v_1\\v_2\\\vdots\\v_{n-1}\\v_{n}
 \tilde{b}_0\\\tilde{b}_1\\\vdots\\\tilde{b}_{n-2}\\\tilde{b}_{n-1}
 \end{bmatrix} \label{eq:problem}
 \end{equation}
-The problem is now solvable by both LU-decomposition and Thomas algorithm. Since matrix $A$ has a constant value along it's diagonals, an optimized Thomas algorithm was constructed to this specific matrix. All codes are tested with a reference function $f(x)$ with the known solution $u(x)$ where
+The problem is now solvable by both LU-decomposition and Thomas algorithm. Since matrix $A$ has a constant value along it's diagonals, an optimized Thomas algorithm was constructed to this specific matrix.
+In this assignment $f(x)$ and its solution $u(x)$ were given as described below. And all programs were tested against the solution.
+
 \begin{equation*}
 f(x)=100\exp[-10x]
 \end{equation*}
@@ -299,7 +301,8 @@ For all programs, divided in task $b$, $c$, $d$ and $e$ see the github repositor
 \section{Results and discussion}
 
 \subsection{LU-decomposition}
-Solving eq. \ref{eq:problem} using LU-decomposition is a time consuming process and is often a non-satisfying method for square matrices of size above $10^4$ due to limits in memory. Table \ref{tbl:time_LU} shows the computation time for a set of matrices of size $N$.
+
+Solving eq. \ref{eq:problem} using LU-decomposition works on each element in the whole matrix and does not take in to consideration the trigonal nature of the problem it is then a more time consuming process than necessary. It is also often a non-satisfying method for square matrices of size above $10^4$ due to limits in memory. Table \ref{tbl:time_LU} shows the computation time for a set of matrices of size $N$.
 
 \begin{table}[h]
 \begin{tabular}{|l|l|l|l|l|} \hline
@@ -308,6 +311,8 @@ t [s] & 2.78e-4 &4.62e-3 & 8.198e-1 & 8.614e2\\ \hline
 \end{tabular}
 \caption{Table showing computation time $t$ in seconds for LU-decompositon of matrices of size $N$.} \label{tbl:time_LU}
 \end{table}
+
+All LU calculations were done using the Armadillo library for C++ \cite{arma}.
 
 \subsection{General Thomas algorithm}
 
@@ -329,7 +334,6 @@ Iterations & Relative error\\ \hline
 \caption{Table showing the relative error from Thomas method based on eq. \ref{eq:num_err} for a set of iterations.}\label{tbl:error}
 \end{table}
 
-\newpage
 
 The reduction of accuracy at $n=10^7$ iterations  is most likely caused by loss of precision in the numerical derivation. $n=10^7$ iterations leads to a step-length $h\simeq 10^{-7}$ which gives terms of $f_(i)$ close to each-other. The term $f_{i+1}-2f_i+f_{i-1}$ could be the source of precision loss if the differences in $f_i$ is in order of $\sim10^{-15}$
 
