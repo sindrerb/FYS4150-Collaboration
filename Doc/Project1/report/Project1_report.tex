@@ -269,12 +269,12 @@ Iterations & Relative error\\ \hline
 The reduction of accuaracy at $n=10^7$ iterations  is most likely caused by loss of precision in the nummerical derivation. $n=10^7$ iterations leads to a steplength $h\simeq 10^{-7}$ wich gives terms of $f_(i)$ close to eachother. The term $f_{i+1}-2f_i+f_{i-1}$ could be the source of precision loss if the differences in $f_i$ is in order of $\sim10^{-15}$
 
 \begin{figure}[htp]
-\includegraphics[width=0.5\textwidth]{./figures/b-run1e2.png} 
+\includegraphics[width=0.5\textwidth]{figures/b-run1e2.png} 
 \caption{Plot of the nummerical approximation of $u(x)$ - in red - with 100 iterations by Thomas algorithm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas1E2}
 \end{figure}
 
 \begin{figure}[htp]
-\includegraphics[width=0.5\textwidth]{./figures/b-run10.png} 
+\includegraphics[width=0.5\textwidth]{figures/b-run10.png} 
 \caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algorithm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
 \end{figure}
 
