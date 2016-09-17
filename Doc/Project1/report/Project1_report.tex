@@ -27,7 +27,7 @@
 
 \usepackage{titlesec} % Allows customization of titles
 \renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
-\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\renewcommand\thesubsection{\roman{subsection}}
 \titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
 \titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
 
@@ -108,15 +108,16 @@ The methods used in this projects are the following:
 \begin{itemize}
 \item Dirichlet boundary conditions
 \item Nummerical derivation
-\item Gaussian elimination
+\item Thomas algoritm
 \item LU-decomposition
+\item Nummerical error analysis
 \end{itemize}
 
 \subsection{Dirichlet boundary condition}
-Dirichlet boundary conditions - also refered to as fixed boundary condition - specifies the value of a given function on a surface $T=f(r,t)$. In a one-dimentional problem it translates to defining an interval of $x$ - $x\in [x_{min},x_{max}]$ - and the function values $f(x_{min})=f_l$ and $f(x_{max})=f_h$ at the edges of the intervall.
+Dirichlet boundary conditions - also refered to as fixed boundary condition - specifies the value of a given function on a surface $T=f(r,t)$. In a one-dimentional problem it translates to defining an interval of $x$ - $x\in [x_{min},x_{max}]$ - and the function values $f(x_{min})=f_{low}$ and $f(x_{max})=f_{high}$ at the edges of the intervall.
 
 \subsection{Nummerical derivarion}
-The derivative of a discrete funtion may be found by nummerical derivation. The principle of nummerical derivation is a result of Taylor expansion. By expanding a function from   a point $x$ with a step $h$, two equations form depending on the direction:
+The derivative of a discrete funtion may be found by nummerical derivation. The principle of nummerical derivation is a result of Taylor expansion. By expanding a function from   a point $x$ with a step $h$, two equations form depending on the direction of the step:
 \begin{equation}
 f(x+h) = f(x)+hf'(x)+\frac{h^2}{2}f''(x)\ldots \label{eq:taylor_pos}
 \end{equation}
@@ -127,14 +128,14 @@ By adding eq. \ref{eq:taylor_neg} to eq. \ref{eq:taylor_pos}, a approximation fo
 \begin{equation}
 f'' = \frac{f_+-2f+f_-}{h^2}+\frac{h^4}{6h^2}f^{\mathit{IV}}\label{eq:sec_der}
 \end{equation}
-Where $f_+ = f(x+h)$, $f=f(x)$, $f_-=f(x-h)$ and $f^{IV}$ is the fourth derivative of $f(x)$. By truncating the series at the fourth derivative a small mathematical error - $\mathcal{O}$ - appears in the order of $h^2$. If a discrete funtion is introduced where $f_i = f(x_i) = f(c_0+ih)$, eq. \ref{eq:sec_der} may be rewritten to an algorithm for the nummerical second derivative.
+Where $f_+ = f(x+h)$, $f=f(x)$, $f_-=f(x-h)$ and $f^{IV}$ is the fourth derivative of $f(x)$. By truncating the series at the fourth derivative a small mathematical error appears in the order of $h^2$. If a discrete funtion is introduced where $f_i = f(x_i) = f(x_0+ih)$, eq. \ref{eq:sec_der} may be rewritten to an algorithm for the nummerical second derivative.
 \begin{equation}
 f''_i = \frac{f_{i+1}-2f_i+f_{i-1}}{h^2}\label{eq:sec_der_discrete}
 \end{equation}
 In eq. \ref{eq:sec_der_discrete} the mathematical error $\mathcal{O}(h^2)$ is neglected.
 
 \subsection{Thomas algorithm}
-Thomas algorithm is a variant of Gaussian elimination used on tridiagonal matrices [kilde], where Gaussian elimination is a method for simplifying a set of $N$ linear equations with $n$ unknown variables $x_i$ $i=0,1,\ldots,n-1$. Thomas algorithm is usefull if the equations is on the form 
+Thomas algorithm is a variant of Gaussian elimination used on tridiagonal matrices \cite{compfys}, where Gaussian elimination is a method using $\mathcal{O}(n^3)$ floating point operations (FLOPS) for solving a set of $n$ linear equations with $n$ unknown variables $x_i$ $i=0,1,\ldots,n-1$. Thomas algorithm is usefull if the equations is on the form :
 \begin{align*}
 a_{i}x_{i-1}+b_{i}x_i+c_{i}x_{i+1}&=y_i
 \end{align*}
@@ -174,29 +175,27 @@ x_1\\x_2\\x_3\\x_4\\\vdots\\x_{n}
 \end{equation*}
 where $\tilde{b}$ and $\tilde{y}$ is affected by the row reduction. The new set of linear equations is the basis for backward substitution.
 \subsubsection{Backward substitution}
-The concept of backwars substitution is to solve the the set of equations from bottom to top. The bottom $x$ can be expressed as $x_n=\frac{\tilde{y}_n}{\tilde{b}_n}$ and may be used in the equation above. In the end, all elements of $x$ is known. In total, the Thomas algoritm is using $9n$ floating point operations (FLOPS). If the matrix elements is constant through every diagonal, the number of FLOPS may be reduced to $4n$.
+The concept of backwars substitution is to solve the the set of equations from bottom to top. The bottom $x$ can be expressed as $x_n=\frac{\tilde{y}_n}{\tilde{b}_n}$ and may be used to solve the equation above. In the end, all elements of $x$ is known. In total, the Thomas algoritm is using $9n$ FLOPS. If the matrix elements is constant through every diagonal, the number of FLOPS may be reduced to $4n$.
 
 \subsection{LU-decompostition}
-blabla \cite{linalg:lay}
+LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important matrix properties such as the determinant.
+\nl
+Most importantly it reduces the number of FLOPS used to solve linear algebra problems, from 
+$\mathcal{O}(n^3)$ FLOPS by a regular Gaussian elimination to $\mathcal{O}(n^2)$ by LU-decomposition. 
+\nl
+LU-decomposition as the name suggests decomposes a matrix $\hat{A}$ into two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
 
 \subsection{Numerical error estimate}
-
-Since we are using numerical derivation this gives us an approximation to the analytical answer.
-Therfore it is interesting to see how good our approximation is.    
-A good way to do this is to look at the difference between the two.
-\nl
-At small step lenghts ($h$) we will have a good approximation if the theori is correct and therfore it is convenient too look at the logaritme of the difference we also use the absolute walue since we dont care if we are over or under the analytical answer. To avoid the logaritme of zero we also devide by the analytical value.
-\nl
-So we get the relative error $\varepsilon$ and for each step ve get:
-
+Since numerical methods are used, the result is only an approximation to the analytical answer.
+Therefore it is interesting to see how good the nummerical method is by comparing the approximation to an already known solution.    
+A good way to do this is to look at the relative error $\varepsilon_r$ between the approximation and the exact solution. At small step lenghts $h$, the approximation is often close to the exact solution if the theory is correct. Therfore it is convenient too look at the logarithm of the relative error to differenciate methods of nearly equal accuaracy. An approptiate formula is:
 \begin{equation}
-\varepsilon_i = log\left(\left|\frac{u_i - v_i}{v_i}\right|\right)
+\varepsilon_i = \log_{10}\left(\left|\frac{v_i - u_i}{u_i}\right|\right)\label{eq:num_err}
 \end{equation}
-
-Here $u_i$ is the numerical value and $v_i$ is the analytical value at step $i$. And $log$ is the base 10 logaritme.
-
+Where $v_i$ is the numerical value and $u_i$ is the analytical value at step $i$.
+\newpage
 \section{Implementation}
-By discretizing the simplified and generalized Poiison equation (eq. \ref{eq:sec_der}) in steps of $h$, we may approximate eq. \ref{eq:sec_der} with eq. \ref{eq:sec_der_num} where $v_i$ is the discrete values of the continium $u(x)$.
+By discretizing the simplified and generalized Poisson equation (eq. \ref{eq:sec_der}) in steps of $h$, we may use eq. \ref{eq:sec_der_discrete} to write eq. \ref{eq:sec_der_num} where $v_i$ is the discrete values of the continium $u(x)$.
 \begin{equation}
 -\frac{v_{i+1}-2v_i+v_{i-1}}{h^2}=f_i \label{eq:sec_der_num}
 \end{equation}
@@ -220,58 +219,64 @@ v_1\\v_2\\\vdots\\v_{n-1}\\v_{n}
 \tilde{b}_0\\\tilde{b}_1\\\vdots\\\tilde{b}_{n-2}\\\tilde{b}_{n-1}
 \end{bmatrix} \label{eq:problem}
 \end{equation}
-The problem is now solvable by both Thomas algorithm and LU-decomposition. Since matrix $A$ has a constant value along it's diagonals, an optimized Thomas algorithm was constructed to this spesific matrix. All codes are tested with a reference function $f(x)$ with the known solution $u(x)$ where
+The problem is now solvable by both LU-decomposition and Thomas algorithm. Since matrix $A$ has a constant value along it's diagonals, an optimized Thomas algorithm was constructed to this spesific matrix. All codes are tested with a reference function $f(x)$ with the known solution $u(x)$ where
 \begin{equation*}
 f(x)=100\exp[-10x]
 \end{equation*}
 \begin{equation*}
 u(x)=1-\exp[-10]x-10\exp[-10x]
 \end{equation*}
-For all programs, divided in task $b$, $c$ and $d$ see the github repository: 
+For all programs, divided in task $b$, $c$, $d$ and $e$ see the github repository: 
 
 \begin{center}
  \href{https://github.com/sindrerb/FYS4150-Collaboration}{github.com/sindrerb/FYS4150-Collaboration}
 \end{center}
 
-\section{Results}
+\newpage
+\section{Results and discussion}
 \subsection{LU-decomposition}
-<<<<<<< HEAD
-Solving eq. \ref{eq:problem} using LU-decomposition is a time consuming process. Even though the method reduces the numper of 
+Solving eq. \ref{eq:problem} using LU-decomposition is a time consuming process and is often a non-satisfying method for square matrices of size above $10^4$ due to limits in memory. Table \ref{tbl:time_LU} shows the computation time for a set of matrices of size $N$.
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|} \hline
+$N$ & 1e1 & 1e2 & 1e3 & 1e4\\ \hline
+t [s] & 2.78e-4 &4.62e-3 & 8.198e-1 & 8.614e2\\ \hline
+\end{tabular}
+\caption{Table showing computation time $t$ in seconds for LU-decompositon of matrices of size $N$.} \label{tbl:time_LU}
+\end{table}
 \subsection{General Thomas algorithm}
-Solving eq. \ref{eq:problem} using Thomas algorithm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
+Solving eq. \ref{eq:problem} by the more suited Thomas algorithm reduced the computation time significally compared to the LU-decomposition. Thomas method gave a - by eye - satisfying approximation at 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. Although - by investigating the nummerical error analysis - the increased number of iterations shows a significant increase of accuaracy up to $N=10^6$ iterations, at higher number of iterations the accuaracy seems to drop as seen i Table \ref{tbl:error}.
+The algorithm seems to have a tendency to underestimate the derivative and will approach the exact solution from below at a low number of iterations, as seen in Figure \ref{fig:Thomas10}.
 
 \begin{figure}[htp]
 \includegraphics[width=0.5\textwidth]{./figures/b-run1e2.png} 
 \caption{Plot of the nummerical approximation of $u(x)$ - in red - with 100 iterations by Thomas algorithm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas1E2}
 \end{figure}
 
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|l|} \hline
+Iterations & Relative error\\ \hline
+1e1 & -1.17970\\
+1e2 & -3.08804\\
+1e3 & -5.08005\\
+1e4 & -7.07927\\
+1e5 & -9.07909\\
+1e6 & -10.7943\\
+1e7 & -9.54215\\ \hline
+\end{tabular}
+\caption{Table showing the relative error based on eq. \ref{eq:num_err} for a set of iterations.}\label{tbl:error}
+\end{table}
+
 \begin{figure}[htp]
 \includegraphics[width=0.5\textwidth]{./figures/b-run10.png} 
 \caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algorithm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
-=======
-LU decomposition (LU) also known as LU- , Crout or Dolittle factorisation \cite{linalg:lay}\cite{compfys} is a common way to solve matrix problems numerically. It is used to find important properties such as the determinant.
-\nl
-Most importantly it reduces the number of floating point operations (FLOPS) used to solve linear algebra problems.
-A regular gaussian elimination to reach row ec reduction requires 
-\nl
-LU as the name suggests decomposes a matrix $\hat{A}$ into  two matrices $\hat{L}$ and $\hat{U}$ where $\hat{L}$ is a lower triangular matrix with ones along its diagonal and $\hat{U}$ is an upper triangular matrix. For this to be possible $\hat{A}$ needs to be a square, invertible matrix and its leading principial minors must be nonzero.
-
-\subsection{General Thomas algoritm}
-Solving eq. \ref{eq:problem} using Thomas algoritm gave a - by eye - satisfying approximation with 100 iterations, as seen in Figure \ref{fig:Thomas1E2}. The algorithm seems to has a tendency to underestimate the derivative and will approach exact solution from below, as seen in Figure \ref{fig:Thomas10}.
-
-\begin{figure}[htp]
-\includegraphics[width=0.5\textwidth]{figures/b-run1e2.png} 
-\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 100 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas1E2}
 \end{figure}
 
-\begin{figure}[htp]
-\includegraphics[width=0.5\textwidth]{figures/b-run10.png} 
-\caption{Plot of the nummerical approximation of $u(x)$ - in red - with 10 iterations by Thomas algoritm, compared to the exact solution $u(x)$ in blue.} \label{fig:Thomas10}
->>>>>>> 7dc3221fa5b50f0c575acbf92721215d501023d2
-\end{figure}
 
 \subsection{Specialized Thomas algorithm}
-Solving eq. \ref{eq:problem} with a specialized Thomas algorithm gave the same results as the general algorithm, but reduced the number floating operations from $9n$ in the general algorithm to $4n$ in the specialized algorithm. The reduction in number of floating operations shorted the comutation time. A difference is hard to spot at a low numer of iterations, but higher number of iterations reveals a difference. A comparation of the timeusage by the two algorithms is found in Table \ref{tbl:ThompsonTime}.
+Solving eq. \ref{eq:problem} with a specialized Thomas algorithm gave - as expected - the same results as the general algorithm, but reduced the number FLOPS from $9n$ in the general algorithm to $4n$ in the specialized algorithm. The reduction in number of FLOPS shorted the comutation time. A difference in the computation time is hard to spot at a low numer of iterations, but a higher number of iterations reveals a difference. A comparation of the timeusage by the two algorithms is found in Table \ref{tbl:ThompsonTime}.
+
+
 \begin{table}[htp]
 \centering
 \begin{tabular}{|l|l|l|} \hline
@@ -288,22 +293,9 @@ Iterations & \multicolumn{2}{|c|}{Timeusage [s]}\\ \hline
 \caption{Table showing timeusage - in seconds - by the special and the general Thomson algorithm for a set of iterations.} \label{tbl:ThompsonTime}
 \end{table}
 
-
-
-\begin{table}[htp]
-\centering
-\begin{tabular}{|l|l|} \hline
-Iterations & Relative error\\ \hline
-1e1 & 1e(-1.17970)\\
-1e2 & 1e(-3.08804)\\
-1e3 & 1e(-5.08005)\\
-1e4 & 1e(-7.07927)\\
-1e5 & 1e(-9.07909)\\
-1e6 & 1e(-10.7943)\\
-1e7 & 1e(-9.54215)\\ \hline
-\end{tabular}
-\caption{Table showing the relative error for a set op iterations.}
-\end{table}
+\newpage
+\section{Conclusion}
+\blindtext
 
 \twocolumn[{%
 \bibliography{ref}{}
