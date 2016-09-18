@@ -41,7 +41,7 @@
 *.loa
 
 # achemso
-acs-*.bib
+#acs-*.bib
 
 # amsthm
 *.thm
