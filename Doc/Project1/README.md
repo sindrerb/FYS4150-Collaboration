@@ -1,6 +1,6 @@
-#Project 1
+##Project 1
 
-###All programs with results are found in folder "programs" divided in tasks related to the project tasks.
+####All programs with results are found in folder "programs" divided in tasks related to the project tasks:
 #####b - General Thomas Algorithm
 #####c - Specialized Thomas Algorithm
 #####d - Error estimate of c
