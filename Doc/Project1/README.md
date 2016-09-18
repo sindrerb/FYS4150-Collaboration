@@ -5,5 +5,5 @@
 ###c - Specialized Thomas Algorithm
 ###d - Error estimate of c
 ###e - LU-decompositon using armadillo
-
-All figures is found in a subfolder "figures" in the folder "report"
+####Every task folder has it's own build folder containing files "runN" where N is the number of iterations.
+####All figures is found in a subfolder "figures" in the folder "report"
