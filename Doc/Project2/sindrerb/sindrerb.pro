@@ -6,3 +6,6 @@ CONFIG -= qt
 SOURCES += main.cpp
 
 LIBS += -llapack -lblas -larmadillo
+
+HEADERS += \
+    matrix.h

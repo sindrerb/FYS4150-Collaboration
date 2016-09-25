@@ -193,7 +193,7 @@ DIST          = /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/exceptions.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/yacc.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/lex.prf \
-		../sindrerb/sindrerb.pro  ../sindrerb/main.cpp
+		../sindrerb/sindrerb.pro matrix.h ../sindrerb/main.cpp
 QMAKE_TARGET  = sindrerb
 DESTDIR       = 
 TARGET        = sindrerb
@@ -537,7 +537,7 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../sindrerb/main.cpp 
+main.o: ../sindrerb/main.cpp ../sindrerb/matrix.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../sindrerb/main.cpp
 
 ####### Install
