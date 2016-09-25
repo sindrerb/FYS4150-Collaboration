@@ -1,4 +1,4 @@
-Time to run matrix of size 1000 was:0.819827
+Time to run matrix of size 1000 was:0.871329
       x:      approx:     exact:  
   0.00099900100   0.0089412456   0.0089413199
    0.0019980020    0.017783683    0.017783831
