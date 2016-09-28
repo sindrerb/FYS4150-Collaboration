@@ -7,11 +7,9 @@ Last edited by: sindrerb
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
-
 
 def ortho(N):
-    M = np.loadtxt("./build_sindrerb/unitTest"+str(N), dtype = 'float', skiprows = 3)
+    M = np.loadtxt("./build_sindrerb/ortoTest"+str(N), dtype = 'float', skiprows = 3)
     maxval = 0
     for i in range(0,len(M[:,1])):
         for j in range(0,len(M[1,:])):
@@ -20,5 +18,6 @@ def ortho(N):
                 maxval = temp
     return maxval
     
-for N in range(50,450,50):
+for N in range(50,1850,50):
     print(ortho(N))
+    

@@ -95,6 +95,26 @@ public:
     void assign(int i, int j, T value){//Access element
         this->M[i][j] = value;
     }
+
+    void setcol(int n, const matrix &B){ //Set column
+        if(B.columns==columns){
+            for(int i = 0; i<columns; i++){
+                    M[i][n]=B.M[i][0];
+            }
+        }else{
+            printf("Error in column assignment:\n Matrix dimention does not match, no changes made.\n");
+        }
+    }
+    void setrow(int n, const matrix &B){ //Set column
+        if(B.rows==rows){
+            for(int i = 0; i<rows; i++){
+                    M[n][i]=B.M[0][i];
+            }
+        }else{
+            printf("Error in row assignment:\n Matrix dimention does not match, no changes made.\n");
+        }
+    }
+
     matrix operator+(const matrix &B){//Matrix addition
         if(this->rows == B.rows && this->columns == B.columns){
             matrix C;
@@ -210,7 +230,7 @@ public:
 
     void fprint(char name){
         double m;
-        ofile << name << "= "<<endl;
+        ofile << name <<endl;
         for(int i = 0; i<columns; i++){
             for(int j = 0; j<rows ; j++){
                 m = M[i][j];
