@@ -11,9 +11,36 @@
 using namespace std;
 using namespace arma;
 
-void findLargestNonDiagonalElement(matrix<double>A, int n, int *k, int *l){
+void Unittest(matrix<double> M, int i,string filename){
+    ofile.open(filename + to_string(i));
+    ofile << setiosflags(ios::showpoint | ios::uppercase);
+    ofile << "Printout for orthogonal test: "<<endl;
+    ofile << "Matrix M at iteration "<<i<<endl;
+    M.fprint('M');
+    ofile.close();
+}
+
+matrix<double> Hamiltonian(int n,double h){
+    matrix<double> H;
+    double v,rho,rho0,alpha;
+    alpha = 1.0;
+    rho0 = 1.0/alpha;
+    matrix<double> I,V;
+    H.diagonal(n,2,-1);
+    V.identity(n);
+    for(int i = 0; i<n;i++){
+        rho = rho0 + ((double)i+1.0)*h;
+        v = rho*rho;
+        V.assign(i,i,v);
+    }
+    H = H/h;
+    H = H+V;
+    return H;
+}
+
+void findLargestNonDiagonalElement(matrix<double> A, int n, int *k, int *l){
     // FIND THE LARGEST NON-DIAGONAL ELEMENT
-    double a_max,a_temp;
+    double a_max,a_temp,a;
     a_max = 0;
     for(int i=0; i<n ;i++){
         for(int j=i+1; j<n; j++){
@@ -80,29 +107,59 @@ void JacobiRotation(matrix<double>A,matrix<double>R, int n, int k, int l){
 
 }
 
-int main(int argc, char *argv[])
+int main()//int argc, char *argv[])
 {
+    string eigenvals = "eigenvals";
+    string eigenvecs = "eigenvecs";
     int n;
-    int *k = new int;
-    int *l = new int;
+    double h,amax,tolerance;
     n = 20;
-    double amax,tolerance;
+    h = 0.1;
     tolerance = 1E-4;
 
-    matrix<double> A,R;
-    A.random(n,n);
+
+    //INITSIALIZE
+    int *k = new int;
+    int *l = new int;
+    matrix<double> H,R,E,L;
     R.identity(n);
+    H = Hamiltonian(n,h);
+    L.ones(n,1);
 
+    findLargestNonDiagonalElement(H,n,k,l);
+    amax = H(*k,*l);
 
-    findLargestNonDiagonalElement(A,n,k,l);
-    amax = A(*k,*l);
     int i = 0;
+    int unittest = 1;
     int maxit = 1000;
     while(fabs(amax)>=tolerance && i<maxit){
-        JacobiRotation(A,R,n,*k,*l);
-        findLargestNonDiagonalElement(A,n,k,l);
-        amax = A(*k,*l);
+        JacobiRotation(H,R,n,*k,*l);
+        findLargestNonDiagonalElement(H,n,k,l);
+        amax = H(*k,*l);
         i++;
+        if(unittest == 50){
+            Unittest(R,i,"unitTest");
+            unittest = 0;
+        }
+        unittest++;
+
     }
+
+    printf("i=%i \n",i);
+    E = H*L;
+    E.print('E');
+
+    ofile.open(eigenvals);
+    ofile << setiosflags(ios::showpoint | ios::uppercase);
+    ofile << "Number of iterations: " << i << "     "<< endl;
+    E.fprint('E');
+    ofile.close();
+
+    ofile.open(eigenvecs);
+    ofile << setiosflags(ios::showpoint | ios::uppercase);
+    R.fprint('R');
+    ofile.close();
+
+
 }
 

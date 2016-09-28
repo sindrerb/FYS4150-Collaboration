@@ -1,7 +1,12 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-
+#include <iostream>
 #include <fstream>
+#include <string>
+
+using namespace std;
+ofstream ofile;
+
 template < typename T > class matrix {
     int rows, columns;
     T **M;
@@ -87,29 +92,67 @@ public:
         return this->M[i][j];
 
     }
-    matrix assign(int i, int j, T value){//Access element
-        this->M[i][j] =  value;
+    void assign(int i, int j, T value){//Access element
+        this->M[i][j] = value;
     }
     matrix operator+(const matrix &B){//Matrix addition
+        if(this->rows == B.rows && this->columns == B.columns){
+            matrix C;
+            int col = this->columns;
+            int row = this->rows;
+            C.zeros(row,col);
+            for(int i = 0; i<col; i++){
+                for(int j = 0; j<row ; j++){
+                    T a = this->M[i][j];
+                    T b = B.M[i][j];
+                    C.M[i][j] = a + b;
+                }
+            }
+            return C;
+        }else{
+            printf("Error: Matrix addition\n Matrix dimentions dont match.");
+        }
+    }
+    matrix operator*(const matrix &B){//Matrix multiplication
+        if(this->columns == B.rows){
+            matrix C;
+            rows = this->rows;
+            columns = B.columns;
+            C.zeros(rows,columns);
+            for(int i = 0; i<columns; i++){
+                for(int j = 0; j<rows ; j++){
+
+                    for(int k=0;k<rows;k++){
+                        C.M[i][j] += this->M[k][j]*B.M[i][k];
+
+                    }
+                }
+            }
+            return C;
+        }else{
+            printf("Error: matrix multiplication.\n Invalid matrix dimentions.\n");
+        }
+    }
+    matrix operator*(const T &b){
         matrix C;
-        C.zeros(this->rows,this->columns);
-        for(int i = 0; i<columns; i++){
-            for(int j = 0; j<rows ; j++){
-                C.M[i][j] = this->M[i][j]+B.M[i][j];
+        int row = this->rows;
+        int col = this->columns;
+        C.zeros(row,col);
+        for(int i = 0; i<col; i++){
+            for(int j = 0; j<row ; j++){
+                C.M[i][j] = this->M[i][j]*b;
             }
         }
         return C;
     }
-    matrix operator*(const matrix &B){//Matrix multiplication
+    matrix operator/(const T &b){
         matrix C;
-        C.zeros(this->rows,this->columns);
+        rows = this->rows;
+        columns = this->rows;
+        C.zeros(rows,columns);
         for(int i = 0; i<columns; i++){
             for(int j = 0; j<rows ; j++){
-
-                for(int k=0;k<rows;k++){
-                    C.M[i][j] += this->M[k][j]*B.M[i][k];
-
-                }
+                    C.M[i][j] = this->M[i][j]/b;
             }
         }
         return C;
@@ -125,6 +168,34 @@ public:
             }
         }
     }
+    matrix transpose(){ //Transpose
+        matrix C;
+        C.zeros(columns,rows);
+        for(int i = 0; i<C.columns; i++){
+            for(int j = 0; j<C.rows ; j++){
+                C.assign(i,j,M[j][i]);
+            }
+        }
+        return C;
+    }
+    matrix col(int n){ //Get column
+        matrix C;
+        int row = rows;
+        C.zeros(1,row);
+        for(int i = 0; i<row; i++){
+                C.assign(i,0,M[n][i]);
+        }
+        return C;
+    }
+    matrix row(int n){ //Get row
+        matrix C;
+        int col = columns;
+        C.zeros(col,1);
+        for(int i = 0; i<col; i++){
+                C.assign(0,i,M[i][n]);
+        }
+        return C;
+    }
 
     //Get info
     void print(char name){
@@ -136,6 +207,21 @@ public:
             printf("\n");
         }
     }
+
+    void fprint(char name){
+        double m;
+        ofile << name << "= "<<endl;
+        for(int i = 0; i<columns; i++){
+            for(int j = 0; j<rows ; j++){
+                m = M[i][j];
+                ofile << m << "    ";
+            }
+            ofile << endl;
+        }
+    }
+
+
+
 
 };
 
