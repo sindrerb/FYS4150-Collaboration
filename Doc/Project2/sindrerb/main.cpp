@@ -34,7 +34,7 @@ matrix<double> rho(double xmin, double xmax,int N){
 
 matrix<double> Hamiltonian(int n,matrix<double> X){
     matrix<double> H;
-    double h,v,x,alpha;
+    double h,v,x;
     h = (X(0,1)-X(0,0));
     matrix<double> I,V;
     H.diagonal(n,2,-1);
@@ -51,7 +51,7 @@ matrix<double> Hamiltonian(int n,matrix<double> X){
 
 void findLargestNonDiagonalElement(matrix<double> A, int n, int *k, int *l){
     // FIND THE LARGEST NON-DIAGONAL ELEMENT
-    double a_max,a_temp,a;
+    double a_max,a_temp;
     a_max = 0;
     for(int i=0; i<n ;i++){
         for(int j=i+1; j<n; j++){
@@ -124,15 +124,15 @@ int main()//int argc, char *argv[])
     string eigenvecs = "eigenvecs";
     int N;
     double maxRho,minRho,amax,tolerance;
-    N =70;
-    maxRho = 4.33;
+    N = 200;
+    maxRho = 5.5;
     minRho = 0.0;
     tolerance = 1E-7;
 
     //INITZIALISE
     int *k = new int;
     int *l = new int;
-    matrix<double> H,R,E,L,X;
+    matrix<double> H,R,E,L,X,P;
     X.zeros(N,1);
     X = rho(minRho,maxRho,N);
     R.identity(N);
@@ -144,38 +144,46 @@ int main()//int argc, char *argv[])
 
     int i = 0;
     int unittest = 1;
-    int maxit = 30000;
+    int maxit = 300000;
     while(fabs(amax)>=tolerance && i<maxit){
         JacobiRotation(H,R,N,*k,*l);
         findLargestNonDiagonalElement(H,N,k,l);
         amax = H(*k,*l);
         i++;
-        if(unittest == 1000){
+        if(unittest == 5000){
             OrthogonalTest(R,i,"ortoTest");
             unittest = 0;
         }
         unittest++;
     }
 
-
     printf("i=%i \n",i);
     E = H*L;
-
+    //E.print('E');
+    //R.print('R');
     //SORTING EIGENVALUES AND VECTORS IN INCREASING ORDER
-    double e;
+    double e,emin;
+    int jmin;
     matrix<double> r;
     for(int i=0;i<N;i++){
-        for(int j=i;j<N;j++){
-            if(E(0,i)>E(0,j)){
-                e = E(0,i);
-                E.assign(0,i,E(0,j));
-                E.assign(0,j,e);
-                r = R.col(i);
-                R.setcol(i,R.col(j));
-                R.setcol(j,r);
+        jmin = i;
+        emin = E(0,i);
+        for(int j=i+1;j<N;j++){
+            if(emin>E(0,j)){
+                emin = E(0,j);
+                jmin = j;
             }
         }
+        if(jmin != i){
+            e = E(0,i);
+            E.assign(0,i,E(0,jmin));
+            E.assign(0,jmin,e);
+            r = R.col(i);
+            R.setcol(i,R.col(jmin));
+            R.setcol(jmin,r);
+        }
     }
+    //*/
     E.print('E');
     //R.print('R');
 

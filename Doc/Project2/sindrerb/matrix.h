@@ -133,6 +133,24 @@ public:
             printf("Error: Matrix addition\n Matrix dimentions dont match.");
         }
     }
+    matrix operator-(const matrix &B){//Matrix addition
+        if(this->rows == B.rows && this->columns == B.columns){
+            matrix C;
+            int col = this->columns;
+            int row = this->rows;
+            C.zeros(row,col);
+            for(int i = 0; i<col; i++){
+                for(int j = 0; j<row ; j++){
+                    T a = this->M[i][j];
+                    T b = B.M[i][j];
+                    C.M[i][j] = a - b;
+                }
+            }
+            return C;
+        }else{
+            printf("Error: Matrix addition\n Matrix dimentions dont match.");
+        }
+    }
     matrix operator*(const matrix &B){//Matrix multiplication
         if(this->columns == B.rows){
             matrix C;
@@ -203,7 +221,7 @@ public:
         int row = rows;
         C.zeros(1,row);
         for(int i = 0; i<row; i++){
-                C.assign(i,0,M[n][i]);
+                C.assign(i,0,M[i][n]);
         }
         return C;
     }
@@ -212,7 +230,7 @@ public:
         int col = columns;
         C.zeros(col,1);
         for(int i = 0; i<col; i++){
-                C.assign(0,i,M[i][n]);
+                C.assign(0,i,M[n][i]);
         }
         return C;
     }
