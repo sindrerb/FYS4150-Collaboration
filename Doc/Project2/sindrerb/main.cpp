@@ -1,7 +1,7 @@
 #include <matrix.h> //Private
 #include <iostream>
-#include <armadillo>
 #include <iomanip>
+//#include <armadillo>
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -9,9 +9,9 @@
 #include "time.h"
 
 using namespace std;
-using namespace arma;
+//using namespace arma;
 
-void Unittest(matrix<double> M, int i,string filename){
+void OrthogonalTest(matrix<double> M, int i,string filename){
     ofile.open(filename + to_string(i));
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     ofile << "Printout for orthogonal test: "<<endl;
@@ -33,7 +33,7 @@ matrix<double> Hamiltonian(int n,double h){
         v = rho*rho;
         V.assign(i,i,v);
     }
-    H = H/h;
+    H = H/(h*h);
     H = H+V;
     return H;
 }
@@ -111,39 +111,60 @@ int main()//int argc, char *argv[])
 {
     string eigenvals = "eigenvals";
     string eigenvecs = "eigenvecs";
-    int n;
+    int N;
     double h,amax,tolerance;
-    n = 20;
-    h = 0.1;
+    N = 3;
+    h = 1;
     tolerance = 1E-4;
-
 
     //INITSIALIZE
     int *k = new int;
     int *l = new int;
     matrix<double> H,R,E,L;
-    R.identity(n);
-    H = Hamiltonian(n,h);
-    L.ones(n,1);
-
-    findLargestNonDiagonalElement(H,n,k,l);
+    R.identity(N);
+    H = Hamiltonian(N,h);
+    L.ones(N,1);
+    H.print('H');
+    findLargestNonDiagonalElement(H,N,k,l);
     amax = H(*k,*l);
 
     int i = 0;
     int unittest = 1;
     int maxit = 1000;
     while(fabs(amax)>=tolerance && i<maxit){
-        JacobiRotation(H,R,n,*k,*l);
-        findLargestNonDiagonalElement(H,n,k,l);
+        JacobiRotation(H,R,N,*k,*l);
+        findLargestNonDiagonalElement(H,N,k,l);
         amax = H(*k,*l);
         i++;
         if(unittest == 50){
-            Unittest(R,i,"unitTest");
+            OrthogonalTest(R,i,"ortoTest");
             unittest = 0;
         }
         unittest++;
 
     }
+
+    /* COMPARE TO ARMADILLO, EAQUAL RESULTS
+    double hh = 1/(h*h);
+    double V;
+    mat G(N,N);
+    for(int i = 0; i<N;i++){
+        for(int j= 0;j<N;j++){
+            if(i==j){
+                V = 1+(i+1)*h;
+                G(i,j)= 2*hh+V*V;
+            }else if(i+1==j || i-1==j){
+                G(i,j)= -hh;
+            }else{
+                G(i,j)=0.0;
+            }
+        }
+    }
+    G.print("G");
+    mat F = eig_sym(G);
+    F.print("F");
+    */
+
 
     printf("i=%i \n",i);
     E = H*L;
