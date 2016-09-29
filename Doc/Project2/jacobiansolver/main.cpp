@@ -227,14 +227,14 @@ int main(int argc, char *argv[])
     //R.print('R');
 
     //WRITE RESULTS TO FILES
-    string freq = (string) round(frequency*100)/100;
-    ofile.open(eigenvals + marker + to_string(freq));
+
+    ofile.open(eigenvals + marker + to_string(frequency));
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     if(i==maxIterations){
         printf("WARNING! Maximal number of iterations reached. Increase 'maxiteration' \n");
         ofile << "WARNING! Maximal number of iterations reached. Increase 'maxiteration' " << endl;
     }
-    ofile << "Number of iterations: " << i << "     Freq: " << freq << endl;
+    ofile << "Number of iterations: " << i << "     Freq: " << frequency << endl;
     E.fprint('E');
     X.fprint(' ');
     ofile.close();
