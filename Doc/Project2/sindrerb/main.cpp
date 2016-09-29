@@ -32,19 +32,40 @@ matrix<double> rho(double xmin, double xmax,int N){
     return X;
 }
 
-matrix<double> Hamiltonian(int n,matrix<double> X){
-    matrix<double> H;
-    double h,v,x;
-    h = (X(0,1)-X(0,0));
-    matrix<double> I,V;
-    H.diagonal(n,2,-1);
+matrix<double> OneParticlePotential(int n, matrix<double> X){
+    double v,x;
+    matrix<double> V;
     V.identity(n);
     for(int i = 0; i<n;i++){
         x = X(0,i);
         v = x*x;
         V.assign(i,i,v);
     }
+    return V;
+}
+matrix<double> TwoParticlePotential(int n, matrix<double> X, double freq){
+    double v,x;
+    matrix<double> V;
+    V.identity(n);
+    for(int i = 0; i<n;i++){
+        x = X(0,i);
+        v = x*x*freq*freq+1.0/x;
+        V.assign(i,i,v);
+    }
+    return V;
+}
+
+matrix<double> Hamiltonian(int n,matrix<double> X,double freq){
+    matrix<double> H,V;
+    double h;
+    h = (X(0,1)-X(0,0));
+    H.diagonal(n,2,-1);
     H = H/(h*h);
+    if(freq != 0){
+        V = TwoParticlePotential(n,X,freq);
+    }else{
+        V = OneParticlePotential(n,X);
+    }
     H = H+V;
     return H;
 }
@@ -118,17 +139,26 @@ void JacobiRotation(matrix<double>A,matrix<double>R, int n, int k, int l){
 
 }
 
-int main()//int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     string eigenvals = "eigenvals";
     string eigenvecs = "eigenvecs";
     int N;
-    double maxRho,minRho,amax,tolerance;
-    N = 200;
-    maxRho = 5.5;
+    double maxRho,minRho,frequency,amax,tolerance;
+    if(argc<2){
+        printf("Please write arguments:\n N:100-300 Frequency:0-10 (leave 0 for single particle) Maximal rho: 5-50\n");
+        return 0;
+    }else if(argc=3){
+        N = atoi(argv[1]);
+        frequency = atof(argv[2]);
+        maxRho = atof(argv[3]);
+    }else{
+        frequency = atof(argv[2]);
+        maxRho = 0.5/frequency;
+    }
+    printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4 \n",N,frequency,maxRho);
+    tolerance = 1E-5;
     minRho = 0.0;
-    tolerance = 1E-7;
-
     //INITZIALISE
     int *k = new int;
     int *l = new int;
@@ -136,7 +166,7 @@ int main()//int argc, char *argv[])
     X.zeros(N,1);
     X = rho(minRho,maxRho,N);
     R.identity(N);
-    H = Hamiltonian(N,X);
+    H = Hamiltonian(N,X,frequency);
 
     L.ones(N,1);
     findLargestNonDiagonalElement(H,N,k,l);
@@ -144,8 +174,8 @@ int main()//int argc, char *argv[])
 
     int i = 0;
     int unittest = 1;
-    int maxit = 300000;
-    while(fabs(amax)>=tolerance && i<maxit){
+    int maxIterations = 500000;
+    while(fabs(amax)>=tolerance && i<maxIterations){
         JacobiRotation(H,R,N,*k,*l);
         findLargestNonDiagonalElement(H,N,k,l);
         amax = H(*k,*l);
@@ -190,7 +220,11 @@ int main()//int argc, char *argv[])
     //WRITE RESULTS TO FILES
     ofile.open(eigenvals);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile << "Number of iterations: " << i << "     "<< endl;
+    if(i==maxIterations){
+        printf("WARNING! Maximal number of iterations reached. Increase 'maxiteration' \n");
+        ofile << "WARNING! Maximal number of iterations reached. Increase 'maxiteration' " << endl;
+    }
+    ofile << "Number of iterations: " << i << "     Freq: " << frequency << endl;
     E.fprint('E');
     X.fprint(' ');
     ofile.close();
