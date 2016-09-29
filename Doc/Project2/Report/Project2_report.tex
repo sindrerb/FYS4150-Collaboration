@@ -64,7 +64,7 @@
 \posttitle{\end{center}} % Article title closing formatting
 \title{FYS4150 - Project 1} % Article title
 \author{%
-\textsc{Vegard Rønning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
+\textsc{Vegard Rï¿½nning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
 \normalsize University of Oslo \\ % Your institution
 \normalsize \href{mailto:vegarduio@gmail.com}{vegarduio@gmail.com}\ ; \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}\\% Your email address
 \footnotesize \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}
@@ -100,7 +100,28 @@
 %----------------------------------------------------------------------------
 \section{Methods}
 \subsection{Jacobi's method}
-Jacobi's method implements Jacobi's rotation in order to solve $A\vec v=\lambda \vec v$. 
+Jacobi's method implements Jacobi's rotation in order to solve $\hat{A}\vec v=\lambda \vec v$. 
+
+
+\subsection{Unit tests}
+
+A unit test is a small piece of code that tests parts of a program for calculation errors. This to ensure that the program runs as expected and delivers correct results throughout the program. The unit tests we have used in this assignment are as follows.
+
+\subsubsection{Orthogonality test}
+
+The Jacobi method preforms orthogonal or unitary transformations to the matrix it operates on. That means the ortogonality of each column in a matrix $\hat{A}$ is conserved. 
+\nl
+So if $\hat{A}$ consists of orthogonal column vectors $\hat{A} = [\vec{a_1} \vec{a_2} \cdots \vec{a_n}  ]$ the dot product of any column vector can be described by a Kroniker delta.
+
+\begin{align*}
+    \vec{a_i}\cdot\vec{a_j} = \delta_{ij} =
+    \begin{cases}
+    1|i=j\\
+    0|i\neq j
+    \end{cases}
+\end{align*}
+
+For the 
 
 %----------------------------------------------------------------------------
 \section{Results and discussion}
