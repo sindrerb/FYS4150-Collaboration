@@ -135,7 +135,7 @@ void JacobiRotation(matrix<double>A,matrix<double>R, int n, int k, int l){
 
     R.assign(i,k,(c*r_ik-s*r_il));
     R.assign(i,l,(c*r_il+s*r_ik));
-    } 
+    }
 
 }
 
@@ -143,6 +143,8 @@ int main(int argc, char *argv[])
 {
     string eigenvals = "eigenvals";
     string eigenvecs = "eigenvecs";
+    string marker;
+
     int N;
     double maxRho,minRho,frequency,amax,tolerance;
     if(argc<2){
@@ -155,6 +157,11 @@ int main(int argc, char *argv[])
     }else{
         frequency = atof(argv[2]);
         maxRho = 0.5/frequency;
+    }
+    if(argc=4){
+        marker = argv[4];
+    }else{
+        marker = ' ';
     }
     printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f \n",N,frequency,maxRho);
     tolerance = 1E-5;
@@ -220,18 +227,19 @@ int main(int argc, char *argv[])
     //R.print('R');
 
     //WRITE RESULTS TO FILES
-    ofile.open(eigenvals + to_string(frequency));
+    string freq = (string) round(frequency*100)/100;
+    ofile.open(eigenvals + marker + to_string(freq));
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     if(i==maxIterations){
         printf("WARNING! Maximal number of iterations reached. Increase 'maxiteration' \n");
         ofile << "WARNING! Maximal number of iterations reached. Increase 'maxiteration' " << endl;
     }
-    ofile << "Number of iterations: " << i << "     Freq: " << frequency << endl;
+    ofile << "Number of iterations: " << i << "     Freq: " << freq << endl;
     E.fprint('E');
     X.fprint(' ');
     ofile.close();
 
-    ofile.open(eigenvecs + to_string(frequency));
+    ofile.open(eigenvecs + marker + to_string(frequency));
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     R.fprint('R');
     ofile.close();
