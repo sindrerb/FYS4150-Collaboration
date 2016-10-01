@@ -158,11 +158,6 @@ int main(int argc, char *argv[])
         frequency = atof(argv[2]);
         maxRho = 0.5/frequency;
     }
-    if(argc=4){
-        marker = argv[4];
-    }else{
-        marker = ' ';
-    }
     printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f \n",N,frequency,maxRho);
     tolerance = 1E-5;
     minRho = 0.0;
@@ -227,8 +222,15 @@ int main(int argc, char *argv[])
     //R.print('R');
 
     //WRITE RESULTS TO FILES
+    string addon;
+    if(frequency > 0){
+        addon = 'F' + to_string(frequency);
+        addon.erase(addon.end()-4,addon.end());
+    }else{
+        addon = 'N' + to_string(N);
+    }
 
-    ofile.open(eigenvals + marker + to_string(frequency));
+    ofile.open(eigenvals + addon);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     if(i==maxIterations){
         printf("WARNING! Maximal number of iterations reached. Increase 'maxiteration' \n");
@@ -239,7 +241,7 @@ int main(int argc, char *argv[])
     X.fprint(' ');
     ofile.close();
 
-    ofile.open(eigenvecs + marker + to_string(frequency));
+    ofile.open(eigenvecs + addon);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     R.fprint('R');
     ofile.close();
