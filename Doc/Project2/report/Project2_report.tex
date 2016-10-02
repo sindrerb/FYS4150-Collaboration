@@ -100,39 +100,74 @@ As tracers in medicine or qubits in quantum computing, quantum dots usages are h
 The Jacobi's method is a iterative method wich uses Jacobi's rotation matrix $\hat{S}$ a number of times to turn a symmetric, hermittian matrix $\hat{A}$ to a diagonal matrix $\hat{D}$.
 	
 \begin{equation*}
-\hat{S}^T_n\hat{S}^T_{n-1}\cdots\hat{S}^T_1\hat{A}\hat{S}_1\cdots\hat{S}_{n-1}\hat{S}_n = \hat{D}
+\hat{S}^T\hat{A}\hat{S} = \hat{S}^T_n\hat{S}^T_{n-1}\cdots\hat{S}^T_1\hat{A}\hat{S}_1\cdots\hat{S}_{n-1}\hat{S}_n = \hat{D}
 \end{equation*}
-	
+
 \noindent
-The rotation matrix $\hat{S}_i$ has the form of an identity matrix with $c = \cos(\theta)$ and $s = \sin(\theta)$ in a symmetric fashion inside depending on the elements in $\hat{A}$ wich are to be rotated. $n$ depends on the number of rotations needed to transform $\hat{A}$ to $\hat{D}$.
-	
-	\begin{equation*}
-	\hat{S} = \begin{bmatrix}
-	1 & 0 & & \cdots & & & 0 \\
-	0 & \ddots &  &  & & & \\
-	&  & c & \cdots & s & &\\
-	\vdots & & \vdots & \ddots & \vdots & &\vdots\\
-	& & -s & \cdots & c & &\\
-	& & & & &\ddots & 0\\
-	0 & & & \cdots & & 0 & 1
-	\end{bmatrix}
-	\end{equation*}
-	
-	If $\hat{A}$ is composed of elements $a_{ij}$ and matrix $\hat{B}$ of elements $b_{ij}$. 
-	One rotation $\hat{S}^T\hat{A}\hat{S} = \hat{B}$ can be done with an algorithm. 
-	\nl
-	First the largest element $a_{kl}$ has to be located, then the new element will be set to zero $b_{kl} = (a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$. For $b_{kl} = 0$ the equation $(a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$ is solved using $\Gamma = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ by the second order polynomial $t^2 + 2\Gamma t-1 = 0$. Here $t = \tan(\theta) = \frac{s}{c}$. This gives solutions for the trigonometrical expessions $t = -\Gamma\pm \sqrt{1+\Gamma^2}$, $s = tc$ and $c = \frac{1}{\sqrt{1 + \Gamma^2}}$. To avoid problems where $\Gamma$ gets large and possible loss of numerical presission we rewrite $t = \frac{\pm 1}{\pm\Gamma + \sqrt{1+\Gamma^2}}$.
-	\nl
-	Rotation algorithm is solved with the previously given solutions for $t$,$c$ and $s$. Here $i$ is the iteration variable and $k$ and $l$ are parameter belonging to the element in rtotation:
-	\begin{align*}
-	&b_{ii} = a_{ii} &|i\neq k,l\\
-	&b_{ik} = a_{ik}c - a_{il}s &|i\neq k,l\\
-	&b_{il} = a_{il}c + a_{ik}s &|i\neq k,l\\
-	&b_{kk} = a_{kk}c^2 - 2a_{kl}cs + a_{ll}s^2&\\
-	&b_{ll} = a_{ll}c^2 + 2a_{kl}cs + a_{kl}s^2&\\
-	&b_{kl} = b_{lk} = 0&
-	\end{align*}
-	
+The rotation matrix $\hat{S}_i$, where $i = 1,2\cdots n$, has the form of an identity matrix with $c = \cos(\theta)$ and $s = \sin(\theta)$ in a symmetric fashion inside depending on which two elements in $\hat{A}$ is to be rotated. $n$ depends on the number of rotations needed to transform $\hat{A}$ to $\hat{D}$.   
+
+\begin{equation*}
+\hat{S} = \begin{bmatrix}
+1 & 0 & & \cdots & & & 0 \\
+0 & \ddots &  &  & & & \\
+&  & c & \cdots & s & &\\
+\vdots & & \vdots & \ddots & \vdots & &\vdots\\
+& & -s & \cdots & c & &\\
+& & & & &\ddots & 0\\
+0 & & & \cdots & & 0 & 1
+\end{bmatrix}
+\end{equation*}
+
+\noindent
+In this assignment we will use Jacobi's method to solve a eigenvalue problem. The eigenvalues ($\lambda$) are preserved using the this method but the eigenvectors are generally not, only the orthogonality of the eigenvectors are preserves. The eigenvalue problem $\hat{A}\vec{x} = \lambda\vec{x}$ then becomes 
+
+\begin{align*}
+(\hat{S}^T\hat{A}\hat{S})(\hat{S}^T\vec{x}) &= (\hat{S}^T\lambda\hat{S})(\hat{S}^T\vec{x})\\
+\hat{D}(\hat{S}^T\vec{x}) &= \lambda(\hat{S}^T\vec{x})
+\end{align*}
+
+
+\nl
+If $\hat{A}$ is composed of elements $a_{ij}$ and matrix $\hat{B}$ of elements $b_{ij}$. 
+One rotation $\hat{S}_i^T\hat{A}\hat{S}_i = \hat{B}$ can be done with an algorithm. 
+\nl
+First the largest non-diagonal element $a_{kl}$ has to be located then the element will be set to zero. Since the matrix is symmetric the element $a_{lk}$ will be subject to the same operation.
+
+\begin{equation*}
+b_{kl} = b_{lk} = (a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0
+\end{equation*}
+
+\noindent
+The equation $(a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$ is solved rewriting the equation using $\Gamma = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ and $t = \frac{s}{c}= \tan(\theta)$ to get the second order polynomial $t^2 + 2\Gamma t-1 = 0$. This gives solutions for the trigonometrical expessions. $t = -\Gamma\pm \sqrt{1+\Gamma^2}$ , $s = tc$ and $c = \frac{1}{\sqrt{1 + \Gamma^2}}$. To avoid problems where $\Gamma$ gets large and possible loss of numerical presission we rewrite $t = \frac{1}{\Gamma + \sqrt{1+\Gamma^2}}$.
+\nl
+Rotation algorithm is solved with the previously given solutions for $t$,$c$ and $s$ by a simple algorithm. 
+
+\begin{align*}
+&b_{ii} = a_{ii} &|i\neq k,l\\
+&b_{ik} = a_{ik}c - a_{il}s &|i\neq k,l\\
+&b_{il} = a_{il}c + a_{ik}s &|i\neq k,l\\
+&b_{kk} = a_{kk}c^2 - 2a_{kl}cs + a_{ll}s^2&\\
+&b_{ll} = a_{ll}c^2 + 2a_{kl}cs + a_{kl}s^2&\\
+&b_{kl} = b_{lk} = 0&
+\end{align*}
+
+\noindent
+
+Here $i = 1,2\cdots n$ is the iteration variable and $k$ and $l$ are parameter belonging to the element in rtotation.
+
+\subsection{Abel-Ruffini Impossiobility Theorem}
+
+The eigenvalue problem $\det(\hat{A}-\lambda \hat{I})\vec{x} = 0$ of a matrix $\hat{A}\in \mathbb{C}^{n\times n}$ is basically a problem of finding the roots of a polynomial $P(\lambda)$. 
+
+\begin{equation*}
+P(\lambda) = \prod_{i=1}^n(\lambda_i - \lambda)
+\end{equation*}
+
+\noindent
+The Abel-Ruffinis impossibility theorem states that not all polynomials og degree $n\geq 5$ can not be solved using roots alone and the solutions for these cases can only be approximated. \citep{compfys}
+\nl
+This implies that matrices $\hat{A}$ of large dimensions has to be solved numerically and it is only possible to get an approximation for the eigenvalues with a chosen degree of accuracy within the boundaries of the computer.
+
 \subsection{Unit tests}
 A unit test is a small piece of code that tests parts of a program for calculation errors. This to ensure that the program runs as expected and delivers correct results throughout the program. The unit tests we have used in this assignment are as follows.
 	
@@ -207,7 +242,7 @@ in to account the r-dependent part of the SE can be written as
 \end{align*}
 By now introducing the dimensionless variable $\rho = \frac{r}{\alpha}$ and repeating the same steps as for the one electron case we get
 \begin{align*}
-\hspace{-0.3cm}-\dfrac{d^2}{d\rho^2} \psi(\rho) + \dfrac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\underbrace{\dfrac{m\alpha \beta e^2}{\hbar^2}}_{I}\dfrac{1}{\rho}\psi(\rho)  = \underbrace{ \dfrac{m\alpha^2}{\hbar^2}E_r}_{II}\psi(\rho)
+\hspace{-1.5cm}-\dfrac{d^2}{d\rho^2} \psi(\rho) + \dfrac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\underbrace{\dfrac{m\alpha \beta e^2}{\hbar^2}}_{I}\dfrac{1}{\rho}\psi(\rho)  = \underbrace{ \dfrac{m\alpha^2}{\hbar^2}E_r}_{II}\psi(\rho)
 \end{align*}
 To further simplify the equation we introduce the new frequency
 \begin{align*}
@@ -221,7 +256,7 @@ Like equation \ref{eq:dimless}, equation \ref{eq:dimless2pt} may be discretized 
 \begin{equation}
 -\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i\label{eq:disk2}
 \end{equation}
-Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. Theese matrix eigenvalue problems may be solved by Jacobi's method.\newpage
+Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. Theese matrix eigenvalue problems may be solved by Jacobi's method.\nl
 
 Tests of conserved orthogonality and normality was done on a one electron system to ensure that the algorithm was correct, sample-matrices was written to a file and later tested for conserved orthogonality and normality. Later a convergence test of the number of iterations was done to weight the accuaracy and computational time. The algortihm was set to solve the schroedinger equation for a two particle system with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without columb interactions.
 \section{Results and discussion}
@@ -263,15 +298,15 @@ $\omega_r$ & Interaction & No Interaction & Impact\\ \hline
 \caption{Table showing the energy of the ground state in a two particle system with and without columb interactions. The impact is defined by the energy difference of the systems divided by the energy of the interacting system. The energies are rounded to the third digit.}\label{tbl:columb}
 \end{table}
 Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondance between the $\omega_r$ and the columb interactions. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the columb interactions was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show an unexpected behaviour where the columb interaction has a greater impact in the electrons than expected. A relation between the energies of the systems with and without columb interaction is given in Table \ref{tbl:columb}. The behaviour may be explained by the fact that $V_{Columb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the columb interactions is large but does not  overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the columb interactions.
-\begin{figure}[h]
+\begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq001.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.01$}\label{fig:fq001}
 \end{figure}
 
-%\begin{figure}[h]
-%\includegraphics[width=0.45\textwidth]{../report/figures/freq025.png} 
-%\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.25$}\label{fig:fq025}
-%\end{figure}
+\begin{figure}[p]
+\includegraphics[width=0.45\textwidth]{../report/figures/freq025.png} 
+\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.25$}\label{fig:fq025}
+\end{figure}
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq050.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.5$}\label{fig:fq050}
@@ -281,19 +316,20 @@ Results from the computation of the two particle systems is given in Figure \ref
 \includegraphics[width=0.45\textwidth]{../report/figures/freq100.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=1.00$}\label{fig:fq100}
 \end{figure}
-%\begin{figure}[p]
-%\includegraphics[width=0.45\textwidth]{../report/figures/freq250.png} 
-%\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=2.50$}\label{fig:fq250}
-%\end{figure}
+\begin{figure}[p]
+\includegraphics[width=0.45\textwidth]{../report/figures/freq250.png} 
+\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=2.50$}\label{fig:fq250}
+\end{figure}
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq500.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=5.00$}\label{fig:fq500}
 \end{figure}	%----------------------------------------------------------------------------
 \section{Summary and Conclusion}
-From Table \ref{tbl:columb} it is clear that the impact of the columb interaction on a system increases as the potential is widening.\nl
+A nummerical experiment is been done where the schroedinger equation is solved iteratively by Jacobi's method. The algortihm is first compared to exact results of a simple system before calculating more complex systems. The results of Table \ref{tbl:columb} it is clear that the impact of the columb interaction on a system increases as the potential is widening.\nl
 This may help to used to design quantum dots able to contain more than one electron wile still knowing roughly the energies of the electrons. 	%----------------------------------------------------------------------------
-	%\twocolumn[{%
-	%	\bibliography{ref.bib}{}
-	%	\bibliographystyle{plain}
+%\twocolumn[{%
+\bibliography{ref.bib}
+\bibliographystyle{plain}
 	%}]
+	
 \end{document}
