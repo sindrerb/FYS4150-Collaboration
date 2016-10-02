@@ -14,17 +14,13 @@ ofstream ofile;
 //using namespace arma;
 
 void UnitTest(Matrix M, int i, int N, string filename){
+    //Write the temporary eigenbasis to a file to check orthogonality and normality
     ofile.open(filename + to_string(i));
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     ofile << "Printout for unit tests: "<<endl;
-    ofile << "Matrix M at iteration "<<i<<endl;
-    for(int i=0;i<N;i++){
-        for(int j=0;j<N;j++){
-            ofile << M(i,j) << "    ";
-        }
-        ofile << endl;
-    }
+    ofile << "Iteration "<<i<<endl;
     ofile.close();
+    M.printToFile("Matrix:",filename + to_string(i));
 }
 
 Matrix rho(double xmin, double xmax,int N){
@@ -50,14 +46,14 @@ Matrix  OneParticlePotential(int n, Matrix  X){
     }
     return V;
 }
-Matrix  TwoParticlePotential(int n, Matrix  X, double freq, bool columb){
+Matrix  TwoParticlePotential(int n, Matrix  X, double frequency, bool useColumbInteraction){
     double v,x;
-    Matrix  V;
+    Matrix  V;  
     V.setIdentity(n);
     for(int i = 0; i<n;i++){
         x = X(0,i);
-        v = x*x*freq*freq;
-        if(columb){
+        v = x*x*frequency*frequency;
+        if(useColumbInteraction){
             v += 1.0/x;
         }
         V.setElement(i,i,v);
@@ -65,14 +61,14 @@ Matrix  TwoParticlePotential(int n, Matrix  X, double freq, bool columb){
     return V;
 }
 
-Matrix  Hamiltonian(int n,Matrix  X,double freq,bool columb){
+Matrix  Hamiltonian(int n,Matrix  X,double frequency,bool useColumbInteraction){
     Matrix  H,V;
     double h;
     h = (X(0,1)-X(0,0));
     H.setDiagonal(n,2,-1);
     H = H/(h*h);
-    if(freq != 0){
-        V = TwoParticlePotential(n,X,freq,columb);
+    if(frequency != 0){
+        V = TwoParticlePotential(n,X,frequency,useColumbInteraction);
     }else{
         V = OneParticlePotential(n,X);
     }
@@ -80,18 +76,17 @@ Matrix  Hamiltonian(int n,Matrix  X,double freq,bool columb){
     return H;
 }
 
-void findLargestNonsetDiagonalElement(Matrix  A, int n, int *k, int *l){
-    // FIND THE LARGEST NON-setDiagonal ELEMENT
-    double a_max,a_temp;
-    a_max = 0;
+void findLargestNonDiagonalElement(Matrix  A, int n, int *k, int *l){
+    double largestElement,temporaryElement;
+    largestElement = 0;
     for(int i=0; i<n ;i++){
         for(int j=i+1; j<n; j++){
             if(i!=j){
-                a_temp = fabs(A(i,j));
-                if(a_temp>a_max){
+                temporaryElement = fabs(A(i,j));
+                if(temporaryElement>largestElement){
                     *k = i;
                     *l = j;
-                    a_max = a_temp;
+                    largestElement = temporaryElement;
                 }
             }
         }
@@ -106,22 +101,19 @@ void JacobiRotation(Matrix A,Matrix R, int n, int k, int l){
     //SOLVE T^2+2*tau*T-1=0
     double c,s,t;
     if(a_kl!=0.0){
-        //printf("a_kl=%f \t",a_kl);
         double tau = (a_ll-a_kk)/(2.0*a_kl);
         if(tau>=0.0){
             t = 1.0/(tau+sqrt(1.0+tau*tau));
         } else {
             t = -1.0/(-tau+sqrt(1.0+tau*tau));
         }
-
         c = 1.0/sqrt(1.0+t*t);
         s = c*t;
     }else{
         c = 1.0;
         s = 0.0;
     }
-    //printf("c=%f\ts=%f\n");
-    //REsetElement ELEMENTS
+    //REASSIGN ELEMENTS
     double a_ik,a_il,r_ik,r_il;
     double cc = c*c;
     double ss = s*s;
@@ -139,7 +131,7 @@ void JacobiRotation(Matrix A,Matrix R, int n, int k, int l){
             A.setElement(i,l,(a_il*c+a_ik*s));
             A.setElement(l,i,A(i,l));
         }
-    //REsetElement EIGENVECTORS
+    //REASSIGN EIGENVECTOR BASIS
     r_ik = R(i,k);
     r_il = R(i,l);
 
@@ -156,86 +148,87 @@ int main(int argc, char *argv[])
     string marker;
 
     int N;
-    double maxRho,minRho,frequency,amax,tolerance, unitIteration;
-    bool columbInteraction, unitTesting;
+    double maximumRho,minimumRho,frequency,largestElement,accuaracyTolerance, unitTestIterationPoint;
+    bool useColumbInteraction, useUnitTesting;
     if(argc<6){
         printf("Please write arguments:\n Iterations:100-300\n Frequency:0-10 (leave 0 for single particle)\n Maximal rho: 5-50\n Columb interactions (1=true/0=false)\n Unit test at iteration i: 100-10 000 (leave 0 for no test)\n");
         return 0;
     }else{
         N = atoi(argv[1]);
         frequency = atof(argv[2]);
-        maxRho = atof(argv[3]);
+        maximumRho = atof(argv[3]);
         if(atoi(argv[4])==1){
-            columbInteraction = true;
+            useColumbInteraction = true;
         }else{
-            columbInteraction=false;
+            useColumbInteraction=false;
         }
-        unitIteration = atoi(argv[5]);
+        unitTestIterationPoint = atoi(argv[5]);
 
     }
-    if(unitIteration>0){
-        unitTesting = true;
+    if(unitTestIterationPoint>0){
+        useUnitTesting = true;
     }else{
-        unitTesting = false;
+        useUnitTesting = false;
     }
-    if(columbInteraction){
-            printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f with columb interactions.\n",N,frequency,maxRho);
+    if(useColumbInteraction){
+            printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f with columb interactions.\n",N,frequency,maximumRho);
     }else{
-            printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f without columb interactions.\n",N,frequency,maxRho);
+            printf("Running calculations using N=%i, Freq.=%.4f and maximal rho %.4f without columb interactions.\n",N,frequency,maximumRho);
     }
-    tolerance = 1E-5;
-    minRho = 0.0;
+    accuaracyTolerance = 1E-5;
+    minimumRho = 0.0;
     //INITZIALISE
     int *k = new int;
     int *l = new int;
 
-    Matrix  H,R,E,L,X,P;
+    Matrix  HamiltonianMatrix,EigenvectorBasis,EigenvalueVector,onesVector,RhoVector;
 
-    X.setZeros(N,1);
-    X = rho(minRho,maxRho,N);
-    R.setIdentity(N);
-    H = Hamiltonian(N,X,frequency,columbInteraction);
-    L.setOnes(N,1);
-    findLargestNonsetDiagonalElement(H,N,k,l);
-    amax = H(*k,*l);
+    RhoVector = rho(minimumRho,maximumRho,N);
+    EigenvectorBasis.setIdentity(N);
+    HamiltonianMatrix = Hamiltonian(N,RhoVector,frequency,useColumbInteraction);
+    onesVector.setOnes(N,1);
+    findLargestNonDiagonalElement(HamiltonianMatrix,N,k,l);
+    largestElement = HamiltonianMatrix(*k,*l);
     int i = 0;
-    int unittest = 1;
-    int maxIterations = 500000;
-    while(fabs(amax)>=tolerance && i<maxIterations){
-        JacobiRotation(H,R,N,*k,*l);
-        findLargestNonsetDiagonalElement(H,N,k,l);
-        amax = H(*k,*l);
+    int unitTestCounter = 1;
+    int maximumIterations = 500000;
+    while(fabs(largestElement)>=accuaracyTolerance && i<maximumIterations){
+        JacobiRotation(HamiltonianMatrix,EigenvectorBasis,N,*k,*l);
+        findLargestNonDiagonalElement(HamiltonianMatrix,N,k,l);
+        largestElement = HamiltonianMatrix(*k,*l);
         i++;
 
-        if(unittest == unitIteration && unitTesting){
-            UnitTest(R,i,N,"UnitTest");
-            unittest = 0;
+        if(unitTestCounter == unitTestIterationPoint && useUnitTesting){
+            UnitTest(EigenvectorBasis,i,N,"UnitTest");
+            unitTestCounter = 0;
         }
-        unittest++;
+        unitTestCounter++;
     }
     printf("Ended successfully with i=%i iterations.\n",i);
-    E = H*L;
+    EigenvalueVector = HamiltonianMatrix*onesVector;
 
     //SORTING EIGENVALUES AND VECTORS IN INCREASING ORDER
-    double e,emin;
-    int jmin;
-    Matrix  r;
+    double eigenvalueElement,minimumEigenvalue;
+    int j_minimumEigenvalue;
+    Matrix  Eigenvector;
     for(int i=0;i<N;i++){
-        jmin = i;
-        emin = E(0,i);
+        j_minimumEigenvalue = i;
+        minimumEigenvalue = EigenvalueVector(0,i);
         for(int j=i+1;j<N;j++){
-            if(emin>E(0,j)){
-                emin = E(0,j);
-                jmin = j;
+            if(minimumEigenvalue>EigenvalueVector(0,j)){
+                minimumEigenvalue = EigenvalueVector(0,j);
+                j_minimumEigenvalue = j;
             }
         }
-        if(jmin != i){
-            e = E(0,i);
-            E.setElement(0,i,E(0,jmin));
-            E.setElement(0,jmin,e);
-            r = R.getColumn(i);
-            R.setColumn(i,R.getColumn(jmin));
-            R.setColumn(jmin,r);
+        if(j_minimumEigenvalue != i){
+            //RESASSIGN EIGENVALUES
+            eigenvalueElement = EigenvalueVector(0,i);
+            EigenvalueVector.setElement(0,i,EigenvalueVector(0,j_minimumEigenvalue));
+            EigenvalueVector.setElement(0,j_minimumEigenvalue,eigenvalueElement);
+            //REASSIGN EIGENVECTOR BASIS
+            Eigenvector = EigenvectorBasis.getColumn(i);
+            EigenvectorBasis.setColumn(i,EigenvectorBasis.getColumn(j_minimumEigenvalue));
+            EigenvectorBasis.setColumn(j_minimumEigenvalue,Eigenvector);
         }
     }
 
@@ -244,7 +237,7 @@ int main(int argc, char *argv[])
     if(frequency > 0){
         addon = 'F' + to_string(frequency);
         addon.erase(addon.end()-4,addon.end());
-        if(columbInteraction){
+        if(useColumbInteraction){
             addon = addon+"Columb";
         }
 
@@ -254,30 +247,19 @@ int main(int argc, char *argv[])
     }
     ofile.open(eigenvals + addon);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    if(i==maxIterations){
+    if(i==maximumIterations){
         printf("WARNING! Maximal number of iterations reached. Increase 'maxiteration' \n");
         ofile << "WARNING! Maximal number of iterations reached. Increase 'maxiteration' " << endl;
     }
     ofile << "Number of iterations: " << i << "     Freq: " << frequency << endl;
-    ofile << "Eigenvalues:" << endl;
-    for(int i = 0;i<N;i++){
-        ofile << E(0,i) << "    ";
-    }
     ofile.close();
+    EigenvalueVector.printToFile("E",eigenvals + addon);
 
     ofile.open(eigenvecs + addon);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
     ofile << "X-coordinates at first line, Eigenvectors below:" << endl;
-    for(int i = 0;i<N;i++){
-        ofile << X(0,i) << "    ";
-    }
-    ofile << endl;
-    for(int i = 0;i<N;i++){
-        for(int j = 0;j<N;j++){
-            ofile << R(i,j) << "    ";
-        }
-        ofile << endl;
-    }
     ofile.close();
+    RhoVector.printToFile(" ",eigenvecs + addon);
+    EigenvectorBasis.printToFile(" ",eigenvecs + addon);
 }
 

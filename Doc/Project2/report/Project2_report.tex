@@ -189,21 +189,51 @@ E_{nl} = \hbar\omega\left(2n+l+ \dfrac{3}{2} \right)
 \end{align}
 Equation \ref{eq:dimless} may be discretized and solved nummerically as a matrix eigenvalue problem.
 \begin{equation}
--\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i
+-\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i \label{eq:disk1}
 \end{equation}
-Were $V_i=\rho_i^2$. The problem may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. This matrix eigenvalue problem may be solved by Jacobi's method.\nl
-
+Were $V_i=\rho_i^2$. 
+\subsubsection{Two particle system}
 By introducing another electron to the system, the system includes two particles in the potential and the interactions between them.
-This may be solved by splitting the problem into relative cooridnates $r=r_1-r_2$ and $R=r_1+r_2$.\\
+SE for two electrons with no Coulomb interactions can be written as
+\begin{align*}
+&\left(  -\frac{\hbar^2}{2 m}\nabla^2+ \frac{1}{2}k(r_1^2+r_2^2)\right)u(r_1,r_2)= E u(r_1,r_2)\end{align*}
+This can be rewritten by introducing the relative coordinate $\textbf{r} = \textbf{r}_1-\textbf{r}_2$ and the center-of-mass(COM) coordinate $\textbf{R} = \frac{1}{2}(\textbf{r}_1 + \textbf{r}_2)$. The radial SE is then
+\begin{align*}
+&\left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2} -\frac{\hbar^2}{4 m} \frac{d^2}{dR^2}+ \frac{1}{4} k r^2+  kR^2\right)u(r,R)\\  &\hspace{5.5cm}= E u(r,R)
+\end{align*}
+The ansatz for the wavefunction $u(r,R) = \psi(r)\phi(R)$ makes it possible to separate the equation for \textbf{r} and \textbf{R} so that the energy is the sum of the relative energy and the COM-energy($E=E_r+E_R$).
+Taking the repulsive Coulomb interaction 
+\begin{align*}
+V_(r_1,r_2) = \dfrac{\beta e^2}{|\textbf{r}_1-\textbf{r}_2|} = \dfrac{\beta e^2}{r}, \hspace{0.5cm} \beta e^2 = 1.44\ \text{eVnm}
+\end{align*}
+in to account the r-dependent part of the SE can be written as
+\begin{align*}
+\left(  -\frac{\hbar^2}{m} \frac{d^2}{dr^2}+ \frac{1}{4}k r^2+\frac{\beta e^2}{r}\right)\psi(r)  = E_r \psi(r)
+\end{align*}
+By now introducing the dimensionless variable $\rho = \frac{r}{\alpha}$ and repeating the same steps as for the one electron case we get
+\begin{align*}
+\hspace{-1.5cm}-\dfrac{d^2}{d\rho^2} \psi(\rho) + \dfrac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\underbrace{\dfrac{m\alpha \beta e^2}{\hbar^2}}_{I}\dfrac{1}{\rho}\psi(\rho)  = \underbrace{ \dfrac{m\alpha^2}{\hbar^2}E_r}_{II}\psi(\rho)
+\end{align*}
+To further simplify the equation we introduce the new frequency
+\begin{align*}
+\omega_r^2 = \dfrac{1}{4}\dfrac{mk\alpha^4}{\hbar^2}
+\end{align*}
+Setting I $= 1$ and II $=\lambda$ we arrive at the final form of SE for the two electron case
+\begin{align}
+-\dfrac{d^2}{d\rho^2} \psi(\rho) + \omega_r^2\rho^2\psi(\rho) +\dfrac{1}{\rho}\psi(\rho) = \lambda \psi(\rho)\label{eq:dimless2pt}
+\end{align}
+Like equation \ref{eq:dimless}, equation \ref{eq:dimless2pt} may be discretized into
+\begin{equation}
+-\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i\label{eq:disk2}
+\end{equation}
+Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. Theese matrix eigenvalue problems may be solved by Jacobi's method.\nl
 
-!SKRIV MER HER!\\
-
-Tests of conserved orthogonality and normality was done in forehand to ensure that the algorithm was correct. Later a convergence test of the number of iterations was done to weight the accuaracy and computational time. The algortihm was set to solve the schr\o edinger equation with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without columb interactions.
+Tests of conserved orthogonality and normality was done on a one electron system to ensure that the algorithm was correct, sample-matrices was written to a file and later tested for conserved orthogonality and normality. Later a convergence test of the number of iterations was done to weight the accuaracy and computational time. The algortihm was set to solve the schroedinger equation for a two particle system with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without columb interactions.
 \section{Results and discussion}
 The jacobian method requires many iterations in order to reach a satisfying accuaracy of the energies. Table \ref{tbl:convergence} from the convergence test of meshpoints indicates that $N=500$ is a minimum requirement for a four digit accuaracy but results also in a high computational time. Figure \ref{fig:iterations} shows the number of iterations for a given set of meshpoints, assumed to be proportional to computation time.
-A number of meshpoints $N=400$ results in a high enough accuaracy for the purpose of this experiment and reducing the computational time drastically.\vfill
+A number of meshpoints $N=400$ results in a high enough accuaracy for the purpose of this experiment and reducing the computational time drastically.\nl
 
-\begin{table}[p]
+\begin{table}[h]
 \centering
 \begin{tabular}{|l|l|l|l|}\hline
 $N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
@@ -225,9 +255,19 @@ $N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
 \includegraphics[width=0.5\textwidth]{../report/figures/eigenvecs123.png} 
 \caption{The first three eigenstates with their respective eigenstates in a harmonic oscillator with one particle, computed with $N=500$ meshpoints.}\label{fig:eigenstates}
 \end{figure}
-
-Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondance between the $\omega_r$ and the columb interactions. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the columb interactions was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show sn unexpected behaviour where the columb interaction has a greater impact in the electrons than expected. The behaviour may be explained by the fact that $V_{Columb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the columb interactions is large but does not  overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the columb interactions.
-
+\begin{table}[p]
+\begin{tabular}{|l|l|l|l|}\hline
+$\omega_r$ & Interaction & No Interaction & Impact\\ \hline
+0.01 & 0.105 & 0.030 & 3.5\\
+0.25 & 1.250  & 0.750 & 1.67\\
+0.50 & 2.230 & 1.500 & 1.49\\
+1.00 & 4.058 & 3.000 & 1.35\\
+2.50 & 9.211 & 7.500 & 1.23\\
+5.00 & 17.448 & 15.000 & 1.16\\ \hline
+\end{tabular}
+\caption{Table showing the energy of the ground state in a two particle system with and without columb interactions. The impact is defined by the energy of the interacting system divided by the non-interacting system.}\label{tbl:columb}
+\end{table}
+Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondance between the $\omega_r$ and the columb interactions. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the columb interactions was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show an unexpected behaviour where the columb interaction has a greater impact in the electrons than expected. A relation between the energies of the systems with and without columb interaction is given in Table \ref{tbl:columb}. The behaviour may be explained by the fact that $V_{Columb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the columb interactions is large but does not  overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the columb interactions.
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq001.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.01$}\label{fig:fq001}
@@ -245,10 +285,15 @@ Results from the computation of the two particle systems is given in Figure \ref
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=1.00$}\label{fig:fq100}
 \end{figure}
 \begin{figure}[p]
+\includegraphics[width=0.45\textwidth]{../report/figures/freq250.png} 
+\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=2.50$}\label{fig:fq250}
+\end{figure}
+\begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq500.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=5.00$}\label{fig:fq500}
 \end{figure}	%----------------------------------------------------------------------------
 \section{Summary and Conclusion}
+From Table \ref{tbl:columb} it is clear that the columb interaction does have a larger impact on a system with a wide potential than with a narrow potential. 
 
 	%----------------------------------------------------------------------------
 	%\twocolumn[{%

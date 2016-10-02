@@ -5,6 +5,7 @@
 #include <string>
 
 using namespace std;
+
 typedef double real;
 
 class Matrix {
@@ -39,6 +40,8 @@ public:
 
 //    //Get info
     void print(string name);
+
+    void printToFile(string dataLabelInFile, string fileName);
 };
 
 #endif // MATRIX_H

@@ -244,33 +244,20 @@ void Matrix::print(string name) {
     }
 }
 
-/*
-void Matrix::printToFile(hc) {     // Do not print properly!
-    //ofstream ofile;
-    double m;
-    ofile << name <<endl;
-    for(int i = 0; i<columns; i++){
-        for(int j = 0; j<rows ; j++){
-            m = M[i][j];
-            ofile << m << "    ";
-        }
-        ofile << endl;
+void Matrix::printToFile(string dataLabelInFile, string fileName) {
+    ofstream ofile;
+    ofile.open(fileName,std::ios::app);
+    if(!ofile.good()) {
+        cout << "Error opening file " << fileName << endl;
+        return;
     }
+    ofile << dataLabelInFile << endl;
+    for(int i = 0; i<columns; i++) {
+        for(int j = 0; j<rows ; j++) {
+            double m = M[i][j];
+            ofile << m << "\t";
+        }
+        ofile <<"\n"<< endl;
+    }
+    ofile.close();
 }
-*/
-//void Matrix::fprint(char* filename) {
-//    ofstream ofile;
-//    ofile.open(filename);
-//    if(!ofile.good()) {
-//        cout << "Error opening file " << filename << endl;
-//        return;
-//    }
-
-//    for(int i = 0; i<columns; i++) {
-//        for(int j = 0; j<rows ; j++) {
-//            double m = M[i][j];
-//            ofile << m << "    ";
-//        }
-//        ofile << endl;
-//    }
-//}

@@ -12,10 +12,12 @@ import matplotlib.pyplot as plt
 N = 3
 plt.xlim(0,6);
 plt.title(" ")
-plt.xlabel(r"$\rho$",size=20); plt.ylabel(r"$|u(\rho)|^2$",size=20)
-M = np.loadtxt("./build/eigenvecsN500", dtype = 'float', skiprows = 2)
-X = np.loadtxt("./build/eigenvecsN500", dtype = 'float', skiprows = 1)[0,:]
-E = np.loadtxt("./build/eigenvalsN500", dtype = 'float', skiprows = 2)
+plt.xlabel(r"$\rho$",size=20); plt.ylabel(r"$|u(\rho)|^2$",size=20)M = np.loadtxt("./build/eigenvecsN300", dtype = 'float', skiprows = 3)
+X = np.loadtxt("./build/eigenvecsN300", dtype = 'float', skiprows = 1)[0,:]
+E = np.loadtxt("./build/eigenvalsN300", dtype = 'float', skiprows = 2)
+
+print M[:,0],len(M[:,0])
+print X, len(X)
 
 for i in range(0,N):
     plt.plot(X,abs(M[:,i])**2,label="E=%.4f" %(E[i]))
