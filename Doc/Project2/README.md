@@ -3,7 +3,7 @@ This folder contains all material used to create the report in the 'report' fold
 All data is extracted form 'jacobiansolver' in the 'build' folder and plottet with python.
 
 ###Jacobiansolver
-The program takes input from terminal were<br>
+The program takes input from terminal where<br>
 [1] Number N iterations (400 gives a relative good accuaracy)<br>
 [2] Harmonic oscillator frequency, leave 0 for single particle calculations<br>
 [3] Max rho, a higher maximum rho is required for low frequencies (maxRho=50,freq.=0.01, maxRho=3,freq.=5)<br>
