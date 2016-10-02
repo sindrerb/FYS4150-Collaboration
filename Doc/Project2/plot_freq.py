@@ -8,16 +8,14 @@ Last edited by: sindrerb
 
 import numpy as np
 import matplotlib.pyplot as plt
+w = '0.01'
 
-
-N = 1
-W = ['0.010','0.500','1.000','5.000']
-plt.xlim(0,5)
+plt.title(r"$\omega_r= %s$" %(w),size=20)
 plt.ylabel(r"$|u(\rho)|^2$",size=20); plt.xlabel(r"$\rho$",size=20)
-for w in W:
-    M = np.loadtxt("./build/freq/eigenvecsF"+str(w), dtype = 'float', skiprows = 1)
-    E = np.loadtxt("./build/freq/eigenvalsF"+str(w), dtype = 'float', skiprows = 2)
-    X = E[1,:]
-    E = E[0,:]
-    plt.plot(X,abs(M[:,0])**2,label=r"$\omega_f=%s$" %(w))
+M0 = np.loadtxt("./build/freq/eigenvecsF"+str(w), dtype = 'float', skiprows = 2)
+MC = np.loadtxt("./build/freq/eigenvecsF"+str(w)+"Columb", dtype = 'float', skiprows = 2)
+E  = np.loadtxt("./build/freq/eigenvecsF"+str(w), dtype = 'float', skiprows = 1)
+X = E[0,:]
+plt.plot(X,abs(M0[:,0])**2,'-',color='black',label=r"No interaction")
+plt.plot(X,abs(MC[:,0])**2,'--',color='black',label=r"Ineraction")
 plt.legend()

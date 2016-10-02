@@ -9,16 +9,19 @@ Last edited by: sindrerb
 import numpy as np
 import matplotlib.pyplot as plt
 
-N = [50,100,200,300,400]#,500]
-plt.title("Convergence test of N")
-for n in N:
-    M = np.loadtxt("./build/eigenvecsN"+str(n), dtype = 'float', skiprows = 1)
-    E = np.loadtxt("./build/eigenvalsN"+str(n), dtype = 'float', skiprows = 2)
-    X = E[1,:]
-    E = E[0,:]
-    plt.plot(X,abs(M[:,0])**2,label="N=%i" %(n))
+N = 3
+plt.xlim(0,6);
+plt.title(" ")
+plt.xlabel(r"$\rho$",size=20); plt.ylabel(r"$|u(\rho)|^2$",size=20)
+M = np.loadtxt("./build/eigenvecsN500", dtype = 'float', skiprows = 2)
+X = np.loadtxt("./build/eigenvecsN500", dtype = 'float', skiprows = 1)[0,:]
+E = np.loadtxt("./build/eigenvalsN500", dtype = 'float', skiprows = 2)
+
+for i in range(0,N):
+    plt.plot(X,abs(M[:,i])**2,label="E=%.4f" %(E[i]))
     
 plt.legend()
+
 """
 t = np.loadtxt("./build/iterationtable", dtype = 'float', skiprows = 1)
 

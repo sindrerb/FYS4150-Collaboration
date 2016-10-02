@@ -46,9 +46,9 @@
 %---------------------------------------------------------
 
 \newcommand{\nl}{
-
-\medskip
-\noindent
+	
+	\medskip
+	\noindent
 }
 %--------------------------------------------
 
@@ -61,57 +61,150 @@
 \setlength{\droptitle}{-4\baselineskip} % Move the title up
 
 \pretitle{\begin{center}\Huge\bfseries} % Article title formatting
-\posttitle{\end{center}} % Article title closing formatting
+	\posttitle{\end{center}} % Article title closing formatting
 \title{FYS4150 - Project 1} % Article title
 \author{%
-\textsc{Vegard Rønning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
-\normalsize University of Oslo \\ % Your institution
-\normalsize \href{mailto:vegarduio@gmail.com}{vegarduio@gmail.com}\ ; \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}\\% Your email address
-\footnotesize \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}
-%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
-%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
-%\normalsize University of Utah \\ % Second author's institution
-%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
+	\textsc{Vegard Rønning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
+	\normalsize University of Oslo \\ % Your institution
+	\normalsize \href{mailto:vegarduio@gmail.com}{vegarduio@gmail.com}\ ; \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}\\% Your email address
+	\footnotesize \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}
+	%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
+	%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
+	%\normalsize University of Utah \\ % Second author's institution
+	%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
 }
 %----------------------------------------------------------------------------
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
-\begin{abstract}
-
-
-
-\end{abstract}
+	\begin{abstract}
+		
+		
+		
+	\end{abstract}
 }
 
 %----------------------------------------------------------------------------
 
 \begin{document}
+	
+	% Print the title
+	\maketitle
+	
+	%----------------------------------------------------------------------------
+	%	ARTICLE CONTENTS
+	%----------------------------------------------------------------------------
+	
+	\section{Introduction}
+	\lettrine[nindent=0em,lines=2]{T}he project consists of two main parts; solving the Shroedinger's equation (SE) for one and two particles in a three dimensional harmonic oscillator(HO) potential with and without Coulomb interactions.
+	Schr\o dinger's equation is solved by Jacobi's method, by rewriting it in a discretized form, as an eigenvalue equation.
+	
+	%----------------------------------------------------------------------------
+	\section{Methods}
+	
+	\subsection{Schrödinger's equation} {
+		SE is often written on the form
+		\begin{align*}
+		-\dfrac{\hbar^2 \nabla^2}{2m}\psi(x) + V(x)\psi(x) = E(x)\psi(x)
+		\end{align*}
+		First off we take a look at how we can rewrite the SL for one electron placed in a three dimensional HO-potential with Coulomb interactions. By assuming spherical symmetry and only looking at the radial part the SL look like this
+		\begin{align*}
+		&-\dfrac{\hbar^2}{2 m} \left ( \dfrac{1}{r^2} \dfrac{d}{dr} r^2 \frac{d}{dr} - \dfrac{l (l + 1)}{r^2} \right )R(r) + V(r) R(r)\\ 
+		&= E R(r).
+		\end{align*}
+		Where the potential $V(r)$ is known by the HO-potential $\frac{1}{2}kr^2$, with $k=m\omega^2$ and the quantum number $l$ describe the orbital momentum of the electron.
+		The energies and oscillator frequency is given by
+		\begin{align*}
+		E_{nl} = \hbar\omega\left(2n+l+ \dfrac{3}{2} \right)
+		\end{align*}
+		where $n\in \mathbb N$, $l\in \mathbb N$ and $r \in [0,\infty)$. By rewriting $R(r)$ as $rR(r) = u(r)$ we get
+		\begin{align*}
+		-\dfrac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) + \left ( V(r) + \dfrac{l (l + 1)}{r^2}\dfrac{\hbar^2}{2 m} \right ) u(r)  = E u(r)
+		\end{align*}
+		The expression can be further simplified by introducing the dimensionless variable $\rho = \frac{1}{\alpha}r$, setting $V(\rho) = \frac{1}{2}k\alpha^2\rho^2$, multiply with $\frac{2m\alpha^2}{\hbar^2}$ and set $l=0$ so that
+		\begin{align*}
+		-\frac{d^2}{d\rho^2} u(\rho) +\underbrace{ \frac{mk}{\hbar^2} \alpha^4}_{I}\rho^2u(\rho)  = \underbrace{\frac{2m\alpha^2}{\hbar^2}E}_{II}u(\rho)
+		\end{align*}
+		and finally setting I $=1$ and defining II $=\lambda$ the final form of the SL for one electron in a HO-potential can be written as
+		\begin{align}
+		-\frac{d^2}{d\rho^2} u(\rho) + \rho^2u(\rho)  = \lambda u(\rho)
+		\end{align}
+		
+	} 
+	
+	\subsection{Jacobi's method}
+	The Jacobi's method uses Jacobi's rotation matrix $\hat{S}$ a number of times to turn all vectors in a symmetric or hermittian matrix $\hat{A}$ so that it become a diagonal matrix $\hat{D}$.
+	
+	\begin{equation*}
+	\hat{S}^T_n\hat{S}^T_{n-1}\cdots\hat{S}^T_1\hat{A}\hat{S}_1\cdots\hat{S}_{n-1}\hat{S}_n = \hat{D}
+	\end{equation*}
+	
+	\noindent
+	The rotation matrix $\hat{S}_i$ has the form of an identity matrix with $c = \cos(\theta)$ and $s = \sin(\theta)$ in a symmetric fashion inside depending on which two elements in $\hat{A}$ is to be rotated. $n$ depends on the number of rotations needed to transform $\hat{A}$ to $\hat{D}$.
+	
+	\begin{equation*}
+	\hat{S} = \begin{bmatrix}
+	1 & 0 & & \cdots & & & 0 \\
+	0 & \ddots &  &  & & & \\
+	&  & c & \cdots & s & &\\
+	\vdots & & \vdots & \ddots & \vdots & &\vdots\\
+	& & -s & \cdots & c & &\\
+	& & & & &\ddots & 0\\
+	0 & & & \cdots & & 0 & 1
+	\end{bmatrix}
+	\end{equation*}
+	
+	If $\hat{A}$ is composed of elements $a_{ij}$ and matrix $\hat{B}$ of elements $b_{ij}$. 
+	One rotation $\hat{S}^T\hat{A}\hat{S} = \hat{B}$ can be done with an algorithm. 
+	\nl
+	First the largest element$a_{kl}$ has to be located, then the new element will be set to zero $b_{kl} = (a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$. For $b_{kl} = 0$ the equation $(a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$ is solved using $\Gamma = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ by the second order polynomial $t^2 + 2\Gamma t-1 = 0$. Here $t = \tan(\theta) = \frac{s}{c}$. This gives solutions for the trigonometrical expessions $t = -\Gamma\pm \sqrt{1+\Gamma^2}$ , $s = tc$ and $c = \frac{1}{\sqrt{1 + \Gamma^2}}$. To avoid problems where $\Gamma$ gets large and possible loss of numerical presission we rewrite $t = \frac{1}{\Gamma + \sqrt{1+\Gamma^2}}$.
+	\nl
+	Rotation algorithm is solved with the prevusly given solutions for $t$,$c$ and $s$. Here $i$ is the iteration variable and $k$ and $l$ are parameter belonging to the element in rtotation:
+	\begin{align*}
+	&b_{ii} = a_{ii} &|i\neq k,l\\
+	&b_{ik} = a_{ik}c - a_{il}s &|i\neq k,l\\
+	&b_{il} = a_{il}c + a_{ik}s &|i\neq k,l\\
+	&b_{kk} = a_{kk}c^2 - 2a_{kl}cs + a_{ll}s^2&\\
+	&b_{ll} = a_{ll}c^2 + 2a_{kl}cs + a_{kl}s^2&\\
+	&b_{kl} = b_{lk} = 0&
+	\end{align*}
+	
+	\subsection{Unit tests}
+	
+	A unit test is a small piece of code that tests parts of a program for calculation errors. This to ensure that the program runs as expected and delivers correct results throughout the program. The unit tests we have used in this assignment are as follows.
+	
+	\subsubsection{Orthogonality test}
+	
+	The Jacobi method preforms orthogonal or unitary transformations to the matrix it operates on. That means the orthogonality of each column in a matrix $\hat{A}$ is conserved. 
+	\nl
+	If $\hat{A}$ is a orthogonal matrix with orthogonal column vectors $\hat{A} = [\vec{a_1} \vec{a_2} \cdots \vec{a_n}  ]$ the dot product of any column vector can be described by a Kronecker delta $\delta_{ij}$.
+	
+	\begin{align*}
+	\vec{a_i}^T \vec{a_j} = \delta_{ij} =
+	\begin{cases}
+	1|i=j\\
+	0|i\neq j
+	\end{cases}
+	\end{align*}
+	
+	For a transformation done by a matrix $\hat{S}$ to be unitary any column all vectors $\vec{w_i}$ produced by the transformation $\hat{S}\vec{v_i} = \vec{w_i}$ must also be orthogonal.
+	
+	\begin{align*}
+	&\vec{w_i^T}\vec{w_j} = (\hat{S}\vec{v_i})^T\hat{S}\vec{v_j} = \hat{S}^T\vec{v_i}^T\hat{S}\vec{v_j} = \\ &\vec{v_i}^T\hat{S}^T\hat{S}\vec{v_j} = \vec{v_i}\vec{v_j} = \delta_{ij}
+	\end{align*}
+	
+	%----------------------------------------------------------------------------
+	\section{Results and discussion}
+	
+\begin{figure}[t]
 
-% Print the title
-\maketitle
-
-%----------------------------------------------------------------------------
-%	ARTICLE CONTENTS
-%----------------------------------------------------------------------------
-
-\section{Introduction}
-\lettrine[nindent=0em,lines=3]{B}la bla
-
-%----------------------------------------------------------------------------
-\section{Methods}
-\subsection{Jacobi's method}
-Jacobi's method implements Jacobi's rotation in order to solve $A\vec v=\lambda \vec v$. 
-
-%----------------------------------------------------------------------------
-\section{Results and discussion}
-
-
-%----------------------------------------------------------------------------
-\section{Summary and Conclusion}
-
-%----------------------------------------------------------------------------
-%\twocolumn[{%
-\bibliography{ref.bib}{}
-\bibliographystyle{plain}
-%}]
+\end{figure}
+	
+	%----------------------------------------------------------------------------
+	\section{Summary and Conclusion}
+	
+	%----------------------------------------------------------------------------
+	%\twocolumn[{%
+	%	\bibliography{ref.bib}{}
+	%	\bibliographystyle{plain}
+	%}]
 \end{document}

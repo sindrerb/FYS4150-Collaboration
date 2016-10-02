@@ -48,8 +48,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../jacobiansolver/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../jacobiansolver/main.cpp \
+		../jacobiansolver/matrix.cpp 
+OBJECTS       = main.o \
+		matrix.o
 DIST          = /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/common/unix.conf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -181,6 +183,7 @@ DIST          = /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/qt_config.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_post.prf \
+		../jacobiansolver/.qmake.stash \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/default_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/resolve_config.prf \
@@ -193,7 +196,8 @@ DIST          = /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/yacc.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/lex.prf \
 		../jacobiansolver/jacobiansolver.pro matrix.h \
-		matrix.h ../jacobiansolver/main.cpp
+		matrix.h ../jacobiansolver/main.cpp \
+		../jacobiansolver/matrix.cpp
 QMAKE_TARGET  = jacobiansolver
 DESTDIR       = 
 TARGET        = jacobiansolver
@@ -336,6 +340,7 @@ Makefile: ../jacobiansolver/jacobiansolver.pro /home/sindrerb/Qt/5.7/gcc_64/mksp
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/qt_config.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/default_pre.prf \
 		/home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/resolve_config.prf \
@@ -480,6 +485,7 @@ Makefile: ../jacobiansolver/jacobiansolver.pro /home/sindrerb/Qt/5.7/gcc_64/mksp
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/qt_config.prf:
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/default_pre.prf:
 /home/sindrerb/Qt/5.7/gcc_64/mkspecs/features/resolve_config.prf:
@@ -537,6 +543,9 @@ compiler_clean:
 
 main.o: ../jacobiansolver/main.cpp ../jacobiansolver/matrix.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../jacobiansolver/main.cpp
+
+matrix.o: ../jacobiansolver/matrix.cpp ../jacobiansolver/matrix.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o matrix.o ../jacobiansolver/matrix.cpp
 
 ####### Install
 
