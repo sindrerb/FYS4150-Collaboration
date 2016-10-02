@@ -77,10 +77,8 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
-		
-		
-		
-	\end{abstract}
+As tracers in medicine or qubits in quantum computing, quantum dots usages are hot topics in science. One advantage of quantum dots are their discrete energy levels wich may be tuned by existing technology and knowledge. As a one particle problem, the quantum dot may be solved analytcally as a particle in a three dimentional harmonic oscillator potential (HO), but the solution is almost impossible to find once multiple particles are confined in one single quantum dot. This project takes advantage of nummerical methods to solve the eigenvalue problem of two electrons in a quantum dot and examines the impact of columb interactions on the system. The results shows that the impact of the columb interactions are higher as the potential grows wider. 
+\end{abstract}
 }
 
 %----------------------------------------------------------------------------
@@ -95,20 +93,18 @@
 	%----------------------------------------------------------------------------
 	
 	\section{Introduction}
-	\lettrine[nindent=0em,lines=2]{Q}uantum mechanical systems with one particle, like a quantum dot, is often possible to approximate to simple systems and solve analytically. Systems containing two or more paricles complicates the problem drastically and is often not possible to solve in the same way as for a single paricle system. By numerical methods, a close approximation may be achieved, and may be used to confirm experimental results or used as an experiment by itself. This project consists of two main parts where the first is solving the Shroedinger equation (SE) numerically for one particle in a three dimensional harmonic oscillator(HO) potential. The second part is to introduce a second particle and solve the system with and without Coulomb interactions. The schrodinger equation is solved by Jacobi's method as an eigenvalue equation rewriting it in a discretized form.
-	
-	%----------------------------------------------------------------------------
+	\lettrine[nindent=0em,lines=2]{Q}uantum dots are promising fields of science with many different usages. As a single particle system, the quantum dot is possible solve analytically by approximating it to a three dimentional harmonic oscillator potential. Once the system is introduced to two or more paricles, it turns very complex and it is often not possible to solve analytically in the same way as for a single particle system. By Jacobi's method, a close approximation may be achieved, and may be used to confirm experimental results or used as an experiment by itself. This project consists of two main parts where the first is writing an Jacobi's method to an algorithm that solves the Shroedinger equation (SE) numerically for a one particle in a three dimensional harmonic oscillator(HO) potential. The algorithm will be controlled to analytical results before proceeding to the second part wich is to introduce a second particle and solve the system with and without Coulomb interactions. The impact of columb interactions is then calculated by studying the energy differnce between the interacting and the non interacting case. 
+%----------------------------------------------------------------------------
 \section{Methods}
-	
 \subsection{Jacobi's method}
-The Jacobi's method uses Jacobi's rotation matrix $\hat{S}$ a number of times to turn all vectors in a symmetric or hermittian matrix $\hat{A}$ so that it become a diagonal matrix $\hat{D}$.
+The Jacobi's method is a iterative method wich uses Jacobi's rotation matrix $\hat{S}$ a number of times to turn a symmetric, hermittian matrix $\hat{A}$ to a diagonal matrix $\hat{D}$.
 	
 \begin{equation*}
 \hat{S}^T_n\hat{S}^T_{n-1}\cdots\hat{S}^T_1\hat{A}\hat{S}_1\cdots\hat{S}_{n-1}\hat{S}_n = \hat{D}
 \end{equation*}
 	
 \noindent
-The rotation matrix $\hat{S}_i$ has the form of an identity matrix with $c = \cos(\theta)$ and $s = \sin(\theta)$ in a symmetric fashion inside depending on which two elements in $\hat{A}$ is to be rotated. $n$ depends on the number of rotations needed to transform $\hat{A}$ to $\hat{D}$.
+The rotation matrix $\hat{S}_i$ has the form of an identity matrix with $c = \cos(\theta)$ and $s = \sin(\theta)$ in a symmetric fashion inside depending on the elements in $\hat{A}$ wich are to be rotated. $n$ depends on the number of rotations needed to transform $\hat{A}$ to $\hat{D}$.
 	
 	\begin{equation*}
 	\hat{S} = \begin{bmatrix}
@@ -125,9 +121,9 @@ The rotation matrix $\hat{S}_i$ has the form of an identity matrix with $c = \co
 	If $\hat{A}$ is composed of elements $a_{ij}$ and matrix $\hat{B}$ of elements $b_{ij}$. 
 	One rotation $\hat{S}^T\hat{A}\hat{S} = \hat{B}$ can be done with an algorithm. 
 	\nl
-	First the largest element$a_{kl}$ has to be located, then the new element will be set to zero $b_{kl} = (a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$. For $b_{kl} = 0$ the equation $(a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$ is solved using $\Gamma = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ by the second order polynomial $t^2 + 2\Gamma t-1 = 0$. Here $t = \tan(\theta) = \frac{s}{c}$. This gives solutions for the trigonometrical expessions $t = -\Gamma\pm \sqrt{1+\Gamma^2}$ , $s = tc$ and $c = \frac{1}{\sqrt{1 + \Gamma^2}}$. To avoid problems where $\Gamma$ gets large and possible loss of numerical presission we rewrite $t = \frac{1}{\Gamma + \sqrt{1+\Gamma^2}}$.
+	First the largest element $a_{kl}$ has to be located, then the new element will be set to zero $b_{kl} = (a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$. For $b_{kl} = 0$ the equation $(a_{kk}-a_{ll})cs + a_{kl}(c^2-s^2) = 0$ is solved using $\Gamma = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ by the second order polynomial $t^2 + 2\Gamma t-1 = 0$. Here $t = \tan(\theta) = \frac{s}{c}$. This gives solutions for the trigonometrical expessions $t = -\Gamma\pm \sqrt{1+\Gamma^2}$, $s = tc$ and $c = \frac{1}{\sqrt{1 + \Gamma^2}}$. To avoid problems where $\Gamma$ gets large and possible loss of numerical presission we rewrite $t = \frac{\pm 1}{\pm\Gamma + \sqrt{1+\Gamma^2}}$.
 	\nl
-	Rotation algorithm is solved with the prevusly given solutions for $t$,$c$ and $s$. Here $i$ is the iteration variable and $k$ and $l$ are parameter belonging to the element in rtotation:
+	Rotation algorithm is solved with the previously given solutions for $t$,$c$ and $s$. Here $i$ is the iteration variable and $k$ and $l$ are parameter belonging to the element in rtotation:
 	\begin{align*}
 	&b_{ii} = a_{ii} &|i\neq k,l\\
 	&b_{ik} = a_{ik}c - a_{il}s &|i\neq k,l\\
@@ -147,10 +143,10 @@ The Jacobi method preforms orthogonal or unitary transformations to the matrix i
 If $\hat{A}$ is a orthogonal matrix with orthogonal column vectors $\hat{A} = [\vec{a_1} \vec{a_2} \cdots \vec{a_n}  ]$ the dot product of any column vector can be described by a Kronecker delta $\delta_{ij}$.
 	
 	\begin{align*}
-	\vec{a_i}^T \vec{a_j} = \delta_{ij} =
+	\vec{a_i}^T \vec{a_j} = |a_i|^2\delta_{ij} =
 	\begin{cases}
-	1|i=j\\
-	0|i\neq j
+	|a_i|^2|i=j\\
+	0\hspace{0.5cm}|i\neq j
 	\end{cases}
 	\end{align*}
 	
@@ -162,13 +158,13 @@ If $\hat{A}$ is a orthogonal matrix with orthogonal column vectors $\hat{A} = [\
 	
 \subsubsection{Normality test}	
 Since the Jacobi method preforms unitary transformations to the matrix it operates on, the normality is conserved if the columns of $\hat{A}$ is normalized.\nl
-This project is using Jacobi rotation on the identity matrix wich is normalized by definition. Introducing the criteria $$col_i(\hat{A})^T\cdot col_i(\hat{A})=1$$ gives a brief indication of the conservation of normality.
+This project is using Jacobi rotation on the identity matrix wich is normalized by definition. Introducing the criteria $$col_i(\hat{A})^T\cdot col_i(\hat{A})=1$$ gives a brief indication of the conservation of normality wich is important for the interpretation of the wavefunction.
 	%----------------------------------------------------------------------------
 \section{Implementation}
 A quantum dot may be approximated to a three dimentional HO-potential. By assuming shperical symmetry the radial part the SL may be rewritten to
 \begin{align*}
-		&-\dfrac{\hbar^2}{2 m} \left ( \dfrac{1}{r^2} \dfrac{d}{dr} r^2 \frac{d}{dr} - \dfrac{l (l + 1)}{r^2} \right )R(r) + V(r) R(r)\\ 
-		&= E R(r).
+		&-\dfrac{\hbar^2}{2 m} \left ( \dfrac{1}{r^2} \dfrac{d}{dr} r^2 \frac{d}{dr} - \dfrac{l (l + 1)}{r^2} \right )R(r)\\ 
+		&\hspace{4cm}+ V(r) R(r)= E R(r).
 		\end{align*}
 Where the potential $V(r)$ is known by the HO-potential $\frac{1}{2}kr^2$, with $k=m\omega^2$ and the quantum number $l$ describe the orbital momentum of the electron.
 The energies and oscillator frequency is given by
@@ -177,7 +173,7 @@ E_{nl} = \hbar\omega\left(2n+l+ \dfrac{3}{2} \right)
 		\end{align*}
 		where $n\in \mathbb N$, $l\in \mathbb N$ and $r \in [0,\infty)$. By rewriting $R(r)$ as $rR(r) = u(r)$ we get
 		\begin{align*}
-		-\dfrac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) + \left ( V(r) + \dfrac{l (l + 1)}{r^2}\dfrac{\hbar^2}{2 m} \right ) u(r)  = E u(r)
+		&-\dfrac{\hbar^2}{2 m} \frac{d^2}{dr^2} u(r) + \left ( V(r) + \dfrac{l (l + 1)}{r^2}\dfrac{\hbar^2}{2 m} \right ) u(r)\\  &\hspace{6cm}=  E u(r)
 		\end{align*}
 		The expression can be further simplified by introducing the dimensionless variable $\rho = \frac{1}{\alpha}r$, setting $V(\rho) = \frac{1}{2}k\alpha^2\rho^2$, multiply with $\frac{2m\alpha^2}{\hbar^2}$ and set $l=0$ so that
 		\begin{align*}
@@ -187,11 +183,10 @@ E_{nl} = \hbar\omega\left(2n+l+ \dfrac{3}{2} \right)
 		\begin{align}
 		-\frac{d^2}{d\rho^2} u(\rho) + \rho^2u(\rho)  = \lambda u(\rho)\label{eq:dimless}
 \end{align}
-Equation \ref{eq:dimless} may be discretized and solved nummerically as a matrix eigenvalue problem.
+Equation \ref{eq:dimless} may be discretized and solved nummerically as a matrix eigenvalue problem were $V_i=\rho_i^2$. 
 \begin{equation}
 -\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i \label{eq:disk1}
 \end{equation}
-Were $V_i=\rho_i^2$. 
 \subsubsection{Two particle system}
 By introducing another electron to the system, the system includes two particles in the potential and the interactions between them.
 SE for two electrons with no Coulomb interactions can be written as
@@ -212,7 +207,7 @@ in to account the r-dependent part of the SE can be written as
 \end{align*}
 By now introducing the dimensionless variable $\rho = \frac{r}{\alpha}$ and repeating the same steps as for the one electron case we get
 \begin{align*}
-\hspace{-1.5cm}-\dfrac{d^2}{d\rho^2} \psi(\rho) + \dfrac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\underbrace{\dfrac{m\alpha \beta e^2}{\hbar^2}}_{I}\dfrac{1}{\rho}\psi(\rho)  = \underbrace{ \dfrac{m\alpha^2}{\hbar^2}E_r}_{II}\psi(\rho)
+\hspace{-0.3cm}-\dfrac{d^2}{d\rho^2} \psi(\rho) + \dfrac{1}{4}\frac{mk}{\hbar^2} \alpha^4\rho^2\psi(\rho)+\underbrace{\dfrac{m\alpha \beta e^2}{\hbar^2}}_{I}\dfrac{1}{\rho}\psi(\rho)  = \underbrace{ \dfrac{m\alpha^2}{\hbar^2}E_r}_{II}\psi(\rho)
 \end{align*}
 To further simplify the equation we introduce the new frequency
 \begin{align*}
@@ -226,12 +221,12 @@ Like equation \ref{eq:dimless}, equation \ref{eq:dimless2pt} may be discretized 
 \begin{equation}
 -\frac{u_{i+1}-2u_i+u_{i-1}}{h^2}+V_iu_i = \lambda u_i\label{eq:disk2}
 \end{equation}
-Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. Theese matrix eigenvalue problems may be solved by Jacobi's method.\nl
+Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. Theese matrix eigenvalue problems may be solved by Jacobi's method.\newpage
 
 Tests of conserved orthogonality and normality was done on a one electron system to ensure that the algorithm was correct, sample-matrices was written to a file and later tested for conserved orthogonality and normality. Later a convergence test of the number of iterations was done to weight the accuaracy and computational time. The algortihm was set to solve the schroedinger equation for a two particle system with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without columb interactions.
 \section{Results and discussion}
 The jacobian method requires many iterations in order to reach a satisfying accuaracy of the energies. Table \ref{tbl:convergence} from the convergence test of meshpoints indicates that $N=500$ is a minimum requirement for a four digit accuaracy but results also in a high computational time. Figure \ref{fig:iterations} shows the number of iterations for a given set of meshpoints, assumed to be proportional to computation time.
-A number of meshpoints $N=400$ results in a high enough accuaracy for the purpose of this experiment and reducing the computational time drastically.\nl
+A number of meshpoints $N=400$ results in a accuaracy to approximately the third digit, wich is thought to be accuarate enough for the purpose of this experiment while  reducing the computational time drastically.\nl
 
 \begin{table}[h]
 \centering
@@ -258,44 +253,45 @@ $N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
 \begin{table}[p]
 \begin{tabular}{|l|l|l|l|}\hline
 $\omega_r$ & Interaction & No Interaction & Impact\\ \hline
-0.01 & 0.105 & 0.030 & 3.5\\
-0.25 & 1.250  & 0.750 & 1.67\\
-0.50 & 2.230 & 1.500 & 1.49\\
-1.00 & 4.058 & 3.000 & 1.35\\
-2.50 & 9.211 & 7.500 & 1.23\\
-5.00 & 17.448 & 15.000 & 1.16\\ \hline
+0.01 & 0.105 & 0.030 & 0.72\\
+0.25 & 1.250  & 0.750 & 0.40\\
+0.50 & 2.230 & 1.500 &  0.33\\
+1.00 & 4.058 & 3.000 &  0.26\\
+2.50 & 9.211 & 7.500 & 0.19\\
+5.00 & 17.448 & 15.000 & 0.14\\ \hline
 \end{tabular}
-\caption{Table showing the energy of the ground state in a two particle system with and without columb interactions. The impact is defined by the energy of the interacting system divided by the non-interacting system.}\label{tbl:columb}
+\caption{Table showing the energy of the ground state in a two particle system with and without columb interactions. The impact is defined by the energy difference of the systems divided by the energy of the interacting system. The energies are rounded to the third digit.}\label{tbl:columb}
 \end{table}
 Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondance between the $\omega_r$ and the columb interactions. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the columb interactions was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show an unexpected behaviour where the columb interaction has a greater impact in the electrons than expected. A relation between the energies of the systems with and without columb interaction is given in Table \ref{tbl:columb}. The behaviour may be explained by the fact that $V_{Columb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the columb interactions is large but does not  overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the columb interactions.
-\begin{figure}[p]
+\begin{figure}[h]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq001.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.01$}\label{fig:fq001}
 \end{figure}
-\begin{figure}[p]
-\includegraphics[width=0.45\textwidth]{../report/figures/freq025.png} 
-\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.25$}\label{fig:fq025}
-\end{figure}
+
+%\begin{figure}[h]
+%\includegraphics[width=0.45\textwidth]{../report/figures/freq025.png} 
+%\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.25$}\label{fig:fq025}
+%\end{figure}
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq050.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=0.5$}\label{fig:fq050}
 \end{figure}
+
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq100.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=1.00$}\label{fig:fq100}
 \end{figure}
-\begin{figure}[p]
-\includegraphics[width=0.45\textwidth]{../report/figures/freq250.png} 
-\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=2.50$}\label{fig:fq250}
-\end{figure}
+%\begin{figure}[p]
+%\includegraphics[width=0.45\textwidth]{../report/figures/freq250.png} 
+%\caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=2.50$}\label{fig:fq250}
+%\end{figure}
 \begin{figure}[p]
 \includegraphics[width=0.45\textwidth]{../report/figures/freq500.png} 
 \caption{Comparison of the wavefunction with and without columb interactions in a HO-potential where $\omega_r=5.00$}\label{fig:fq500}
 \end{figure}	%----------------------------------------------------------------------------
 \section{Summary and Conclusion}
-From Table \ref{tbl:columb} it is clear that the columb interaction does have a larger impact on a system with a wide potential than with a narrow potential. 
-
-	%----------------------------------------------------------------------------
+From Table \ref{tbl:columb} it is clear that the impact of the columb interaction on a system increases as the potential is widening.\nl
+This may help to used to design quantum dots able to contain more than one electron wile still knowing roughly the energies of the electrons. 	%----------------------------------------------------------------------------
 	%\twocolumn[{%
 	%	\bibliography{ref.bib}{}
 	%	\bibliographystyle{plain}
