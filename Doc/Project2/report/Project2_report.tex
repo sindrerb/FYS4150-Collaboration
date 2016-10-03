@@ -52,8 +52,8 @@
 }
 %--------------------------------------------
 
-
-
+\newcommand{\SE}{Schroedinger equation }
+\newcommand{\CI}{Coulomb interactions}
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@
 	\posttitle{\end{center}} % Article title closing formatting
 \title{FYS4150 - Project 1} % Article title
 \author{%
-	\textsc{Vegard R?nning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
+	\textsc{Vegard R\o{}nning \& Heine H. Ness \& Sindre R. Bilden} \\[1ex] % Your name
 	\normalsize University of Oslo \\ % Your institution
 	\normalsize \href{mailto:vegard.ronning@fys.uio.no}{vegard.ronning@fys.uio.no}\ ; \href{mailto:h.h.ness@fys.uio.no}{h.h.ness@fys.uio.no}\ ; \href{mailto:s.r.bilden@fys.uio.no}{s.r.bilden@fys.uio.no}\\% Your email address
 	\footnotesize \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}
@@ -77,7 +77,8 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
-		As tracers in medicine or qubits in quantum computing, utilizing quantum dots are hot topics in science. One advantage of quantum dots are their discrete energy levels which may be tuned by existing technology and knowledge. As a one particle problem, the quantum dot may be solved analytically as a particle in a three dimensional harmonic oscillator potential (HO), but the solution is almost impossible to find once multiple particles are confined in one single quantum dot. This project takes advantage of numerical methods to solve the eigenvalue problem of two electrons in a quantum dot and examines the impact of Coulomb interactions on the system. The results shows that the impact of the Coulomb interactions are higher as the potential grows wider. 
+\vspace{-0.4cm} As tracers in medicine or qubits in quantum computing, utilizing quantum dots are hot topics in science. One advantage of quantum dots are their discrete energy levels which may be tuned by existing technology and knowledge. As a one particle problem, the quantum dot may be solved analytically as a particle in a three dimensional harmonic oscillator potential (HO), but the solution is almost impossible to find once multiple particles are confined in one single quantum dot. The project uses numerical methods to solve the eigenvalue problem of two electrons in a quantum dot and examines the impact of \CI on the system. The results shows that the impact of the \CI increases with a widening potential. 
+\vspace{-0.5cm}
 	\end{abstract}
 }
 
@@ -91,11 +92,12 @@
 	%----------------------------------------------------------------------------
 	%	ARTICLE CONTENTS
 	%----------------------------------------------------------------------------
-	
-	\section{Introduction}
-	\lettrine[nindent=0em,lines=2]{Q}uantum dots are promising field of science, with a wide range of applications. As a single particle system, the quantum dot is possible solve analytically by approximating it to a three dimensional HO-potential. Once the system consist of to two or more particles, it becomes very complex and is often not possible to solve analytically like the single particle system. It is possible to achieve a close approximate of a two particle system numerically by using Jacobi's method, that may be used to confirm experimental results or just as an experiment by itself. This project consists of two main parts where the first is writing a program that utilizes Jacobi's method to solve the Shroedinger equation (SE) numerically for a one particle in a three dimensional HO-potential. The algorithm will be controlled to analytical results before proceeding to the second part which is to introduce a second particle and solve the system with and without Coulomb interactions. The impact of Coulomb interactions is then calculated by studying the energy difference between the interacting and the non interacting case. 
+\vspace{-2cm}
+	\section{Introduction}\vspace{-0.4cm}
+	\lettrine[nindent=0em,lines=2]{Q}uantum dots are promising field of science, with a wide range of applications. As a single particle system, the quantum dot is possible solve analytically by approximating it to a three dimensional HO-potential. Once the system consist of to two or more particles, it becomes very complex and is often not possible to solve analytically like the single particle system. It is possible to achieve a close approximate of a two particle system numerically by using Jacobi's method, that may be used to confirm experimental results or as an experiment by itself. This project consists of two main parts where the first is writing a program that utilizes Jacobi's method (presented in section \ref{sec:methods}, Methods) to solve the \SE (SE) numerically for a one particle in a three dimensional HO-potential as described in section \ref{sec:implementation}, Implementation. The numerical results will be compared to analytical results before proceeding to the second part which is to introduce a second particle and solve the system with and without \CI. The impact of the \CI is then calculated by studying the energy difference between the interacting and the non interacting case, where the results are presented and discussed in section \ref{sec:results}.
 	%----------------------------------------------------------------------------
 	\section{Methods}
+	\label{sec:methods}
 	\subsection{Jacobi's method}
 	Jacobi's method is an iterative method which uses Jacobi's rotation matrix $\hat{S}$ a number of times to turn a symmetric, hermittian matrix $\hat{A}$ to a diagonal matrix $\hat{D}$.
 	
@@ -190,7 +192,8 @@
 	This implies that matrices $\hat{A}$ of large dimensions has to be solved numerically and is only possible to get an approximation for the eigenvalues with a chosen degree of numerical accuracy within the boundaries of the computer.
 	
 	\subsection{Unit tests}
-	A unit test is a small block of code that tests parts of a program for calculation errors. This to ensure that the program runs as expected and delivers correct results throughout the program. The unit tests used in this assignment are as follows.
+	A unit test is a small block of code that tests parts of a program for calculation errors. This to ensure that the program runs as expected and delivers correct results throughout the program.
+The unit tests used in this assignment are as follows.
 	
 	\subsubsection{Orthogonality test}
 	
@@ -217,6 +220,7 @@
 	In this case Jacobi rotation is done on the identity matrix which is normalized by definition. Introducing the criteria $$col_i(\hat{A})^T\cdot col_i(\hat{A})=1$$ gives a brief indication of the conservation of normality which is important for the interpretation of the wavefunction.
 	%----------------------------------------------------------------------------
 	\section{Implementation}
+	\label{sec:implementation}
 	A quantum dot may be approximated to a three dimensional HO-potential. By assuming spherical symmetry, the radial part of the SE may be rewritten to
 	\begin{align*}
 	&-\dfrac{\hbar^2}{2 m} \left ( \dfrac{1}{r^2} \dfrac{d}{dr} r^2 \frac{d}{dr} - \dfrac{l (l + 1)}{r^2} \right )R(r)\\ 
@@ -280,12 +284,17 @@
 	\end{equation}
 	Were the new potential $V_i=\omega_r^2\rho_i^2+\frac{1}{\rho}$. Both equation \ref{eq:disk1} and \ref{eq:disk2} may be rewritten to $\hat{H}\hat{u}=\lambda\hat{u}$ were $\hat{H}$ is a tridiagonal matrix with center diagonal $d_{ii}=\frac{2}{h^2}+V_i$ and the upper diagonal equal to the lower diagonal equal to $e_{ij}=\frac{-1}{h^2}$. These matrix eigenvalue problems may be solved by Jacobi's method.\nl
 	
-	Tests of conserved orthogonality and normality was done on a one electron system to ensure that the algorithm was correct, sample-matrices was written to a file and later tested for conserved orthogonality and normality. Later a convergence test of the number of iterations was done to weight the accuracy and computational time. The algorithm was set to solve SE for a two particle system with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without Coulomb interactions.
+	Tests of conserved orthogonality and normality was done on a one electron system to ensure that the algorithm was correct, sample-matrices was written to a file and later tested for conserved orthogonality and normality in a Python script 
+(\href{https://github.com/sindrerb/FYS4150-Collaboration/blob/master/Doc/Project2/unitTest.py}{unitTest.py}). Later a convergence test of the number of iterations was done to weight the accuracy and computational time. The algorithm was set to solve SE for a two particle system with $\omega_r$ equal to $0.01,0.5,1$ and $5$. Both with and without \CI{}.
+All code and results are found in the GitHub repository \\
+{\small \centering \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/}}
 	\section{Results and discussion}
+	\label{sec:results}
 	Jacobi's method may require many iterations in order to reach a satisfying accuracy of the energies. Table \ref{tbl:convergence} from the convergence test of mesh points indicates that $N=500$ is a minimum requirement for a four digit accuracy but results also in a high computational time. Figure \ref{fig:iterations} shows the number of iterations for a given set of mesh points, assumed to be proportional to computation time.
 	A number of mesh points $N=400$ results in a accuracy to approximately the third digit, which is thought to be accurate enough for the purpose of this experiment while  reducing the computational time drastically.\nl
 	
 	\begin{table}[h]
+			\caption{Table showing the three lowest computed eigenvalues $\lambda$ with $N$ mesh points, compared to the exact $\lambda_0=3$,$\lambda_1=7$ and $\lambda_2=11$.}\label{tbl:convergence}
 		\centering
 		\begin{tabular}{|l|l|l|l|}\hline
 			$N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
@@ -297,7 +306,6 @@
 			400& 2.99986 & 6.99903 & 10.9976\\
 			500& 2.99993 & 6.99937 & 10.9986\\\hline
 		\end{tabular}
-		\caption{Table showing the three lowest computed eigenvalues $\lambda$ with $N$ mesh points, compared to the exact $\lambda_0=3$,$\lambda_1=7$ and $\lambda_2=11$.}\label{tbl:convergence}
 	\end{table}
 	\begin{figure}[p]
 		\includegraphics[width=0.5\textwidth]{figures/iterations.png} 
@@ -308,6 +316,7 @@
 		\caption{The first three eigenstates with their respective eigenstates in a harmonic oscillator with one particle, computed with $N=500$ mesh points.}\label{fig:eigenstates}
 	\end{figure}
 	\begin{table}[p]
+			\caption{Table showing the energy of the ground state in a two particle system with and without \CI. The impact is defined by the energy difference of the systems divided by the energy of the interacting system. The energies are rounded to the third digit.}\label{tbl:Coulomb}
 		\begin{tabular}{|l|l|l|l|}\hline
 			$\omega_r$ & Interaction & No Interaction & Impact\\ \hline
 			0.01 & 0.105 & 0.030 & 0.72\\
@@ -317,9 +326,8 @@
 			2.50 & 9.211 & 7.500 & 0.19\\
 			5.00 & 17.448 & 15.000 & 0.14\\ \hline
 		\end{tabular}
-		\caption{Table showing the energy of the ground state in a two particle system with and without Coulomb interactions. The impact is defined by the energy difference of the systems divided by the energy of the interacting system. The energies are rounded to the third digit.}\label{tbl:Coulomb}
 	\end{table}
-	Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondence between the $\omega_r$ and the Coulomb interactions. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the Coulomb interactions was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show an unexpected behavior where the Coulomb interaction has a greater impact in the electrons than expected. A relation between the energies of the systems with and without Coulomb interaction is given in Table \ref{tbl:Coulomb}. The behavior may be explained by the fact that $V_{Coulomb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the Coulomb interactions is large but does not overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the Coulomb interactions.
+	Results from the computation of the two particle systems is given in Figure \ref{fig:fq001} $-$ \ref{fig:fq500}, where it is a clear correspondence between the $\omega_r$ and the \CI. A high $\omega_f$ results in a narrow potential and a confinement of the electrons, in this narrow potential the \CI was thought to give a great impact on the wavefunction but Figure \ref{fig:fq500} contradicts this hypothesis. Figure \ref{fig:fq001} does also show an unexpected behavior where the \CI has a greater impact in the electrons than expected. A relation between the energies of the systems with and without \CI is given in Table \ref{tbl:Coulomb}. The behavior may be explained by the fact that $V_{Coulomb}=\frac{\beta}{r}$ diverge while $r$ goes to zero. In a narrow potential, the \CI are large but does not overpower the confinement of the potential. While widening the potential, the confinement decreases more rapidly than the \CI.
 	\begin{figure}[p]
 		\includegraphics[width=0.45\textwidth]{../report/figures/freq001.png} 
 		\caption{Comparison of the wavefunction with and without Coulomb interactions in a HO-potential where $\omega_r=0.01$}\label{fig:fq001}
@@ -347,8 +355,9 @@
 		\caption{Comparison of the wavefunction with and without Coulomb interactions in a HO-potential where $\omega_r=5.00$}\label{fig:fq500}
 	\end{figure}	%----------------------------------------------------------------------------
 	\section{Summary and Conclusion}
-	A numerical experiment was done where SE got solved iteratively by Jacobi's method. The algorithm was first compared to exact results of a simple system before calculated for more complex systems. The results of Table \ref{tbl:Coulomb} clearly show that the impact of the Coulomb interaction on a system increases as the potential is widening.\nl
-	This may be used to design quantum dots that is able to contain more than one electron while still knowing roughly the energies of the electrons. 	%----------------------------------------------------------------------------
+	\label{sec:conclusion}
+	A numerical experiment was done where \SE were solved iteratively by Jacobi's method. The algorithm was first compared to exact results of a simple system before calculated for more complex systems. The results of Table \ref{tbl:Coulomb} clearly show that the impact of the \CI on a system increases as the potential widens.\nl
+	This may be used to design quantum dots that is able to contain more than one electron while still knowing roughly the energies of the electrons. Opening for more volume efficient manipulation of electons. 	%----------------------------------------------------------------------------
 	%\twocolumn[{%
 	\bibliography{ref}
 	\bibliographystyle{plain}
