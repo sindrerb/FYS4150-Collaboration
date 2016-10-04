@@ -3,11 +3,12 @@
 \usepackage{blindtext} % Package to generate dummy text throughout this template 
 \usepackage{graphicx}
 \usepackage{natbib}
+\usepackage{lmodern}
 
 \usepackage[sc]{mathpazo} % Use the Palatino font
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \linespread{1.05} % Line spacing - Palatino needs more space between lines
-\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+%\usepackage{microtype} % Slightly tweak font spacing for aesthetics
 
 \usepackage[english]{babel} % Language hyphenation and typographical rules
 
@@ -50,10 +51,16 @@
 	\medskip
 	\noindent
 }
-%--------------------------------------------
-
 \newcommand{\SE}{Schroedinger equation }
 \newcommand{\CI}{Coulomb interactions}
+\newcommand{\sun}{\odot}
+\newcommand{\planet}{\bullet}
+\newcommand{\AU}{\text{AU}}
+\newcommand{\Yr}{\text{Yr}}
+%--------------------------------------------
+
+
+
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
@@ -76,41 +83,70 @@
 %----------------------------------------------------------------------------
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
-	\begin{abstract}
-\vspace{-0.4cm} \blindtext
-\vspace{-0.5cm}
-	\end{abstract}
+\begin{abstract}
+
+\end{abstract}
 }
 
 %----------------------------------------------------------------------------
 
 \begin{document}
 	
-	% Print the title
-	\maketitle
-	
-	%----------------------------------------------------------------------------
-	%	ARTICLE CONTENTS
-	%----------------------------------------------------------------------------
-\vspace{-2cm}
-	\section{Introduction}\vspace{-0.4cm}
-	\lettrine[nindent=0em,lines=2]{Q}uantum \blindtext
-	%----------------------------------------------------------------------------
-	\section{Methods}
-	\label{sec:methods}
-	\blindtext
-	%----------------------------------------------------------------------------
-	\section{Implementation}
-	\label{sec:implementation}
-	\blindtext
-All code and results are found in the GitHub repository \\
-{\small \centering \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project2}{github.com/sindrerb/FYS4150-Collaboration/}}
-	\section{Results and discussion}
-	\label{sec:results}
-	\blindtext
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------
+\section{Introduction}
+\lettrine[nindent=0em,lines=2]{Q}uantum \blindtext
+%----------------------------------------------------------------------------
+\section{Methods}
+\label{sec:methods}
+\blindtext
+\blindtext
+%----------------------------------------------------------------------------
+\newpage
+\section{Implementation}
+\label{sec:implementation}
+Every planet in our solar system is affected by the gravitational force from the sun and other nearby planets. Where the gravitational force is
+\begin{equation}
+F_{G}=G\frac{M_\circ M_\planet}{r^2}
+\end{equation} 
+where $M_\circ$ and $M_\planet$ are the masses of two arbitrary objects. Decomposing the force into Cartesian coordinates, the components may be represented
+\begin{equation*}
+\hspace{-0.5cm}F_x=-\frac{GM_\circ M_\planet x}{r^3},F_y=-\frac{GM_\circ M_\planet y}{r^3},F_z=-\frac{GM_\circ M_\planet z}{r^3}
+\end{equation*}
+By Newton's second law the the relation between acceleration and position, we have the relation between the position of the planet and the total force component acting on the planet.
+\begin{equation*}
+\frac{d^2x}{dt^2}=\frac{F_x}{M_\planet},\hspace{0.6cm}\frac{d^2y}{dt^2}=\frac{F_y}{M_\planet},\hspace{0.6cm}\frac{d^2z}{dt^2}=\frac{F_z}{M_\planet}
+\end{equation*}
+Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of earth masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
+\begin{equation}
+GM_\sun = 4\pi^2 \frac{\AU^3}{\Yr^2} \label{eq:units}
+\end{equation}
+Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces Earth masses, Astronomical Units and Years as natural units for this system.\nl
+In total the system gets three sets of coupled differential equations per object in the system, which has to be solved to describe the system properly.
+\begin{align}
+&\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
+&\frac{dy}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
+&\frac{dz}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
+\end{align}
+The system may be described with numerical methods by discretizing equations (\ref{eq:set_x}-\ref{eq:set_z}). Letting  $t\rightarrow t_i=t_0+i dt, i\in \mathbb{N}$, $x\rightarrow x_i+1=x_i+v_i dt$ and $v\rightarrow v_i+1=v_i+a(x_i) dt$ be the new discretized relations, the derivative may approximated by Taylor expansions.\nl
+\begin{align}
+&\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
+&\frac{dy}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
+&\frac{dz}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
+\end{align}
+
+All code and results are found in the GitHub repository\nl
+{\small \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project3}{github.com/sindrerb/FYS4150-Collaboration/}}
+\section{Results and discussion}
+\label{sec:results}
+
 	
 	\begin{table}[h]
-			\caption{Table showing the three lowest computed eigenvalues $\lambda$ with $N$ mesh points, compared to the exact $\lambda_0=3$,$\lambda_1=7$ and $\lambda_2=11$.}\label{tbl:convergence}
+\caption{Table showing the three lowest computed eigenvalues $\lambda$ with $N$ mesh points, compared to the exact $\lambda_0=3$,$\lambda_1=7$ and $\lambda_2=11$.}\label{tbl:convergence}
 		\centering
 		\begin{tabular}{|l|l|l|l|}\hline
 			$N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
@@ -128,10 +164,10 @@ All code and results are found in the GitHub repository \\
 		\caption{Graph over the number of iterations for a given set of mesh points $N$. The solid red line is proportional to $N^2$ as a comparison.}\label{fig:iterations}
 \end{figure}
 
-\blindtext	%----------------------------------------------------------------------------
+%----------------------------------------------------------------------------
 \section{Summary and Conclusion}
 \label{sec:conclusion}
-\blindtext	%----------------------------------------------------------------------------
+%----------------------------------------------------------------------------
 	%\twocolumn[{%
 	\bibliography{ref}
 	\bibliographystyle{plain}
