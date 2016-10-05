@@ -37,14 +37,20 @@ void initializeSatellite(Satellite satellite){
 int main(){
     Satellite sun("sun"),mercury("mercury"),venus("venus"),earth("earth"),mars("mars"),jupiter("jupiter"),saturn("saturn"),uranus("uranus"),neptun("neptun"),pluto("pluto");
     Satellite solarSystem[1] = { earth };
+    Matrix initialPosSun,initialPosEarth;
+    initialPosSun.setZeros(1,3);
+    initialPosEarth.setOnes(1,3);
+    sun.setPosition(initialPosSun);
+    earth.setPosition(initialPosEarth);
 
-    sun.setPos(0);
+
+
+
+    cout << earth.getRelativeDistTo(sun) <<endl;
 
 //    int numberOfSatellites = sizeof(solarSystem)/sizeof(*solarSystem);
 //    for(int i = 0; i< numberOfSatellites;i++){
 //        initializeSatellite(solarSystem[i]);
 //    }
-
-
 
 }
