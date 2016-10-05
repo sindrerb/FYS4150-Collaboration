@@ -1,51 +1,57 @@
 #include "satellite.h"
+#include <math.h>
 
-Satellite::Satellite() {
-    satelliteMass = 0;
-    posX = 0;
-    posY = 0;
-    posZ = 0;
-    satelliteMass = 0;
+//Constructor
+Satellite::Satellite (string name) {
+    myName = name;
 }
 
-Satellite::Satellite(string name) {
-    satelliteName = name;
+//Setters
+void Satellite::setMass(double mass) {
+    myMass = mass;
 }
 
-void Satellite::setPosition(double x, double y, double z) {
-    posX = x;
-    posY = y;
-    posZ = z;
+void Satellite::setPosition(Matrix newPosition) {
+    position = newPosition;
 }
 
-void Satellite::setPosX(double x) {
-    posX = x;
+void Satellite::setVelocity(Matrix newVelocity) {
+    velocity = newVelocity;
 }
 
-void Satellite::setPosY(double y) {
-    posY = y;
+//Getters
+double Satellite::getRelativeDistTo(const Satellite satellite, int axis) {
+    double distance;
+    Matrix Diff, Axis;
+    if(axis !=0){
+        if(axis<=3){
+            Axis.setZeros(3,3);
+            Axis.setElement(axis,axis,1);
+        }else{
+            cout << "Error, axis dimention too large.";
+        }
+    }else{
+        Axis.setIdentity(3);
+    }
+    Diff = position-satellite.position;
+
+    distance = sqrt(Diff(0,0)*Diff(0,0)+Diff(0,1)*Diff(0,1)+Diff(0,2)*Diff(0,2));
+
+    return distance;
 }
 
-void Satellite::setPosZ(double z) {
-    posZ = z;
+double Satellite::getMass() {
+    return myMass;
 }
 
-void Satellite::setMass(double m) {
-    satelliteMass = m;
+string Satellite::getName() {
+    return myName;
 }
 
-double Satellite::getRelativeDistance(const Satellite ball) {
-    double R,dx,dy,dz;
-    dx = posX-ball.posX;
-    dy = posY-ball.posY;
-    dz = posZ-ball.posZ;
-
-    R = sqrt(dx*dx + dy*dy + dz*dz);
-
-    return R;
+Matrix Satellite::getPosition() {
+    return position;
 }
 
-string Satellite::getName() const {
-    return satelliteName;
+Matrix Satellite::getVelocity() {
+    return velocity;
 }
-

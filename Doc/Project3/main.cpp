@@ -35,17 +35,19 @@ void initializeSatellite(Satellite satellite){
 }
 
 int main(){
+    double h = 0.01;
+    Satellite sun("sun"),mercury("mercury"),venus("venus"),earth("earth"),mars("mars"),jupiter("jupiter"),saturn("saturn"),uranus("uranus"),neptun("neptun"),pluto("pluto");
+    Satellite solarSystem[1] = { earth };
+    Matrix initialPosSun,initialPosEarth;
+    initialPosSun.setZeros(1,3);
+    initialPosEarth.setOnes(1,3);
+    sun.setPosition(initialPosSun);
+    earth.setPosition(initialPosEarth);
 
 
-    Satellite earth("earth");
-    cout << earth.getName() << endl ;
-//    Satellite sun("sun"),mercury("mercury"),venus("venus"),earth("earth"),mars("mars"),jupiter("jupiter"),saturn("saturn"),uranus("uranus"),neptun("neptun"),pluto("pluto");
-//    Satellite solarSystem[1] = { earth };
-//    Matrix initialPosSun,initialPosEarth;
-//    initialPosSun.setZeros(1,3);
-//    initialPosEarth.setOnes(1,3);
-//    sun.setPosition(initialPosSun);
-//    earth.setPosition(initialPosEarth);
+    earth.getPosition().print("Earth pos");
+    earth.getVelocity().print("Earth vel");
+    //earth.setPosition(euler(earth.getPosition(),h));
 
 
 
