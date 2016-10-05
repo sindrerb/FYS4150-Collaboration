@@ -85,7 +85,7 @@ real Matrix::operator()(int i, int j) {//Access element
 }
 
 void Matrix::setElement(int i, int j, real value) {//Access element
-    this->M[i][j] = value;
+    this->M[j][i] = value;
 }
 
 void Matrix::setColumn(int n, const Matrix &B) { //Set column
@@ -244,14 +244,14 @@ void Matrix::print(string name) {
     }
 }
 
-void Matrix::printToFile(string dataLabelInFile, string fileName) {
+void Matrix::printToFile( string fileName) {//string dataLabelInFile,
     ofstream ofile;
     ofile.open(fileName,std::ios::app);
     if(!ofile.good()) {
         cout << "Error opening file " << fileName << endl;
         return;
     }
-    ofile << dataLabelInFile << endl;
+    //ofile << dataLabelInFile << endl;
     for(int i = 0; i<columns; i++) {
         for(int j = 0; j<rows ; j++) {
             double m = M[i][j];

@@ -41,7 +41,7 @@ public:
 //    //Get info
     void print(string name);
 
-    void printToFile(string dataLabelInFile, string fileName);
+    void printToFile(string fileName); //string dataLabelInFile,
 };
 
 #endif // MATRIX_H

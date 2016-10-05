@@ -34,7 +34,6 @@ double Satellite::getRelativeDistTo(const Satellite satellite, int axis) {
         Axis.setIdentity(3);
     }
     Diff = position-satellite.position;
-
     distance = sqrt(Diff(0,0)*Diff(0,0)+Diff(0,1)*Diff(0,1)+Diff(0,2)*Diff(0,2));
 
     return distance;

@@ -12,8 +12,7 @@ class Satellite
 private:
     string myName;
     double myMass;
-    Matrix position;
-    Matrix velocity;
+    Matrix position, velocity;
 public:
     //Constructor
     Satellite (string name);
@@ -24,7 +23,7 @@ public:
     void setVelocity(Matrix newVelocity);
 
     //Getters
-    double getRelativeDistTo(const Satellite satellite, int axis = 0);
+    double getRelativeDistTo(const Satellite satellite, int axis);
     double getMass();
     string getName();
     Matrix getPosition();
