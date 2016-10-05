@@ -1,8 +1,11 @@
 #include "satellite.h"
+#include <math.h>
 
-Satellite::Satellite()
+using namespace std;
+
+Satellite::Satellite(string name)
 {
-
+    myName = name;
 }
 
 void Satellite::setPos(double X,double Y,double Z){
@@ -13,7 +16,6 @@ void Satellite::setPos(double X,double Y,double Z){
 
 void Satellite::setMass(double M){
     Mass = M;
-
 }
 
 double Satellite::getRelativeDist(const Satellite ball){
@@ -21,8 +23,9 @@ double Satellite::getRelativeDist(const Satellite ball){
     dX = Xpos-ball.Xpos;
     dY = Ypos-ball.Ypos;
     dZ = Zpos-ball.Zpos;
-
-    R = sqrt(dX*dX + dY*dY + dZ*dZ)
-
+    R = sqrt(dX*dX + dY*dY + dZ*dZ);
     return R;
+}
+string Satellite::getName(){
+    return myName;
 }
