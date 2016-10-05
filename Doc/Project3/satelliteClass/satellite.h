@@ -6,16 +6,26 @@
 #include <string>
 
 using namespace std;
-typedef double real;
 
 class Satellite
 {
 private:
+    double Mass;
+    double Xpos;
+    double Ypos;
+    double Zpos;
 
 public:
-    Satellite();
-    setMass();
-    setPosition();
+    //Constructor
+    Satellite ();
+
+    //Setters
+    void setMass(double M);
+    void setPos(double X,double Y,double Z);
+
+    //Getters
+    double getRelativeDist(const Satellite ball);
+
 };
 
 #endif // SATELLITE_H
