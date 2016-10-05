@@ -11,13 +11,13 @@ using namespace std;
 class Satellite
 {
 private:
-    string myName;
-    double myMass;
-    Matrix position;
-    Matrix velocity;
+    string satelliteName;
+    double satelliteMass;
+    Matrix satellitePosition;
+    Matrix satelliteVelocity;
 public:
     //Constructor
-    Satellite (string name);
+    Satellite ();
 
     // Overload Constructor
     Satellite(string name);

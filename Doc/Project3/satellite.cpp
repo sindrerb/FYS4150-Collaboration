@@ -1,22 +1,25 @@
 #include "satellite.h"
-#include <math.h>
 
 //Constructor
-Satellite::Satellite (string name) {
-    myName = name;
+Satellite::Satellite () {
+    satelliteMass = 0;
 }
 
 //Setters
+Satellite::Satellite(string name) {
+    satelliteName = name;
+}
+
 void Satellite::setMass(double mass) {
-    myMass = mass;
+    satelliteMass = mass;
 }
 
 void Satellite::setPosition(Matrix newPosition) {
-    position = newPosition;
+    satellitePosition = newPosition;
 }
 
 void Satellite::setVelocity(Matrix newVelocity) {
-    velocity = newVelocity;
+    satelliteVelocity = newVelocity;
 }
 
 //Getters
@@ -33,7 +36,7 @@ double Satellite::getRelativeDistTo(const Satellite satellite, int axis) {
     }else{
         Axis.setIdentity(3);
     }
-    Diff = position-satellite.position;
+    Diff = satellitePosition-satellite.satellitePosition;
 
     distance = sqrt(Diff(0,0)*Diff(0,0)+Diff(0,1)*Diff(0,1)+Diff(0,2)*Diff(0,2));
 
@@ -41,17 +44,17 @@ double Satellite::getRelativeDistTo(const Satellite satellite, int axis) {
 }
 
 double Satellite::getMass() {
-    return myMass;
+    return satelliteMass;
 }
 
 string Satellite::getName() {
-    return myName;
+    return satelliteName;
 }
 
 Matrix Satellite::getPosition() {
-    return position;
+    return satellitePosition;
 }
 
 Matrix Satellite::getVelocity() {
-    return velocity;
+    return satelliteVelocity;
 }
