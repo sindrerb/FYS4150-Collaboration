@@ -10,18 +10,18 @@ using namespace std;
 class Satellite
 {
 private:
-    double Mass;
-    double Xpos;
-    double Ypos;
-    double Zpos;
+    double MASS;
+    double posX;
+    double posY;
+    double posZ;
 
 public:
     //Constructor
     Satellite ();
 
     //Setters
-    void setMass(double M);
-    void setPos(double X,double Y,double Z);
+    void setMass(double m);
+    void setPos(double x,  double y, double z);
 
     //Getters
     double getRelativeDist(const Satellite ball);

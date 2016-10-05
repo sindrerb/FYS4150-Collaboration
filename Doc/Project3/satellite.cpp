@@ -5,24 +5,24 @@ Satellite::Satellite()
 
 }
 
-void Satellite::setPos(double X,double Y,double Z){
-    Xpos = X;
-    Ypos = Y;
-    Zpos = Z;
+void Satellite::setPos(double x, double y, double z) {
+    posX = x;
+    posY = y;
+    posZ = z;
 }
 
-void Satellite::setMass(double M){
-    Mass = M;
+void Satellite::setMass(double m) {
+    MASS = m;
 
 }
 
-double Satellite::getRelativeDist(const Satellite ball){
-    double R,dX,dY,dZ;
-    dX = Xpos-ball.Xpos;
-    dY = Ypos-ball.Ypos;
-    dZ = Zpos-ball.Zpos;
+double Satellite::getRelativeDist(const Satellite ball) {
+    double R,dx,dy,dz;
+    dx = posX-ball.posX;
+    dy = posY-ball.posY;
+    dz = posZ-ball.posZ;
 
-    R = sqrt(dX*dX + dY*dY + dZ*dZ)
+    R = sqrt(dx*dx + dy*dy + dz*dz)
 
     return R;
 }
