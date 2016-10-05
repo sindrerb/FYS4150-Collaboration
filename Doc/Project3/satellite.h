@@ -4,27 +4,36 @@
 #include <matrix.h>
 #include <fstream>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
-class Satellite
-{
-private:
-    double MASS;
-    double posX;
-    double posY;
-    double posZ;
+class Satellite {
 
 public:
     //Constructor
     Satellite ();
 
+    // Overload Constructor
+    Satellite(string name);
     //Setters
     void setMass(double m);
-    void setPos(double x,  double y, double z);
+    void setPosition(double x,  double y, double z);
+    void setPosX(double x);
+    void setPosY(double y);
+    void setPosZ(double z);
 
     //Getters
-    double getRelativeDist(const Satellite ball);
+    string getName() const;
+    double getRelativeDistance(const Satellite ball);
+
+private:
+    string satelliteName;
+    double satelliteMass;
+    double satelliteVelocity;
+    double posX;
+    double posY;
+    double posZ;
 
 };
 
