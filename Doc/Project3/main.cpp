@@ -3,8 +3,8 @@
 #include <string>
 #include <fstream>
 
-#include "../classes/satellite.h"
-#include "../classes/matrix.h"
+#include <satellite.h>
+#include <matrix.h>
 
 using namespace std;
 
@@ -35,6 +35,7 @@ void initializeSatellite(Satellite satellite){
 }
 
 int main(){
+    double h = 0.01;
     Satellite sun("sun"),mercury("mercury"),venus("venus"),earth("earth"),mars("mars"),jupiter("jupiter"),saturn("saturn"),uranus("uranus"),neptun("neptun"),pluto("pluto");
     Satellite solarSystem[1] = { earth };
     Matrix initialPosSun,initialPosEarth;
@@ -44,9 +45,11 @@ int main(){
     earth.setPosition(initialPosEarth);
 
 
+    earth.getPosition().print("Earth pos");
+    earth.getVelocity().print("Earth vel");
+    //earth.setPosition(euler(earth.getPosition(),h));
 
 
-    cout << earth.getRelativeDistTo(sun) <<endl;
 
 //    int numberOfSatellites = sizeof(solarSystem)/sizeof(*solarSystem);
 //    for(int i = 0; i< numberOfSatellites;i++){

@@ -149,12 +149,12 @@ Matrix Matrix::operator-(const Matrix &B) {//Matrix addition
 Matrix Matrix::operator*(const Matrix &B) {//Matrix multiplication
     if(this->columns == B.rows) {
         Matrix C;
-        rows = this->rows;
-        columns = B.columns;
-        C.setZeros(rows,columns);
-        for(int i = 0; i<columns; i++) {
-            for(int j = 0; j<rows ; j++) {
-                for(int k=0; k<rows; k++) {
+        C.rows = this->rows;
+        C.columns = B.columns;
+        C.setZeros(C.rows,C.columns);
+        for(int i = 0; i<C.columns; i++) {
+            for(int j = 0; j<C.rows ; j++) {
+                for(int k=0; k<C.rows; k++) {
                     C.M[i][j] += this->M[k][j]*B.M[i][k];
                 }
             }
