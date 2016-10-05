@@ -4,6 +4,23 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{lmodern}
+\usepackage{color}
+\usepackage{listings}
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=l,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+  xleftmargin=0.5cm
+}
+
 
 \usepackage[sc]{mathpazo} % Use the Palatino font
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
@@ -57,6 +74,7 @@
 \newcommand{\planet}{\bullet}
 \newcommand{\AU}{\text{AU}}
 \newcommand{\Yr}{\text{Yr}}
+\newcommand{\err}[1]{\mathcal{O}(#1)}
 %--------------------------------------------
 
 
@@ -129,15 +147,29 @@ Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth 
 In total the system gets three sets of coupled differential equations per object in the system, which has to be solved to describe the system properly.
 \begin{align}
 &\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
-&\frac{dy}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
-&\frac{dz}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
+&\frac{dy}{dt}=v_y &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
+&\frac{dz}{dt}=v_v &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
 \end{align}
-The system may be described with numerical methods by discretizing equations (\ref{eq:set_x}-\ref{eq:set_z}). Letting  $t\rightarrow t_i=t_0+i dt, i\in \mathbb{N}$, $x\rightarrow x_i+1=x_i+v_i dt$ and $v\rightarrow v_i+1=v_i+a(x_i) dt$ be the new discretized relations, the derivative may approximated by Taylor expansions.\nl
-\begin{align}
-&\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
-&\frac{dy}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
-&\frac{dz}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
-\end{align}
+The system may be described with numerical methods by discretizing equations (\ref{eq:set_x}-\ref{eq:set_z}). Letting  $t\rightarrow t_i=t_0+ih, i\in \mathbb{N}$, $x\rightarrow x_i$ and $v\rightarrow v_i$ be the new discretized relations with the initial conditions $x(t_0)=x_0$ and $v(t_0)=v_0$ where $x_0$ and $v_0$ is known, and $h=\frac{t_{max}-t_0}{N} $. The equations may be solved by Euler's method resulting in an algorithm with an error $\err{h^2}$ at each calculation. Here $a_{k,i}=\frac{F_k(k_i)}{M_\planet}$ where $k$ represents an axis label.
+\begin{lstlisting}[style=customc]
+x[i+1]=x[i]+h*xV[i]
+y[i+1]=y[i]+h*yV[i]
+z[i+1]=z[i]+h*zV[i]
+xV[i+1]=xV[i]+h*xA[i]
+yV[i+1]=yV[i]+h*yA[i]
+zV[i+1]=zV[i]+h*zA[i]
+\end{lstlisting}
+
+Or with the more stable Verlet Vocity method reducing the error to $\err{h^3}$ for a calculation. 
+\begin{lstlisting}[style=customc]
+x[i+1]=x[i]+h*xV[i]+0.5*h*xA[i]
+y[i+1]=y[i]+h*yV[i]+0.5*h*yA[i]
+z[i+1]=z[i]+h*zV[i]+0.5*h*zA[i]
+xV[i+1]=xV[i]+0.5*h*h*(xA[i+1]+xA[i])
+yV[i+1]=yV[i]+0.5*h*h*(yA[i+1]+yA[i])
+zV[i+1]=zV[i]+0.5*h*h*(zA[i+1]+zA[i])
+\end{lstlisting}
+These algorithms were implemented in a script that simulates the dynamics of the Sun and Earth. 
 
 All code and results are found in the GitHub repository\nl
 {\small \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project3}{github.com/sindrerb/FYS4150-Collaboration/}}
