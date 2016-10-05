@@ -1,7 +1,6 @@
 #ifndef SATELLITE_H
 #define SATELLITE_H
 #include <iostream>
-#include <matrix.h>
 #include <fstream>
 #include <string>
 
@@ -10,14 +9,17 @@ using namespace std;
 class Satellite
 {
 private:
+    string myName;
     double Mass;
+//    double *possition = new double[3];
     double Xpos;
     double Ypos;
     double Zpos;
 
 public:
+
     //Constructor
-    Satellite ();
+    Satellite(string name);
 
     //Setters
     void setMass(double M);
@@ -25,7 +27,7 @@ public:
 
     //Getters
     double getRelativeDist(const Satellite ball);
-
+    string getName();
 };
 
 #endif // SATELLITE_H

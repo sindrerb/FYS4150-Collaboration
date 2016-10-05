@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    ../satelliteClass/satellite.cpp
+    ../classes/matrix.cpp \
+    ../classes/satellite.cpp
 
 HEADERS += \
-    ../satelliteClass/satellite.h
+    ../classes/matrix.h \
+    ../classes/satellite.h
