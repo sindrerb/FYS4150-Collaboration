@@ -5,65 +5,57 @@
 
 Satellite::Satellite(){
     satelliteMass = 0;
+    satelliteVelocity.setZeros(1,3);
+    satellitePosition.setZeros(1,3);
 }
 
 Satellite::Satellite(string name) {
     satelliteName = name;
 }
 
-string Satellite::getSatelliteName() const {
+Satellite::Satellite(string name, Matrix position, Matrix velocity) {
+    satelliteName = name;
+    satelliteVelocity.setColumn(0,velocity);
+    satellitePosition.setColumn(0,position);
+}
+
+string Satellite::getName() const {
     return satelliteName;
 }
 
-void Satellite::setSatelliteName(string name) {
+void Satellite::setName(string name) {
     satelliteName = name;
 }
 
-double Satellite::getSatelliteMass() const {
+double Satellite::getMass() const {
     return satelliteMass;
 }
 
-void Satellite::setSatelliteMass(double mass) {
+void Satellite::setMass(double mass) {
     satelliteMass = mass;
 }
 
-double Satellite::getPosZ() const {
-    return posZ;
-}
-
-void Satellite::setPosZ(double zCoordinate) {
-    posZ = zCoordinate;
-}
-
-double Satellite::getPosY() const {
-    return posY;
-}
-
-void Satellite::setPosY(double yCoordinate) {
-    posY = yCoordinate;
-}
-
-double Satellite::getPosX() const {
-    return posX;
-}
-
-void Satellite::setPosX(double xCoordinate) {
-    posX = xCoordinate;
-}
-
-Matrix Satellite::getSatellitePosition() const {
+Matrix Satellite::getPosition() const {
     return satellitePosition;
 }
 
-void Satellite::setSatellitePosition(Matrix position) {
+void Satellite::setPosition(Matrix position) {
     satellitePosition = position;
 }
 
-double Satellite::getRelativeDist(const Satellite name) {
-    double R,dx,dy,dz;
-    dx = posX - name.posX;
-    dy = posY - name.posY;
-    dz = posZ - name.posZ;
-    R = sqrt(dx*dx + dy*dy + dz*dz);
-    return R;
+Matrix Satellite::getVelocity() const {
+    return satelliteVelocity;
 }
+
+void Satellite::setVelocity(const Matrix &value) {
+    satelliteVelocity = value;
+}
+
+//double Satellite::getRelativeDist(const Satellite name) {
+//    double R,dx,dy,dz;
+//    dx = satellitePosition.get - name.posX;
+//    dy = posY - name.posY;
+//    dz = posZ - name.posZ;
+//    R = sqrt(dx*dx + dy*dy + dz*dz);
+//    return R;
+//}

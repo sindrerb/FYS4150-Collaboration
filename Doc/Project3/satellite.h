@@ -9,37 +9,32 @@ using namespace std;
 
 class Satellite
 {
+
+public:
+//Constructors
+    Satellite ();
+    Satellite(string name);
+    Satellite(string name, Matrix position, Matrix velocity);
+
+//Setters
+    void setName(string name);
+    void setMass(double mass);
+    void setPosition(Matrix position);
+
+//Getters
+    string getName() const;
+    double getMass() const;
+    Matrix getPosition() const;
+    double getRelativeDist(const Satellite name);
+    Matrix getVelocity() const;
+    void setVelocity(const Matrix &value);
+
 private:
     string satelliteName;
     double satelliteMass;
     Matrix satellitePosition;
     Matrix satelliteVelocity;
-    double posX;
-    double posY;
-    double posZ;
-
-public:
-    Satellite ();                   //Constructor
-    Satellite(string name);         //Overload constructor
-
-    //Setters
-    void setSatelliteName(string name);
-    void setSatelliteMass(double mass);
-    void setPosZ(double zCoordinate);
-    void setPosY(double yCoordinate);
-    void setPosX(double xCoordinate);
-    void setSatellitePosition(Matrix position);
-
-    //Getters
-
-    string getSatelliteName() const;
-    double getSatelliteMass() const;
-    double getPosZ() const;
-    double getPosY() const;
-    double getPosX() const;
-    Matrix getSatellitePosition() const;
-    double getRelativeDist(const Satellite name);
-
 };
+
 
 #endif // SATELLITE_H

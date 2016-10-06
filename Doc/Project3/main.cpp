@@ -4,6 +4,7 @@
 #include <math.h>
 #include "satellite.h"
 #include "matrix.h"
+#include "solarsystem.h"
 
 using namespace std;
 
@@ -11,12 +12,29 @@ using namespace std;
 
 int main(){
 
-    string satelliteName;
+    int NUMBER_OF_ITERATIONS = 1000;
+    double START_TIME = 0;
+    double END_TIME = 100;
+    int stepLength = (END_TIME - START_TIME)/NUMBER_OF_ITERATIONS;
 
-    cout << "Type a planet name: ";
-    cin >> satelliteName;
+    Matrix velocitySun;
+    Matrix positionSun;
+    Matrix velocityEarth;
+    Matrix positionEarth;
 
-    Satellite satelite1(satelliteName);
+//  Satellite sun("Sun", positionSun, velocitySun);
+//    Satellite earth("Earth", positionEarth, velocityEarth);
 
-    cout << "You made planet: " << satelite1.getSatelliteName() <<endl;
+//    Matrix velocity;
+//    velocity.setZeros(4,5);
+//    velocity.setElement(1,0,5);
+//    velocity.print("velocity");
+//    string satelliteName;
+
+//    cout << "Type a planet name: ";
+//    cin >> satelliteName;
+
+//    Satellite satelite1(satelliteName);
+
+//    cout << "You made planet: " << satelite1.getName() <<endl;
 }
