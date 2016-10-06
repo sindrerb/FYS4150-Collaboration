@@ -6,6 +6,12 @@ using namespace std;
 Matrix::Matrix(){
 }
 
+Matrix::Matrix(double x, double y, double z) {
+    components[0] = x;
+    components[1] = x;
+    components[2] = x;
+}
+
 void Matrix::setZeros(int row, int column) {
     rows = row;
     columns = column;

@@ -11,9 +11,11 @@ typedef double real;
 class Matrix {
     int rows, columns;
     real **M;
+    double components[3];
 public:
     //Constructor
     Matrix ();
+    Matrix(double x, double y, double z);
 
     //Defining array type
     void setZeros(int row, int column);
