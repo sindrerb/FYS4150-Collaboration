@@ -10,6 +10,14 @@ Satellite::Satellite (string name) {
     myName = name;
 }
 
+Satellite::Satellite(string name, double mass, Matrix pos, Matrix velo, Matrix acc) {
+    myName = name;
+    myMass = mass;
+    position = pos;
+    velocity = velo;
+    acceleration = acc;
+}
+
 //Setters
 void Satellite::setMass(double mass) {
     myMass = mass;

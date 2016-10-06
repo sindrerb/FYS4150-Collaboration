@@ -15,10 +15,12 @@ private:
     Matrix position;
     Matrix velocity;
     Matrix acceleration;
+
 public:
     //Constructor
     Satellite ();
     Satellite (string name);
+    Satellite(string name, double mass, Matrix pos, Matrix velo, Matrix acc);
 
     //Setters
     void setMass(double mass);
@@ -33,6 +35,7 @@ public:
     Matrix getPosition();
     Matrix getVelocity();
     Matrix getAcceleration();
+
 };
 
 #endif // SATELLITE_H
