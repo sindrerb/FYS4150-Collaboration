@@ -10,21 +10,35 @@ using namespace std;
 class Satellite
 {
 private:
-    double MASS;
+    string satelliteName;
+    double satelliteMass;
+    Matrix satellitePosition;
+    Matrix satelliteVelocity;
     double posX;
     double posY;
     double posZ;
 
 public:
-    //Constructor
-    Satellite ();
+    Satellite ();                   //Constructor
+    Satellite(string name);         //Overload constructor
 
     //Setters
-    void setMass(double m);
-    void setPos(double x,  double y, double z);
+    void setSatelliteName(string name);
+    void setSatelliteMass(double mass);
+    void setPosZ(double zCoordinate);
+    void setPosY(double yCoordinate);
+    void setPosX(double xCoordinate);
+    void setSatellitePosition(Matrix position);
 
     //Getters
-    double getRelativeDist(const Satellite ball);
+
+    string getSatelliteName() const;
+    double getSatelliteMass() const;
+    double getPosZ() const;
+    double getPosY() const;
+    double getPosX() const;
+    Matrix getSatellitePosition() const;
+    double getRelativeDist(const Satellite name);
 
 };
 

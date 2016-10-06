@@ -5,12 +5,10 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     matrix.cpp \
-    ../satelliteClass/satellite.cpp \
     satellite.cpp
 
 HEADERS += \
     matrix.h \
-    ../satelliteClass/satellite.h \
     satellite.h
 
 DISTFILES += \
