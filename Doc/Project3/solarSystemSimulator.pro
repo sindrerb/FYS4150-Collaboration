@@ -5,11 +5,13 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     matrix.cpp \
-    satellite.cpp
+    satellite.cpp \
+    solarsystem.cpp
 
 HEADERS += \
     matrix.h \
-    satellite.h
+    satellite.h \
+    solarsystem.h
 
 DISTFILES += \
     earth.txt \
