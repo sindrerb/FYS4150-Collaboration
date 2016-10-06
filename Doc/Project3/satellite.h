@@ -12,9 +12,8 @@ class Satellite
 private:
     string myName;
     double myMass;
-    Matrix position, velocity;
-    position.setZeros(3,1);
-    velocity.setZeros(3,1);
+    Matrix position;
+    Matrix velocity;
 public:
     //Constructor
     Satellite ();

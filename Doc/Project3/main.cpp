@@ -33,29 +33,36 @@ int main(){
     Satellite sun("sun"),mercury("mercury"),venus("venus"),earth("earth"),mars("mars"),jupiter("jupiter"),saturn("saturn"),uranus("uranus"),neptun("neptun"),pluto("pluto");
 
     /*########     USER INPUT     #########*/
-    Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
+    //Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
     string filename = "PositionFile.txt";
-    double h = 1E-5;
+    double finalTime, N;
+    finalTime = 1.0;
+    N = 1E2;
     int task = 1;
 
+    double timeStep = finalTime/N;
     Matrix initialPos,initialVel;
-    if(task==1){//Set up system with only Sun and Earth
-        initialPos.setZeros(3,1);
-        initialVel.setZeros(3,1);
+    double mass;
+    //Set up system with only Sun and Earth
+    initialPos.setZeros(3,1);
+    initialVel.setZeros(3,1);
+    mass = 10E6;
 
-        sun.setPosition(initialPos);
-        sun.setVelocity(initialVel);
+    sun.setPosition(initialPos);
+    sun.setVelocity(initialVel);
+    sun.setMass(mass);
 
-        initialPos.setElement(0,0,1);
-        initialVel.setElement(1,0,6.28);  //2pi??
+    initialPos.setElement(0,0,1);
+    initialVel.setElement(1,0,6.28);  //2pi??
+    mass = 1;
 
-        earth.setPosition(initialPos);
-        earth.setVelocity(initialVel);
+    earth.setPosition(initialPos);
+    earth.setVelocity(initialVel);
+    earth.setMass(mass);
 
-        Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
-    }
-//    else if(task==2){//Set up system with Sun, Earth and Jupiter
-//        double mass;
+    Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
+
+//        /*##### Set up system with Sun, Earth and Jupiter */
 //        initialPos.setZeros(3,1);
 //        initialVel.setZeros(3,1);
 //        mass = 10E6;
@@ -81,7 +88,7 @@ int main(){
 //        jupiter.setMass(mass);
 
 //        Satellite object[3] = { sun , earth , jupiter};  //List of the objects that are in use, the Sun must be the first element
-//    }else{ //Sets up the whole solar system
+//        /*##### Sets up the whole solar system */
 //        Satellite object[10] = { sun , mercury, venus, earth ,mars , jupiter, saturn, uranus, neptun ,pluto};  //List of the objects that are in use, the Sun must be the first element
 
 //        int numberOfSatellites = sizeof(object)/sizeof(*object);
@@ -128,14 +135,16 @@ int main(){
     ofile << "Position \n  x \t y \t z " << endl;
     ofile.close();
 
-    double R;
-    for(int j = 0; j<1E5; j++) {
+    double R,time;
+    time = 0;
+    while(time < finalTime) {
         pos = object[i].getPosition();
-//        vel = object[i].getVelocity();
-//        R = object[i].getRelativeDistTo(object[0],0);
-//        object[i].setPosition(euler(pos,vel,h));
-//        object[i].setVelocity(euler(vel,accerelation(pos,R),h));
-//        pos = object[i].getPosition();
-//        pos.printToFile(filename);
+        vel = object[i].getVelocity();
+        R = object[i].getRelativeDistTo(object[0],0);
+        object[i].setPosition(euler(pos,vel,timeStep));
+        object[i].setVelocity(euler(vel,accerelation(pos,R),timeStep));
+        pos = object[i].getPosition();
+        pos.printToFile(filename);
+        time += timeStep;
     }
 }

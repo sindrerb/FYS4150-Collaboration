@@ -16,10 +16,12 @@ void Satellite::setMass(double mass) {
 }
 
 void Satellite::setPosition(Matrix newPosition) {
+    position.setZeros(3,1);
     position = newPosition;
 }
 
 void Satellite::setVelocity(Matrix newVelocity) {
+    velocity.setZeros(3,1);
     velocity = newVelocity;
 }
 
@@ -52,7 +54,9 @@ string Satellite::getName() {
 }
 
 Matrix Satellite::getPosition() {
-    return position;
+    Matrix pos;
+    pos = position;
+    return pos;
 }
 
 Matrix Satellite::getVelocity() {
