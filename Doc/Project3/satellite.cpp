@@ -2,6 +2,10 @@
 #include <math.h>
 
 //Constructor
+
+Satellite::Satellite () {
+}
+
 Satellite::Satellite (string name) {
     myName = name;
 }
