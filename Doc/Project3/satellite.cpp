@@ -24,6 +24,10 @@ void Satellite::setVelocity(Matrix newVelocity) {
     velocity.setZeros(3,1);
     velocity = newVelocity;
 }
+void Satellite::setAcceleration(Matrix newAcceleration) {
+    acceleration.setZeros(3,1);
+    acceleration = newAcceleration;
+}
 
 //Getters
 double Satellite::getRelativeDistTo(const Satellite satellite, int axis) {
@@ -54,11 +58,13 @@ string Satellite::getName() {
 }
 
 Matrix Satellite::getPosition() {
-    Matrix pos;
-    pos = position;
-    return pos;
+    return position;
 }
 
 Matrix Satellite::getVelocity() {
     return velocity;
+}
+
+Matrix Satellite::getAcceleration() {
+    return acceleration;
 }

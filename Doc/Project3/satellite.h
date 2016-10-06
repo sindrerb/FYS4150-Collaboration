@@ -14,6 +14,7 @@ private:
     double myMass;
     Matrix position;
     Matrix velocity;
+    Matrix acceleration;
 public:
     //Constructor
     Satellite ();
@@ -23,6 +24,7 @@ public:
     void setMass(double mass);
     void setPosition(Matrix newPosition);
     void setVelocity(Matrix newVelocity);
+    void setAcceleration(Matrix newAcceleration);
 
     //Getters
     double getRelativeDistTo(const Satellite satellite, int axis);
@@ -30,6 +32,7 @@ public:
     string getName();
     Matrix getPosition();
     Matrix getVelocity();
+    Matrix getAcceleration();
 };
 
 #endif // SATELLITE_H

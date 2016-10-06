@@ -21,7 +21,7 @@ Matrix verlet(Matrix vector, Matrix derivative,double step) { //Solving next ste
     return newVector;
 }
 
-Matrix accerelation(Matrix position, double distance){  // Calculates acceleration relation between two objects
+Matrix acceleration(Matrix position, double distance){  // Calculates acceleration relation between two objects
     Matrix acc;
     acc = position*(-39.4761/(distance*distance*distance));
 //    acc.print("acc");
@@ -36,62 +36,47 @@ int main(){
     //Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
     string filename = "PositionFile.txt";
     double finalTime, N;
-    finalTime = 1.0;
-    N = 1E2;
-    int task = 1;
+    finalTime = 30;
+    N = 1E5;
 
     double timeStep = finalTime/N;
-    Matrix initialPos,initialVel;
+    Matrix initialPos,initialVel,initialAcc;
     double mass;
     //Set up system with only Sun and Earth
     initialPos.setZeros(3,1);
     initialVel.setZeros(3,1);
-    mass = 10E6;
+    initialAcc.setZeros(3,1);
+    mass = 1000;
 
     sun.setPosition(initialPos);
     sun.setVelocity(initialVel);
+    sun.setAcceleration(initialAcc);
     sun.setMass(mass);
 
     initialPos.setElement(0,0,1);
     initialVel.setElement(1,0,6.28);  //2pi??
-    mass = 1;
+    mass = 0.00300150829;
 
     earth.setPosition(initialPos);
     earth.setVelocity(initialVel);
+    earth.setAcceleration(initialAcc);
     earth.setMass(mass);
 
-    Satellite object[2] = { sun , earth };  //List of the objects that are in use, the Sun must be the first element
+    initialPos.setElement(0,0,10);
+    initialVel.setElement(1,0,2);  //2pi??
+    mass = 0.954248366;
 
-//        /*##### Set up system with Sun, Earth and Jupiter */
-//        initialPos.setZeros(3,1);
-//        initialVel.setZeros(3,1);
-//        mass = 10E6;
+    jupiter.setPosition(initialPos);
+    jupiter.setVelocity(initialVel);
+    jupiter.setAcceleration(initialAcc);
+    jupiter.setMass(mass);
 
-//        sun.setPosition(initialPos);
-//        sun.setVelocity(initialVel);
-//        sun.setMass(mass);
+    Satellite object[3] = { sun , earth , jupiter};  //List of the objects that are in use, the Sun must be the first element
 
-//        initialPos.setElement(0,0,1);
-//        initialVel.setElement(1,0,6.28);  //2pi??
-//        mass = 1;
-
-//        earth.setPosition(initialPos);
-//        earth.setVelocity(initialVel);
-//        earth.setMass(mass);
-
-//        initialPos.setElement(0,0,4);
-//        initialVel.setElement(1,0,6.28);  //2pi??
-//        mass = 10E2;
-
-//        jupiter.setPosition(initialPos);
-//        jupiter.setVelocity(initialVel);
-//        jupiter.setMass(mass);
-
-//        Satellite object[3] = { sun , earth , jupiter};  //List of the objects that are in use, the Sun must be the first element
 //        /*##### Sets up the whole solar system */
 //        Satellite object[10] = { sun , mercury, venus, earth ,mars , jupiter, saturn, uranus, neptun ,pluto};  //List of the objects that are in use, the Sun must be the first element
 
-//        int numberOfSatellites = sizeof(object)/sizeof(*object);
+        int numberOfSatellites = sizeof(object)/sizeof(*object);
 
 //        initialPos.setZeros(3,1);
 //        initialVel.setZeros(3,1);
@@ -126,25 +111,55 @@ int main(){
 //            }
 //    }
 
-    int i = 1;
-    Matrix pos, vel;
-    pos.setZeros(3,1);
-    vel.setZeros(3,1);
+    Matrix pos, vel, acc, zeroColumn;
+    zeroColumn.setZeros(3,1);
+    pos = zeroColumn;
+    vel = zeroColumn;
+    acc = zeroColumn;
 
-    ofile.open(filename);
-    ofile << "Position \n  x \t y \t z " << endl;
-    ofile.close();
-
+    for(int i = 1; i<numberOfSatellites; i++){
+        ofile.open(object[i].getName());
+        ofile << object[i].getName() << " position \n  x \t y \t z " << endl;
+        ofile.close();
+    }
     double R,time;
     time = 0;
+
+    Matrix i_acc, j_acc, j_pos;
+    i_acc.setZeros(3,1);
+    j_acc.setZeros(3,1);
+    j_pos.setZeros(3,1);
+    double i_m,j_m;
     while(time < finalTime) {
-        pos = object[i].getPosition();
-        vel = object[i].getVelocity();
-        R = object[i].getRelativeDistTo(object[0],0);
-        object[i].setPosition(euler(pos,vel,timeStep));
-        object[i].setVelocity(euler(vel,accerelation(pos,R),timeStep));
-        pos = object[i].getPosition();
-        pos.printToFile(filename);
+        for(int i = 1; i<numberOfSatellites; i++) {
+            pos = object[i].getPosition();
+            vel = object[i].getVelocity();
+            R = object[i].getRelativeDistTo(object[0],0);
+            acc = acceleration(pos,R);
+            i_acc = object[i].getAcceleration();
+            object[i].setAcceleration(j_acc+acc);
+            if(numberOfSatellites>2) {
+                for(int j = i+1; j<numberOfSatellites; j++) {
+                    j_pos = object[j].getPosition();
+                    R = object[i].getRelativeDistTo(object[j],0);
+                    acc = acceleration(pos-j_pos,R);
+                    i_m = object[i].getMass();
+                    j_m = object[j].getMass();
+                    i_acc = object[i].getAcceleration();
+                    j_acc = object[j].getAcceleration();
+                    object[i].setAcceleration(i_acc+acc*j_m);
+                    object[j].setAcceleration(j_acc+acc*i_m);
+                }
+            }
+            acc = object[i].getAcceleration();
+            object[i].setPosition(euler(pos,vel,timeStep));
+            object[i].setVelocity(euler(vel,acc,timeStep));
+        }
+        for(int i = 1; i<numberOfSatellites; i++){
+            object[i].setAcceleration(zeroColumn);
+            pos = object[i].getPosition();
+            pos.printToFile(object[i].getName());
+        }
         time += timeStep;
     }
 }
