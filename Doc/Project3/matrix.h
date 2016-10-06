@@ -34,7 +34,7 @@ public:
     Matrix operator*(const Matrix &B);
     Matrix operator*(const real &b);
     Matrix operator/(const real &b);
-    Matrix& operator= (const Matrix copy_from);
+    Matrix operator= (const Matrix copy_from);
     Matrix transpose();
 
 

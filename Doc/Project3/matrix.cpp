@@ -191,14 +191,14 @@ Matrix Matrix::operator/(const real &b) {
     return C;
 }
 
-Matrix &Matrix::operator=(Matrix copy_from) {//Assign matrix eaqual to another
-    columns=copy_from.columns;
-    rows=copy_from.rows;
+Matrix Matrix::operator=(Matrix matrix) {//Assign matrix eaqual to another
+    columns=matrix.columns;
+    rows=matrix.rows;
     M = new real*[columns];
     for(int i = 0; i<columns; i++) {
         M[i] = new real[rows];
         for(int j = 0; j<rows ; j++) {
-            M[i][j] = copy_from.M[i][j];
+            M[i][j] = matrix.M[i][j];
         }
     }
 }
