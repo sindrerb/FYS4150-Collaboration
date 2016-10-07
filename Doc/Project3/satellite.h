@@ -13,7 +13,13 @@ public:
     Satellite(double mass, vec3 position, vec3 velocity);
 
     double getSatelliteMass() const;
-    void setSatelliteMass(double value);
+    void setSatelliteMass(double mass);
+
+    vec3 getSatellitePosition() const;
+    void setSatellitePosition(const vec3 &position);
+
+    vec3 getSatelliteVelocity() const;
+    void setSatelliteVelocity(const vec3 &velocity);
 
 private:
 
