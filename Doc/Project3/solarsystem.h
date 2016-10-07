@@ -1,18 +1,11 @@
 #ifndef SOLARSYSTEM_H
 #define SOLARSYSTEM_H
-#include "satellite.h"
 
 
 class SolarSystem
 {
 public:
-    SolarSystem();    
-
-    Satellite getBodies() const;
-    void setBodies(const Satellite &body);
-
-private:
-    Satellite bodies;
+    SolarSystem();
 };
 
 #endif // SOLARSYSTEM_H
