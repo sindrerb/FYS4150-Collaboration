@@ -9,6 +9,10 @@ Satellite& SolarSystem::createSatellite(double mass, vec3 position, vec3 velocit
     return m_satellites.back();
 }
 
+double SolarSystem::relativeDistanceBetween() {
+
+}
+
 std::vector<Satellite> &SolarSystem::satellites() {
     return m_satellites;
 }

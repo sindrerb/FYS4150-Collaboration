@@ -3,13 +3,12 @@
 #include <math.h>
 #include "vec3.h"
 #include "matrix.h"
+#include "numericalsolver.h"
 
 
 class Satellite {
 public:
-    double satelliteMass;
-    vec3 satellitePosition;
-    vec3 satelliteVelocity;
+
     Satellite(double mass, vec3 position, vec3 velocity);
 
     double getSatelliteMass() const;
@@ -20,9 +19,12 @@ public:
 
     vec3 getSatelliteVelocity() const;
     void setSatelliteVelocity(const vec3 &velocity);
+    static vec3 distanceBetweenSomethingOrOther(Satellite s1, Satellite s2);
 
 private:
-
+    double satelliteMass;
+    vec3 satellitePosition;
+    vec3 satelliteVelocity;
 
 };
 

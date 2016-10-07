@@ -6,11 +6,11 @@
 class NumericalSolver {
 
 public:
-    NumericalSolver();
 
-    vec3 solveEuler(vec3 x, vec3 dx, double step);
+    static vec3 solveEuler(vec3 x, vec3 dx, double step);
 
 private:
+    NumericalSolver();
 };
 
 #endif // NUMERICALSOLVER_H

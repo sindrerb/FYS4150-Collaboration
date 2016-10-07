@@ -1,5 +1,11 @@
 #include "satellite.h"
 
+Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
+    satelliteMass = mass;
+    satellitePosition = position;
+    satelliteVelocity = velocity;
+}
+
 double Satellite::getSatelliteMass() const {
     return satelliteMass;
 }
@@ -24,10 +30,10 @@ void Satellite::setSatelliteVelocity(const vec3 &velocity) {
     satelliteVelocity = velocity;
 }
 
-Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
-    satelliteMass = mass;
-    satellitePosition = position;
-    satelliteVelocity = velocity;
+vec3 Satellite::distanceBetweenSomethingOrOther(Satellite s1, Satellite s2) {
+    return s1.getSatellitePosition() - s2.getSatellitePosition();
 }
+
+
 
 
