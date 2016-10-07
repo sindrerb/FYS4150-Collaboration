@@ -8,7 +8,7 @@ class vec3
 public:
     vec3();
     vec3(const vec3&) = default;
-    vec3(vec3&&) = default;
+//    vec3(vec3&&) = default;
     vec3(double x, double y, double z);
     double lengthSquared();
     double length();

@@ -7,13 +7,15 @@ SOURCES += main.cpp \
     matrix.cpp \
     vec3.cpp \
     satellite.cpp \
-    solarsystem.cpp
+    solarsystem.cpp \
+    numericalsolver.cpp
 
 HEADERS += \
     matrix.h \
     vec3.h \
     satellite.h \
-    solarsystem.h
+    solarsystem.h \
+    numericalsolver.h
 
 DISTFILES += \
     earth.txt \
