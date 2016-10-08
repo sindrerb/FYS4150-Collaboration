@@ -12,22 +12,26 @@ using namespace std;
 
 int main(){
 
-    int NUMBER_OF_ITERATIONS = 100;
-    double START_TIME = 0;
-    double END_TIME = 10;
-    double stepLength = (END_TIME - START_TIME)/NUMBER_OF_ITERATIONS;
-    double SOLAR_MASS = 1000;
-    double EARTH_MASS = 10;
+//    int NUMBER_OF_ITERATIONS = 100;
+//    double START_TIME = 0;
+//    double END_TIME = 10;
+//    double stepLength = (END_TIME - START_TIME)/NUMBER_OF_ITERATIONS;
+//    double SOLAR_MASS = 1000;
+//    double EARTH_MASS = 10;
 
     SolarSystem solarSystem;
 
-    Satellite &sun = solarSystem.createSatellite( SOLAR_MASS, vec3(-1,0,0), vec3(0,0,0) );       // Initializes satelliteObject
-    Satellite &earth = solarSystem.createSatellite( EARTH_MASS, vec3(10,5,2), vec3(2,4,6) );     // Initializes satelliteObject
+//    Satellite &sun = solarSystem.createSatellite( SOLAR_MASS, vec3(0,0,0), vec3(0,0,0) );       // Initializes satelliteObject
+//    Satellite &earth = solarSystem.createSatellite( EARTH_MASS, vec3(10,5,2), vec3(2,4,6) );     // Initializes satelliteObject
+//    double distance = Satellite::getDistanceBetween(sun,earth);
+//    cout << "distance: " << distance << endl;
 
+    solarSystem.createSunEarth();
 
-    double distance = Satellite::getDistanceBetween(sun, earth);
-    cout << "distance: " << distance << endl;
+    vector<Satellite> &satellite = solarSystem.satellites();
 
+    double distance = Satellite::getDistanceBetween(satellite[0],satellite[1]);
+    cout << "distance: " << distance <<endl;
 
 
 // Create vector of satellites

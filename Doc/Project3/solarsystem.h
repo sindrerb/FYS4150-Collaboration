@@ -12,6 +12,7 @@ public:
     Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
 
     std::vector<Satellite> &satellites();
+    Satellite &createSunEarth();
 private:
     std::vector<Satellite> m_satellites;
 };
