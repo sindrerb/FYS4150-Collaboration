@@ -11,8 +11,6 @@ public:
     SolarSystem();
     Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
 
-    double relativeDistanceBetween();
-
     std::vector<Satellite> &satellites();
 private:
     std::vector<Satellite> m_satellites;

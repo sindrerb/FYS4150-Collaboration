@@ -30,9 +30,12 @@ void Satellite::setSatelliteVelocity(const vec3 &velocity) {
     satelliteVelocity = velocity;
 }
 
-vec3 Satellite::distanceBetweenSomethingOrOther(Satellite s1, Satellite s2) {
-    return s1.getSatellitePosition() - s2.getSatellitePosition();
+double Satellite::getDistanceBetween(Satellite s1, Satellite s2) {
+    vec3 distanceVector = s1.getSatellitePosition() - s2.getSatellitePosition();
+    double dr = distanceVector.length();
+    return dr;
 }
+
 
 
 

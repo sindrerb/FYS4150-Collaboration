@@ -21,22 +21,29 @@ int main(){
 
     SolarSystem solarSystem;
 
-    Satellite &sun = solarSystem.createSatellite( SOLAR_MASS, vec3(0,0,0), vec3(0,0,0) );       // Initializes satelliteObject
-    Satellite &earth = solarSystem.createSatellite( EARTH_MASS, vec3(1,2,3), vec3(2,4,6) );     // Initializes satelliteObject
+    Satellite &sun = solarSystem.createSatellite( SOLAR_MASS, vec3(-1,0,0), vec3(0,0,0) );       // Initializes satelliteObject
+    Satellite &earth = solarSystem.createSatellite( EARTH_MASS, vec3(10,5,2), vec3(2,4,6) );     // Initializes satelliteObject
 
-    vector<Satellite> &satelliteObjects = solarSystem.satellites();     //Gets satelites from SolarSystem.
 
-    Satellite &satellite = satelliteObjects[1]; // Set satellite to [n] object created in SolarSystem.
+    double distance = Satellite::getDistanceBetween(sun, earth);
+    cout << "distance: " << distance << endl;
 
-    // Uses Eulers method to find next position for satellite Object[n]
-    satellite.setSatellitePosition(NumericalSolver::solveEuler(satellite.getSatellitePosition(), satellite.getSatelliteVelocity(), stepLength) );
 
-    //Print result for satelliteObject[n]
-    cout << satellite.getSatelliteMass() << "\n"
-         << satellite.getSatellitePosition() << "\n"
-         << satellite.getSatelliteVelocity() << endl;
-    vec3 kukk = Satellite::distanceBetweenSomethingOrOther(satelliteObjects[0], satelliteObjects[1]);
-    cout << kukk << endl;
+
+// Create vector of satellites
+    //    vector<Satellite> &satelliteObjects = solarSystem.satellites();     //Gets satelites from SolarSystem.
+
+    //    Satellite &satellite = satelliteObjects[1]; // Set satellite to [n] object created in SolarSystem.
+
+        // Uses Eulers method to find next position for satellite Object[n]
+    //    satellite.setSatellitePosition(NumericalSolver::solveEuler(satellite.getSatellitePosition(), satellite.getSatelliteVelocity(), stepLength) );
+
+    //    //Print result for satelliteObject[n]
+    //    cout << satellite.getSatelliteMass() << "\n"
+    //         << satellite.getSatellitePosition() << "\n"
+    //         << satellite.getSatelliteVelocity() << endl;
+    //    cout << sun.getSatellitePosition() << endl;
+
 
 //EULER TEST
     //    double someStepLength = 2;
@@ -47,9 +54,4 @@ int main(){
     //    cout << resultFromEuler << endl;
 
     return 0;
-}
-
-void test () {
-    vec3 result = NumericalSolver::solveEuler(vec3(0, 0, 0), vec3(0,0,0), 0);
-    Assert.IsEqual(vec3(0,0,0), result);
 }
