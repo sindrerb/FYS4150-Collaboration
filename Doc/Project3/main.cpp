@@ -30,6 +30,22 @@ int main(){
     double sunEarthDistance = sun.relativeDistanceTo(earth);
     cout << "relative distance between sun and earth: " << sunEarthDistance << endl;
 
+    vec3 earthPos1 = earth.getSatellitePosition();
+    cout << "earth position: ";
+    earthPos1.print();
+
+    double step = 5;
+    earth.calculateNewPosition(earth.getSatellitePosition(),earth.getSatelliteVelocity(), step );
+    vec3 earthPos2 = earth.getSatellitePosition();
+    cout << "new earth position: ";
+    earthPos2.print();
+
+    earth.calculateNewAccelleration(earth.getSatellitePosition(), sunEarthDistance );
+    vec3 earthAcc = earth.getSatelliteAcceleration();
+    earth.calculateNewVelocity( earthAcc, step );
+    vec3 earthVelo = earth.getSatelliteVelocity();
+    cout << "new earth velocity: ";
+    earthVelo.print();
 
 
 //********** TESTING CRAP *************

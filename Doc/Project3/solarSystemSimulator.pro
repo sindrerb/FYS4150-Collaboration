@@ -15,7 +15,8 @@ HEADERS += \
     vec3.h \
     satellite.h \
     solarsystem.h \
-    numericalsolver.h
+    numericalsolver.h \
+    catch.hpp
 
 DISTFILES += \
     earth.txt \
