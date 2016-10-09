@@ -1,5 +1,8 @@
 #include "satellite.h"
 
+Satellite::Satellite() {
+}
+
 Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
     satelliteMass = mass;
     satellitePosition = position;

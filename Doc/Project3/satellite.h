@@ -8,7 +8,7 @@
 
 class Satellite {
 public:
-
+    Satellite();
     Satellite(double mass, vec3 position, vec3 velocity);
 
     double getSatelliteMass() const;
