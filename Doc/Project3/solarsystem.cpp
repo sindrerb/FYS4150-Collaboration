@@ -15,7 +15,9 @@ Satellite& SolarSystem::createSatellite(double mass, vec3 position, vec3 velocit
 }
 
 Satellite &SolarSystem::createSunEarth() {
+
     SolarSystem::m_satellites.clear();  // Clear m_satellites (vector of Satellites)
+
     // Declare initial values (the hard way)
     int NUMBER_OF_ITERATIONS = 100;
     double START_TIME = 0;
@@ -23,6 +25,7 @@ Satellite &SolarSystem::createSunEarth() {
     double stepLength = (END_TIME - START_TIME)/NUMBER_OF_ITERATIONS;
     double SOLAR_MASS = 2 * exp(30);
     double EARTH_MASS = 6 * exp(24);
+
     Satellite &sun = SolarSystem::createSatellite( SOLAR_MASS, vec3(0,0,0), vec3(0,0,0) );       // Initializes satelliteObject
     Satellite &earth = SolarSystem::createSatellite( EARTH_MASS, vec3(10,5,2), vec3(2,4,6) );     // Initializes satelliteObject
 }

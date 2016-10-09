@@ -22,6 +22,7 @@ public:
 
     static double getDistanceBetween(Satellite s1, Satellite s2);
 
+    double relativeDistanceTo(Satellite satelliteName);
 private:
     double satelliteMass;
     vec3 satellitePosition;

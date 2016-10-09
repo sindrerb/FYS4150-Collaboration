@@ -24,6 +24,13 @@ int main(){
     double distance = Satellite::getDistanceBetween(solarSystemSatellites[0],solarSystemSatellites[1]);
     cout << "distance: " << distance <<endl;
 
+    // Calculating distance between sun and earth created from file.
+    Satellite &sun = solarSystemSatellites[0];
+    Satellite &earth = solarSystemSatellites[1];
+    double sunEarthDistance = sun.relativeDistanceTo(earth);
+    cout << "relative distance between sun and earth: " << sunEarthDistance << endl;
+
+
 
 //********** TESTING CRAP *************
 

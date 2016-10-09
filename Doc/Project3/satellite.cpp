@@ -36,6 +36,12 @@ double Satellite::getDistanceBetween(Satellite s1, Satellite s2) {
     return dr;
 }
 
+double Satellite::relativeDistanceTo(Satellite satelliteName) {
+    vec3 distanceVector = this->getSatellitePosition() - satelliteName.getSatellitePosition();
+    double dr = distanceVector.length();
+    return dr;
+}
+
 
 
 
