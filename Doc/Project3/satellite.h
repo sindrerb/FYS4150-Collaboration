@@ -19,6 +19,7 @@ public:
 
     vec3 getSatelliteVelocity() const;
     void setSatelliteVelocity(const vec3 &velocity);
+
     static double getDistanceBetween(Satellite s1, Satellite s2);
 
 private:

@@ -19,4 +19,5 @@ HEADERS += \
 
 DISTFILES += \
     earth.txt \
-    sun.txt
+    sun.txt \
+    solarsystem.txt

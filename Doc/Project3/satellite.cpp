@@ -39,4 +39,3 @@ double Satellite::getDistanceBetween(Satellite s1, Satellite s2) {
 
 
 
-
