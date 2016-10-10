@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     vec3.cpp \
     satellite.cpp \
     solarsystem.cpp \
-    numericalsolver.cpp
+    numericalsolver.cpp \
+
 
 HEADERS += \
     matrix.h \

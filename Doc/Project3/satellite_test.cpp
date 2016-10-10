@@ -9,7 +9,7 @@ TEST_CASE("Creating satellite") {
     SECTION ( "Create satellite object with position, velocity and mass" );
     INFO ( "FAILED to set position" ) satellite.setSatellitePosition(vec3(1,1,1));
     INFO ( "FAILED to set velocity" )satellite.setSatelliteVelocity(vec3(1,2,3));
-    INFO ( "FAILED to set mass" )satellite.setSatelliteMass(10);
+    INFO ( "FAILED to set mass" )satellite.setSatelliteMass(20);
     CAPTURE ( satellite.getSatellitePosition() );
     CAPTURE ( satellite.getSatelliteVelocity() );
     CAPTURE ( satellite.getSatelliteMass() );
