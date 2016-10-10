@@ -31,14 +31,12 @@ public:
     vec3 calculateNewVelocity( vec3 initialAcceleration, double timesStep );
     vec3 calculateNewAccelleration( vec3 initalPosition , double relativeDistance );
 
-
-
 private:
-    double satelliteMass;
-    vec3 satellitePosition;
-    vec3 satelliteVelocity;
-    vec3 satelliteAcceleration;
-
+    double m_mass;
+    vec3 m_position;
+    vec3 m_velocity;
+    vec3 m_acceleration;
+    vec3 m_force;
 };
 
 #endif // SATELLITE_H

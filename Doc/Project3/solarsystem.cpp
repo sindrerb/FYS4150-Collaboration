@@ -1,8 +1,8 @@
 #include "solarsystem.h"
 #include "satellite.h"
-//#include <iostream>
-//#include <string>
-//#include <fstream>
+#include <iostream>
+#include <string>
+#include <fstream>
 
 
 SolarSystem::SolarSystem() {
