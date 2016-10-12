@@ -46,7 +46,14 @@ Satellite &SolarSystem::createSolarSystem(std::string fileName) {
     }
 }
 
-
+void &SolarSystem::simulate(int N) {
+    vector<Satellite> &allSatellites = satellites();
+    vec3 temporaryAcceleration;
+    for(int i=0;i<allSatellites.size();i++) {
+        object_i = allSatellites[i];
+        object_i.setSatelliteAcceleration(object_i.getSatelliteAcceleration()+)
+    }
+}
 
 
 std::vector<Satellite> &SolarSystem::satellites() {

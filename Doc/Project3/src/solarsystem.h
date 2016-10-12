@@ -20,6 +20,9 @@ public:
     Satellite &createSolarSystem(std::string fileName);
 
 
+    //Evolve the system
+    void simulate(int N);
+
 private:
     // member variables
     std::vector<Satellite> m_satellites;

@@ -109,8 +109,8 @@ void Matrix::setRow(int n, const Matrix &B) { //Set column
 }
 
 Matrix Matrix::operator+(const Matrix &B) {//Matrix addition
+    Matrix C;
     if(this->rows == B.rows && this->columns == B.columns) {
-        Matrix C;
         int col = this->columns;
         int row = this->rows;
         C.setZeros(row,col);
@@ -121,10 +121,10 @@ Matrix Matrix::operator+(const Matrix &B) {//Matrix addition
                 C.M[i][j] = a + b;
             }
         }
-        return C;
     }else{
         printf("Error: Matrix addition\n Matrix dimentions dont match.");
     }
+    return C;
 }
 
 Matrix Matrix::operator-(const Matrix &B) {//Matrix addition

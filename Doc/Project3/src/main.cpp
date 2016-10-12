@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <math.h>
-#include "matrix.h"
+//#include "matrix.h"
 #include "vec3.h"
 #include "solarsystem.h"
 #include "satellite.h"
@@ -12,42 +12,46 @@ using namespace std;
 
 int main(){
 
-    SolarSystem solarSystem;    // Create instance of SolarSystem
 
-    solarSystem.createSunEarth();       // Create Sun-Earth system (vecor<Satellites>) from member function in Solarsystem
-    vector<Satellite> &sunEarthSatellites = solarSystem.satellites();   // Access satellite objects from vector<Satellites> in SolarSystem
-    double distance2 = Satellite::getDistanceBetween(sunEarthSatellites[0],sunEarthSatellites[1]);  // calculate distance between sun(sunEarthSatellites[0]) and earth(sunEarthSatellites[1])
-    cout << "distance: "<< distance2 << endl;
 
-    solarSystem.createSolarSystem("solarsystem.txt");           // Create solarSystem objects from file
-    vector<Satellite> &solarSystemSatellites = solarSystem.satellites();
-    double distance = Satellite::getDistanceBetween(solarSystemSatellites[0],solarSystemSatellites[1]);
-    cout << "distance: " << distance <<endl;
 
-//    solarSystem.simulate(1,100);
-    // Calculating distance between sun and earth created from file.
-    Satellite &sun = solarSystemSatellites[0];
-    Satellite &earth = solarSystemSatellites[1];
-    double sunEarthDistance = sun.relativeDistanceTo(earth);
-    cout << "relative distance between sun and earth: " << sunEarthDistance << endl;
+    /*################  VEGAR'S STUFF #############*/
+//    SolarSystem solarSystem;    // Create instance of SolarSystem
 
-    vec3 earthPos1 = earth.getSatellitePosition();
-    cout << "earth position: ";
-    earthPos1.print();
+//    solarSystem.createSunEarth();       // Create Sun-Earth system (vecor<Satellites>) from member function in Solarsystem
+//    vector<Satellite> &sunEarthSatellites = solarSystem.satellites();   // Access satellite objects from vector<Satellites> in SolarSystem
+//    double distance2 = Satellite::getDistanceBetween(sunEarthSatellites[0],sunEarthSatellites[1]);  // calculate distance between sun(sunEarthSatellites[0]) and earth(sunEarthSatellites[1])
+//    cout << "distance: "<< distance2 << endl;
 
-//    double step = 5;
-//    earth.nextPositionEuler(earth.getSatellitePosition(),earth.getSatelliteVelocity(), step );
-    vec3 earthPos2 = earth.getSatellitePosition();
-    cout << "new earth position: ";
-    earthPos2.print();
-    vec3 earthAcc = earth.getSatelliteAcceleration();
-    cout << "earth acceleration: ";
-    earthAcc.print();
+//    solarSystem.createSolarSystem("solarsystem.txt");           // Create solarSystem objects from file
+//    vector<Satellite> &solarSystemSatellites = solarSystem.satellites();
+//    double distance = Satellite::getDistanceBetween(solarSystemSatellites[0],solarSystemSatellites[1]);
+//    cout << "distance: " << distance <<endl;
 
-    earth.nextAcceleration(sun);
-    vec3 earthAcc2 = earth.getSatelliteAcceleration();
-    cout << "earth acceleration: ";
-    earthAcc2.print();
+////    solarSystem.simulate(1,100);
+//    // Calculating distance between sun and earth created from file.
+//    Satellite &sun = solarSystemSatellites[0];
+//    Satellite &earth = solarSystemSatellites[1];
+//    double sunEarthDistance = sun.relativeDistanceTo(earth);
+//    cout << "relative distance between sun and earth: " << sunEarthDistance << endl;
+
+//    vec3 earthPos1 = earth.getSatellitePosition();
+//    cout << "earth position: ";
+//    earthPos1.print();
+
+////    double step = 5;
+////    earth.nextPositionEuler(earth.getSatellitePosition(),earth.getSatelliteVelocity(), step );
+//    vec3 earthPos2 = earth.getSatellitePosition();
+//    cout << "new earth position: ";
+//    earthPos2.print();
+//    vec3 earthAcc = earth.getSatelliteAcceleration();
+//    cout << "earth acceleration: ";
+//    earthAcc.print();
+
+//    earth.nextAcceleration(sun);
+//    vec3 earthAcc2 = earth.getSatelliteAcceleration();
+//    cout << "earth acceleration: ";
+//    earthAcc2.print();
 
 //    earth.nextAcceleration(earth.getSatellitePosition(), sunEarthDistance );
 //    vec3 earthAcc = earth.getSatelliteAcceleration();
