@@ -12,20 +12,22 @@ public:
     SolarSystem();
     Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
 
-    // Create vecor array of satellite objects
-    std::vector<Satellite> &satellites();
-
     // Class functions for initsializing systems(<vector>) of satellites
     Satellite &createSunEarth();
-    Satellite &createSolarSystem(std::string fileName);
+    Satellite &createSolarSystem(std::string inputfile);
 
+    //File handeling
+    void printHeader(double time, int iterations, std::string outputfile);
+    void printPositions(double time,std::string outputfile);
 
     //Evolve the system
-    void simulate(int N);
+    void simulate(double finaltime, int iterations, std::string outputfile);
+
 
 private:
     // member variables
     std::vector<Satellite> m_satellites;
+    std::vector<std::string> m_names;
 
 };
 

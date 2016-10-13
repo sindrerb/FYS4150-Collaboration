@@ -14,48 +14,51 @@ Satellite& SolarSystem::createSatellite(double mass, vec3 position, vec3 velocit
     return m_satellites.back();
 }
 
-Satellite &SolarSystem::createSunEarth() {
-    m_satellites.clear();  // Clear m_satellites (vector of Satellites)
-
-    // Declare initial values (the hard way)
-    int NUMBER_OF_ITERATIONS = 100;
-    double START_TIME = 0;
-    double END_TIME = 10;
-    double stepLength = (END_TIME - START_TIME)/NUMBER_OF_ITERATIONS;
-    double SOLAR_MASS = 2 * exp(30);
-    double EARTH_MASS = 6 * exp(24);
-
-    Satellite &sun = createSatellite( SOLAR_MASS, vec3(0,0,0), vec3(0,0,0) );       // Initializes satelliteObject
-    Satellite &earth = createSatellite( EARTH_MASS, vec3(10,5,2), vec3(2,4,6) );     // Initializes satelliteObject
-}
-
-Satellite &SolarSystem::createSolarSystem(std::string fileName) {
+Satellite &SolarSystem::createSolarSystem(std::string inputfile) {
     m_satellites.clear();  // Clear m_satellites (vector of Satellites)
 
     // Delcare inital values from file
-    std::fstream myfile(fileName , std::ios_base::in);
+    std::fstream myfile(inputfile , std::ios_base::in);
     if(!myfile.good()) {
-        std::cout << "Error reading file " << fileName << ". Make sure it is in executable dir" << endl;
+        std::cout << "Error reading file " << inputfile << ". Make sure it is in executable dir" << endl;
         terminate();
     }
-
     std::string name;
     double mass , massEXP, posX, posY, posZ, veloX, veloY, veloZ;
     while (myfile >> name >> mass >> massEXP >> posX >> posY >> posZ >> veloX >> veloY >> veloZ) {
+        m_names.push_back(name);
         Satellite &name = createSatellite( mass*exp(massEXP), vec3(posX,posY,posZ), vec3(veloX,veloY,veloZ));
+
     }
 }
-
-void &SolarSystem::simulate(int N) {
-    vector<Satellite> &allSatellites = satellites();
-    vec3 temporaryAcceleration;
-    for(int i=0;i<allSatellites.size();i++) {
-        object_i = allSatellites[i];
-        object_i.setSatelliteAcceleration(object_i.getSatelliteAcceleration()+)
+void SolarSystem::printHeader(double time, int iterations, std::string outputfile){
+    std::ofstream outfile(outputfile);
+    outfile << "Simulation of solar system over "<<time<<" years, with "<<iterations<<" iterations.\n";
+    outfile << "Time \t";
+    for(int i=0; i<m_names.size();i++) {
+        outfile << m_names[i] << "\t \t";
     }
+    outfile << "\n";
+    outfile.close();
 }
 
+void SolarSystem::printPositions(double time,std::string outputfile){
+    std::ofstream outfile(outputfile,std::ios::app);
+    outfile << time;
+    for(int i=0; i<m_satellites.size();i++) {
+        outfile <<",\t"<< m_satellites[i].g_position[0]<<","<<m_satellites[i].g_position[1]<<","<<m_satellites[i].g_position[2];
+    }
+    outfile << "\n";
+    outfile.close();
+}
 
-std::vector<Satellite> &SolarSystem::satellites() {
-    return m_satellites;
+void SolarSystem::simulate(double finaltime, int iterations, std::string outputfile){
+    printHeader(finaltime,iterations,outputfile);
+    double timestep, duration;
+    timestep = finaltime/iterations;
+    duration = 0;
+    while(duration<finaltime) {
+        printPositions(duration,outputfile);
+        duration += timestep;
+    }
 }
