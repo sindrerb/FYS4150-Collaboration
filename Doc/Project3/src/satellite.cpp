@@ -7,14 +7,19 @@ Satellite::Satellite() {
 
     g_position = m_position;
     g_velocity = m_velocity;
-    g_acceleration = vec3(0,0,0);
-    g_force = vec3(0,0,0);
+    g_new_acceleration = vec3(0,0,0);
+    g_old_acceleration = vec3(0,0,0);
 }
 
 Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
     m_mass = mass;
     m_position = position;
     m_velocity = velocity;
+
+    g_position = m_position;
+    g_velocity = m_velocity;
+    g_new_acceleration = vec3(0,0,0);
+    g_old_acceleration = vec3(0,0,0);
 }
 
 double Satellite::getMass() const {

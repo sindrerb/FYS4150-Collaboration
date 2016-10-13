@@ -10,8 +10,8 @@ class Satellite {
 public:
     vec3 g_position;
     vec3 g_velocity;
-    vec3 g_acceleration;
-    vec3 g_force;
+    vec3 g_new_acceleration;
+    vec3 g_old_acceleration;
 
     Satellite();
     Satellite(double mass, vec3 position, vec3 velocity);
