@@ -40,6 +40,18 @@ double vec3::dot(vec3 otherVector)
     return otherVector[0]*components[0] + otherVector[1]*components[1] + otherVector[2]*components[2];
 }
 
+void vec3::zeros() {
+    components[0] = 0;
+    components[1] = 0;
+    components[2] = 0;
+}
+
+void vec3::ones() {
+    components[0] = 1;
+    components[1] = 1;
+    components[2] = 1;
+}
+
 void vec3::normalize()
 {
     double length = this->length();
