@@ -17,12 +17,17 @@ Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
     m_velocity = velocity;
 }
 
-double Satellite::getMass() const {
+double Satellite::mass() const {
     return m_mass;
 }
 
 void Satellite::setMass(double mass) {
     m_mass = mass;
+}
+
+vec3 Satellite::relativeDistanceVector(const Satellite &satelliteName) {
+    vec3 distanceVector = g_position - satelliteName.g_position;
+    return distanceVector;
 }
 
 double Satellite::relativeDistanceTo(const Satellite &satelliteName) {

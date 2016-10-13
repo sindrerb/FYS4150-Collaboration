@@ -16,10 +16,12 @@ public:
     Satellite();
     Satellite(double mass, vec3 position, vec3 velocity);
 
-    double getMass() const;
+    double mass() const;
     void setMass(double mass);
 
+    vec3 relativeDistanceVector(const Satellite &satelliteName);
     double relativeDistanceTo(const Satellite &satelliteName );
+
 
 private:
     double m_mass;
