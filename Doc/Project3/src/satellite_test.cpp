@@ -6,17 +6,17 @@
 TEST_CASE("Creating satellite") {
     Satellite satellite;
     vec3 vec;
-    SECTION ( "Create satellite object with position, velocity and mass" ) {};
-    INFO ( "FAILED to set position" ) satellite.setSatellitePosition(vec3(1,1,1));
-    INFO ( "FAILED to set velocity" )satellite.setSatelliteVelocity(vec3(1,2,3));
-    INFO ( "FAILED to set mass" )satellite.setSatelliteMass(20);
-    CAPTURE ( satellite.getSatellitePosition() );
-    CAPTURE ( satellite.getSatelliteVelocity() );
-    CAPTURE ( satellite.getSatelliteMass() );
+//    SECTION ( "Create satellite object with position, velocity and mass" ) {};
+//    INFO ( "FAILED to set position" ) satellite.setSatellitePosition(vec3(1,1,1));
+//    INFO ( "FAILED to set velocity" )satellite.setSatelliteVelocity(vec3(1,2,3));
+//    INFO ( "FAILED to set mass" )satellite.setSatelliteMass(20);
+//    CAPTURE ( satellite.getSatellitePosition() );
+//    CAPTURE ( satellite.getSatelliteVelocity() );
+    CAPTURE ( satellite.getMass() );
 
 //    REQUIRE( satellite.getSatellitePosition().approxEqual(vec3(1,1,1) ));
 
 //    CHECK ( satellite.getSatellitePosition() == vec(1,1,1) );
 //    CHECK ( satellite.getSatelliteVelocity() == vec(1,2,3) );
-    CHECK ( satellite.getSatelliteMass() == 10) ;
+    CHECK ( satellite.getMass() == 10) ;
   }
