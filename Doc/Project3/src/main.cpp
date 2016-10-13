@@ -14,7 +14,14 @@ int main(){
 
     SolarSystem solarSystem;    // Create instance of SolarSystem
     solarSystem.createSolarSystem("solarsystem.txt");
-    solarSystem.simulate(10,1000,"OUTPUT.txt");
+//    solarSystem.simulate(10,1000,"OUTPUT.txt");
+    vector<Satellite> &satellites = solarSystem.g_satellites;
+    Satellite &sun = satellites[0];
+    double sunmass = sun.mass();
+    cout << sunmass << endl;
+    cout << "balle" << endl;
+    cout << 2*1e30<< endl;
 
     return 0;
 }
+

@@ -12,11 +12,11 @@ TEST_CASE("Creating satellite") {
 //    INFO ( "FAILED to set mass" )satellite.setSatelliteMass(20);
 //    CAPTURE ( satellite.getSatellitePosition() );
 //    CAPTURE ( satellite.getSatelliteVelocity() );
-    CAPTURE ( satellite.getMass() );
+    CAPTURE ( satellite.mass() );
 
 //    REQUIRE( satellite.getSatellitePosition().approxEqual(vec3(1,1,1) ));
 
 //    CHECK ( satellite.getSatellitePosition() == vec(1,1,1) );
 //    CHECK ( satellite.getSatelliteVelocity() == vec(1,2,3) );
-    CHECK ( satellite.getMass() == 10) ;
+    CHECK ( satellite.mass() == 10) ;
   }
