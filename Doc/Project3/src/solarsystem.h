@@ -13,12 +13,20 @@ public:
     Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
 
     // Class functions for initsializing systems(<vector>) of satellites
-    Satellite &createSunEarth();
-    Satellite &createSolarSystem(std::string inputfile);
+    void createSolarSystem(std::string inputfile);
 
     //File handeling
     void printHeader(double time, int iterations, std::string outputfile);
     void printPositions(double time,std::string outputfile);
+
+    //Interactions
+    void shiftAccelerations();
+    void clearNewAccelerations();
+    void updatePositions();
+    void updateVelocities();
+    void updateForces();
+
+    vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //Evolve the system
     void simulate(double finaltime, int iterations, std::string outputfile);
@@ -28,6 +36,10 @@ private:
     // member variables
     std::vector<Satellite> m_satellites;
     std::vector<std::string> m_names;
+    int m_numberofsatellites;
+    double m_timestep;
+    double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
+    double SOLAR_MASS = 1E3;
 
 };
 
