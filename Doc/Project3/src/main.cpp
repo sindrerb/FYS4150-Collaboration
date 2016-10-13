@@ -13,8 +13,7 @@ using namespace std;
 int main(){
 
     SolarSystem solarSystem;    // Create instance of SolarSystem
-    solarSystem.createSolarSystem("solarsystem.txt");
-    solarSystem.simulate(10,1000,"OUTPUT.txt");
-
+    solarSystem.createSolarSystem("sunEarth.txt");
+    solarSystem.simulate(1,1e4,"OUTPUT.txt");
     return 0;
 }
