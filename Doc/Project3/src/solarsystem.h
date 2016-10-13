@@ -23,11 +23,22 @@ public:
     //Evolve the system
     void simulate(double finaltime, int iterations, std::string outputfile);
 
+    // Calculate energy of the system
+    void resetForces();
+    void calculateForces();
+    void calculateEnergies();
+
+    //Global variables
+    double g_kineticEnergy;
+    double g_potentialEnergy;
+    vec3 angularMomentum;
+    std::vector<Satellite> g_satellites;
 
 private:
     // member variables
     std::vector<Satellite> m_satellites;
     std::vector<std::string> m_names;
+    double SOLAR_MASS = 1000;
 
 };
 
