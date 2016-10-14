@@ -528,3 +528,8 @@ TSWLatexianTemp*
 
 # auto folder when using emacs and auctex 
 /auto/*
+
+# Filse generated from qt creator build-profiles
+/debug
+/release
+/profile
