@@ -528,3 +528,8 @@ TSWLatexianTemp*
 
 # auto folder when using emacs and auctex 
 /auto/*
+
+# Dir generated from Qtcreator buil-profile
+/debug
+/profile
+/release
