@@ -26,6 +26,14 @@ double Satellite::getMass() const {
     return m_mass;
 }
 
+vec3 Satellite::position() const {
+    return m_position;
+}
+
+vec3 Satellite::velocity() const {
+    return m_velocity;
+}
+
 void Satellite::setMass(double mass) {
     m_mass = mass;
 }
@@ -35,8 +43,3 @@ double Satellite::relativeDistanceTo(const Satellite &satelliteName) {
     double dr = distanceVector.length();
     return dr;
 }
-
-
-
-
-
