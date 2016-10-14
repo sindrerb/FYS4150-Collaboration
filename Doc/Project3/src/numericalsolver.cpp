@@ -8,7 +8,7 @@ vec3 NumericalSolver::solveEuler(vec3 x, vec3 dx, double step) {
 }
 
 vec3 NumericalSolver::solveVerletPos(vec3 x, vec3 dx, vec3 ddx, double step) {
-    return x +  (step * dx) + (step * ddx)/2.0;
+    return x +  (step * dx) + (step*step * ddx)/2.0;
 }
 
 vec3 NumericalSolver::solveVerletVel(vec3 dx, vec3 ddx1, vec3 ddx0, double step) {

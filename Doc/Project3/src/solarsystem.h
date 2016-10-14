@@ -39,7 +39,6 @@ private:
     int m_numberofsatellites;
     double m_timestep;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
-    double SOLAR_MASS = 1E3;
 
 };
 

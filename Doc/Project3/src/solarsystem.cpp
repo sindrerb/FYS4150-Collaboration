@@ -56,7 +56,6 @@ void SolarSystem::printPositions(double time,std::string outputfile){
 
 
 void SolarSystem::shiftAccelerations() {
-    m_satellites[1].g_old_acceleration.print();
     for(int i=0;i<m_numberofsatellites;i++) {
         m_satellites[i].g_old_acceleration =  m_satellites[i].g_new_acceleration;
     }
@@ -93,12 +92,13 @@ void SolarSystem::updateForces(){
             m_satellites[j].g_new_acceleration += gravity*m_satellites[i].getMass();
         }
     }
+    //m_satellites[1].g_new_acceleration.print();
 }
 
 vec3 SolarSystem::gravitationalForce(Satellite planetA,Satellite planetB){
     vec3 force;
     double R = planetA.relativeDistanceTo(planetB);
-    force = FOUR_PI_SQUARED*(planetA.g_position-planetB.g_position)/(R*R*R*SOLAR_MASS);
+    force = FOUR_PI_SQUARED*(planetA.g_position-planetB.g_position)/(R*R*R);
     return force;
 }
 
