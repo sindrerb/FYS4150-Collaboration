@@ -2,7 +2,6 @@
 #include <string>
 #include <fstream>
 #include <math.h>
-//#include "matrix.h"
 #include "vec3.h"
 #include "solarsystem.h"
 #include "satellite.h"

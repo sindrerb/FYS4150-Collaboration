@@ -2,7 +2,6 @@
 #define SATELLITE_H
 #include <math.h>
 #include "vec3.h"
-#include "matrix.h"
 #include "numericalsolver.h"
 
 

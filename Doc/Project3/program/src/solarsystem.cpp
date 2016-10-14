@@ -20,11 +20,11 @@ Satellite &SolarSystem::createSolarSystem(std::string inputfile) {
     // Delcare inital values from file
     std::fstream myfile(inputfile , std::ios_base::in);
     if(!myfile.good()) {
-        std::cout << "Error reading file " << inputfile << ". Make sure it is in executable dir" << endl;
-        terminate();
+        std::cout << "Error reading file " << inputfile << ". Make sure it is in executable dir" << std::endl;
+        std::terminate();
     }
     std::string name;
-    double mass , massEXP, posX, posY, posZ, veloX, veloY, veloZ;
+    double mass , posX, posY, posZ, veloX, veloY, veloZ;
     while (myfile >> name >> mass >> posX >> posY >> posZ >> veloX >> veloY >> veloZ) {
         m_names.push_back(name);
         Satellite &name = createSatellite( mass, vec3(posX,posY,posZ), vec3(veloX,veloY,veloZ));

@@ -3,7 +3,6 @@
 #include <iostream>
 #include "vec3.h"
 #include "satellite.h"
-#include "matrix.h"
 
 class SolarSystem
 {
