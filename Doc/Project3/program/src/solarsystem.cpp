@@ -68,15 +68,14 @@ void SolarSystem::clearNewAccelerations() {
 }
 
 void SolarSystem::updatePositions() {
-    vec3 test;
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timestep);
+        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStepSquared);
     }
 }
 
 void SolarSystem::updateVelocities(){
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_timestep);
+        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_timeStep);
     }
 }
 
@@ -105,7 +104,7 @@ vec3 SolarSystem::gravitationalForce(Satellite planetA,Satellite planetB){
 void SolarSystem::simulate(double finaltime, int iterations, std::string outputfile){
     printHeader(finaltime,iterations,outputfile);
     double timestep, duration;
-    m_timestep = finaltime/iterations;
+    m_timeStep = finaltime/iterations;
     duration = 0;
     updateForces();
     while(duration<finaltime) {
@@ -113,6 +112,6 @@ void SolarSystem::simulate(double finaltime, int iterations, std::string outputf
         updateForces();
         updateVelocities();
         printPositions(duration,outputfile);
-        duration += m_timestep;
+        duration += m_timeStep;
     }
 }
