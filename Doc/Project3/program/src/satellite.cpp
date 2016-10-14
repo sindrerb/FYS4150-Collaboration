@@ -22,7 +22,7 @@ Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
     g_old_acceleration = vec3(0,0,0);
 }
 
-double Satellite::getMass() const {
+double Satellite::mass() const {
     return m_mass;
 }
 
