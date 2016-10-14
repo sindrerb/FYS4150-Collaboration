@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
-#include "satellite.h"
-#include "vec3.h"
+#include "../src/satellite.h"
+#include "../src/vec3.h"
 
 TEST_CASE("Creating satellite") {
     Satellite satellite;

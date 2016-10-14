@@ -4,18 +4,16 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-    ../src/matrix.cpp \
-    ../src/numericalsolver_test.cpp \
-    ../src/numericalsolver.cpp \
-    ../src/satellite_test.cpp \
+    numericalsolver_test.cpp \
+    satellite_test.cpp \
+    ../src/numericalsolver.cpp \    
     ../src/satellite.cpp \
     ../src/solarsystem.cpp \
     ../src/vec3.cpp
 
 HEADERS += \
-    ../src/matrix.h \
+    catch.hpp \
     ../src/numericalsolver.h \
     ../src/satellite.h \
     ../src/solarsystem.h \
-    ../src/vec3.h \
-    ../src/catch.hpp
+    ../src/vec3.h
