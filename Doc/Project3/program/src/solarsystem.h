@@ -10,7 +10,7 @@ class SolarSystem
 public:
     // Constructors
     SolarSystem();
-    Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
+    void createSatellite(double mass, vec3 position, vec3 velocity);
 
     // Class functions for initsializing systems(<vector>) of satellites
     void createSolarSystem(std::string inputfile);
