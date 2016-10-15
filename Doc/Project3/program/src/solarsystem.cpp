@@ -115,3 +115,8 @@ void SolarSystem::simulate(double finaltime, int iterations, std::string outputf
         duration += m_timeStep;
     }
 }
+
+std::vector<Satellite> SolarSystem::satellites() const
+{
+    return m_satellites;
+}

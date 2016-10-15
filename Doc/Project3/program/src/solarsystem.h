@@ -32,6 +32,8 @@ public:
     void simulate(double finaltime, int iterations, std::string outputfile);
 
 
+    std::vector<Satellite> satellites() const;
+
 private:
     // member variables
     std::vector<Satellite> m_satellites;
