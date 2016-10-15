@@ -16,7 +16,9 @@ public:
     Satellite();
     Satellite(double mass, vec3 position, vec3 velocity);
 
-    double getMass() const;
+    double mass() const;
+    vec3 position() const;
+    vec3 velocity() const;
     void setMass(double mass);
 
     double relativeDistanceTo(const Satellite &satelliteName );

@@ -86,8 +86,8 @@ void SolarSystem::updateForces(){
         for(int j=i+1;j<m_numberofsatellites;j++) {
             gravity = gravitationalForce(m_satellites[i],m_satellites[j]);
 
-            m_satellites[i].g_new_acceleration -= gravity*m_satellites[j].getMass();
-            m_satellites[j].g_new_acceleration += gravity*m_satellites[i].getMass();
+            m_satellites[i].g_new_acceleration -= gravity*m_satellites[j].mass();
+            m_satellites[j].g_new_acceleration += gravity*m_satellites[i].mass();
         }
     }
     //m_satellites[1].g_new_acceleration.print();
@@ -115,4 +115,9 @@ void SolarSystem::simulate(double finaltime, int iterations, std::string outputf
         printPositions(duration,outputfile);
         duration += m_timeStep;
     }
+}
+
+std::vector<Satellite> SolarSystem::satellites() const
+{
+    return m_satellites;
 }
