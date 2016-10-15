@@ -38,7 +38,8 @@ private:
     std::vector<std::string> m_names;
     int m_numberofsatellites;
     double m_timeStep;
-    double m_timeStepSquared = m_timeStep*m_timeStep;
+    double m_halfTimeStep;
+    double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
 
 };

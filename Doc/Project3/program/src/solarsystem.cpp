@@ -68,13 +68,13 @@ void SolarSystem::clearNewAccelerations() {
 
 void SolarSystem::updatePositions() {
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_timeStepSquared);
+        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_halfTimeStepSquared);
     }
 }
 
 void SolarSystem::updateVelocities(){
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_timeStep);
+        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_halfTimeStep);
     }
 }
 
@@ -104,7 +104,8 @@ void SolarSystem::simulate(double finaltime, int iterations, std::string outputf
     printHeader(finaltime,iterations,outputfile);
     double duration;
     m_timeStep = finaltime/iterations;
-    m_timeStepSquared = m_timeStep*m_timeStep;
+    m_halfTimeStep = m_timeStep*0.5;
+    m_halfTimeStepSquared = m_timeStep*m_timeStep*0.5;
     duration = 0;
     updateForces();
     while(duration<finaltime) {
