@@ -9,7 +9,8 @@ SOURCES += \
     ../src/numericalsolver.cpp \    
     ../src/satellite.cpp \
     ../src/solarsystem.cpp \
-    ../src/vec3.cpp
+    ../src/vec3.cpp \
+    solarsystem_test.cpp
 
 HEADERS += \
     catch.hpp \
