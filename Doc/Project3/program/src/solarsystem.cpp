@@ -9,10 +9,10 @@ SolarSystem::SolarSystem() {
     m_satellites.empty();
 }
 
-Satellite& SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
+void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
     m_satellites.push_back( Satellite(mass, position, velocity) );
     m_numberofsatellites += 1;
-    return m_satellites.back();
+    //return m_satellites.back();
 }
 
 void SolarSystem::createSolarSystem(std::string inputfile) {
@@ -29,8 +29,7 @@ void SolarSystem::createSolarSystem(std::string inputfile) {
     double mass , posX, posY, posZ, veloX, veloY, veloZ;
     while (myfile >> name >> mass >> posX >> posY >> posZ >> veloX >> veloY >> veloZ) {
         m_names.push_back(name);
-        std::cout << name<<"\t " <<"P:"<< posX <<" "<< posY<<" " << posZ<<"\t" <<"V:"<< veloX<<" " << veloY<<" " << veloZ << endl;
-        Satellite &name = createSatellite( mass, vec3(posX,posY,posZ), vec3(veloX,veloY,veloZ));
+        createSatellite( mass, vec3(posX,posY,posZ), vec3(veloX,veloY,veloZ));
     }
 }
 void SolarSystem::printHeader(double time, int iterations, std::string outputfile){
@@ -69,7 +68,7 @@ void SolarSystem::clearNewAccelerations() {
 
 void SolarSystem::updatePositions() {
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStepSquared);
+        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_timeStepSquared);
     }
 }
 
@@ -103,8 +102,9 @@ vec3 SolarSystem::gravitationalForce(Satellite planetA,Satellite planetB){
 
 void SolarSystem::simulate(double finaltime, int iterations, std::string outputfile){
     printHeader(finaltime,iterations,outputfile);
-    double timestep, duration;
+    double duration;
     m_timeStep = finaltime/iterations;
+    m_timeStepSquared = m_timeStep*m_timeStep;
     duration = 0;
     updateForces();
     while(duration<finaltime) {
