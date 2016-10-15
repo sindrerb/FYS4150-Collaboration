@@ -6,7 +6,7 @@
 
 SCENARIO( "Creating satellite objects" ) {
 
-    GIVEN( "Satellite created from empty constructor();" ) {
+    GIVEN( "Satellite created from empty constructor Satellite();" ) {
         Satellite satellite = Satellite();
 
         WHEN( "When calling member variables" ) {
@@ -53,6 +53,20 @@ SCENARIO( "Creating satellite objects" ) {
                 REQUIRE( velocity.x() == 2 );
                 REQUIRE( velocity.y() == 4 );
                 REQUIRE( velocity.z() == 6 );
+            }
+        }
+    }
+}
+
+SCENARIO( "Calculating relative distance" ) {
+
+    GIVEN( "Two satellites" ) {
+        Satellite satellite1 = Satellite( 10, vec3(0,0,0), vec3(0,0,0) );
+        Satellite satellite2 = Satellite( 10, vec3(1,1,1), vec3(1,1,1)  );
+        WHEN( "calculating ralative distance between" ) {
+            double relativeDistance = satellite1.relativeDistanceTo( satellite2 );
+            THEN( "return double" ) {
+                REQUIRE( relativeDistance == sqrt(3) );
             }
         }
     }
