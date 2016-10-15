@@ -10,7 +10,7 @@ SolarSystem::SolarSystem() {
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
-    m_satellites.push_back( Satellite(mass, position, velocity) );
+    m_satellites.push_back( Satellite(mass, position, velocity*365) );
     m_numberofsatellites += 1;
     //return m_satellites.back();
 }
