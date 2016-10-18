@@ -117,7 +117,50 @@ void SolarSystem::simulate(double finaltime, int iterations, std::string outputf
     }
 }
 
+
+//Setters and getters for membervariables
 std::vector<Satellite> SolarSystem::satellites() const
 {
     return m_satellites;
 }
+
+int SolarSystem::numberofsatellites() const
+{
+    return m_numberofsatellites;
+}
+
+void SolarSystem::setNumberofsatellites(int numberofsatellites)
+{
+    m_numberofsatellites = numberofsatellites;
+}
+
+double SolarSystem::timeStep() const
+{
+    return m_timeStep;
+}
+
+void SolarSystem::setTimeStep(double timeStep)
+{
+    m_timeStep = timeStep;
+}
+
+double SolarSystem::halfTimeStep() const
+{
+    return m_halfTimeStep;
+}
+
+void SolarSystem::setHalfTimeStep(double halfTimeStep)
+{
+    m_halfTimeStep = halfTimeStep;
+}
+
+double SolarSystem::halfTimeStepSquared() const
+{
+    return m_halfTimeStepSquared;
+}
+
+void SolarSystem::setHalfTimeStepSquared(double halfTimeStepSquared)
+{
+    m_halfTimeStepSquared = halfTimeStepSquared;
+}
+

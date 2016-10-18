@@ -34,6 +34,16 @@ public:
 
     std::vector<Satellite> satellites() const;
 
+    // Setters and Getters for member variables (enabeling Unit tests)
+    int numberofsatellites() const;
+    void setNumberofsatellites(int numberofsatellites);
+    double timeStep() const;
+    void setTimeStep(double timeStep);
+    double halfTimeStep() const;
+    void setHalfTimeStep(double halfTimeStep);
+    double halfTimeStepSquared() const;
+    void setHalfTimeStepSquared(double halfTimeStepSquared);
+
 private:
     // member variables
     std::vector<Satellite> m_satellites;
