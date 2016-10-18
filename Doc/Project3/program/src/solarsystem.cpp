@@ -68,13 +68,21 @@ void SolarSystem::clearNewAccelerations() {
 
 void SolarSystem::updatePositions() {
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_halfTimeStepSquared);
+        if(m_method=="euler"){
+            m_satellites[i].g_position =  NumericalSolver::solveEuler(m_satellites[i].g_position,m_satellites[i].g_velocity,m_timeStep);
+        }else{
+            m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_halfTimeStepSquared);
+        }
     }
 }
 
 void SolarSystem::updateVelocities(){
     for(int i=0;i<m_numberofsatellites;i++) {
-        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_halfTimeStep);
+        if(m_method=="euler"){
+            m_satellites[i].g_velocity = NumericalSolver::solveEuler(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_timeStep);
+        }else{
+            m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_halfTimeStep);
+        }
     }
 }
 
@@ -82,7 +90,11 @@ void SolarSystem::updateForces(){
     shiftAccelerations();
     clearNewAccelerations();
     vec3 gravity;
-    for(int i=0;i<m_numberofsatellites;i++) {
+    for(int i=m_startIteration;i<m_numberofsatellites;i++) {
+        if(m_startIteration==1){
+            gravity = gravitationalForce(m_satellites[i],m_satellites[0]);
+            m_satellites[i].g_new_acceleration -= gravity;
+        }
         for(int j=i+1;j<m_numberofsatellites;j++) {
             gravity = gravitationalForce(m_satellites[i],m_satellites[j]);
 
@@ -97,12 +109,19 @@ vec3 SolarSystem::gravitationalForce(Satellite planetA,Satellite planetB){
     vec3 force;
     double R = planetA.relativeDistanceTo(planetB);
     force = FOUR_PI_SQUARED*(planetA.g_position-planetB.g_position)/(R*R*R);
+    if(m_method == "relativistic"){
+        double RC = R*SPEED_OF_LIGHT;
+        vec3 angularMomentum = planetA.g_position.cross(planetA.g_velocity);
+        force = force*(1+(3*angularMomentum.lengthSquared())/(RC*RC));
+    }
     return force;
 }
 
-void SolarSystem::simulate(double finaltime, int iterations, std::string outputfile){
+void SolarSystem::simulate(double finaltime, int iterations,int startIteration,std::string method, std::string outputfile){
     printHeader(finaltime,iterations,outputfile);
     double duration;
+    m_method = method;
+    m_startIteration = startIteration;
     m_timeStep = finaltime/iterations;
     m_halfTimeStep = m_timeStep*0.5;
     m_halfTimeStepSquared = m_timeStep*m_timeStep*0.5;

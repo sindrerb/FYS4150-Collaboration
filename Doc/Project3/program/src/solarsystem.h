@@ -29,7 +29,7 @@ public:
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //Evolve the system
-    void simulate(double finaltime, int iterations, std::string outputfile);
+    void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
 
 
     std::vector<Satellite> satellites() const;
@@ -43,6 +43,9 @@ private:
     double m_halfTimeStep;
     double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
+    double SPEED_OF_LIGHT = 173*365;
+    int m_startIteration;
+    std::string m_method;
 
 };
 
