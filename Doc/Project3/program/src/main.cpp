@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
             solarCenter = "locked";
         }
 
-        if(simulationMethod!="euler" && simulationMethod=="verlet" && simulationMethod=="relativistic") {
+        if(simulationMethod!="euler" && simulationMethod!="verlet" && simulationMethod!="relativistic") {
             cout << "Did not recognize the argument "<<simulationMethod<<", running with verlet method.\n";
             simulationMethod = "verlet";
         }
@@ -44,6 +44,6 @@ int main(int argc, char *argv[]){
         cout << "Running simulation from "<<infile<<" using "<<simulationMethod<<" with a "<<solarCenter<<" sun, over "<<timeSpan<<" years with "<<iterations<<" iterations.\nWriting to "<<outfile<<endl;
         return 0;
     }else{
-        cout <<"Write arguments:\n -Time span\n -Iterations\n -Solar center (locked/free)\n -Simulation method (euler,verlet,relativistic)\n -Inputfile\n -Outputfile\n";
+        cout <<"Write arguments:\n -Time span in years\n -Iterations(example: 1e5)\n -Solar center (locked/free)\n -Simulation method (euler,verlet,relativistic)\n -Inputfile\n -Outputfile\n";
     }
 }
