@@ -118,15 +118,16 @@ void SolarSystem::updateForces(){
     clearNewAccelerations();
     vec3 gravity;
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        if ( m_startIteration == 1 ) {
-            gravity = gravitationalForce(m_satellites[i], m_satellites[0]);
-            m_satellites[i].g_new_acceleration -= gravity;
+        for ( int k = 0; k < m_startIteration; k++) {
+            gravity = gravitationalForce( m_satellites[i], m_satellites[k] );
+            m_satellites[i].g_new_acceleration -= gravity * m_satellites[k].mass();
         }
+
         for (int j = i+1; j < m_numberofsatellites; j++) {
             gravity = gravitationalForce(m_satellites[i], m_satellites[j]);
 
-            m_satellites[i].g_new_acceleration -= gravity*m_satellites[j].mass();
-            m_satellites[j].g_new_acceleration += gravity*m_satellites[i].mass();
+            m_satellites[i].g_new_acceleration -= gravity * m_satellites[j].mass();
+            m_satellites[j].g_new_acceleration += gravity * m_satellites[i].mass();
         }
     }
     //m_satellites[1].g_new_acceleration.print();
@@ -214,5 +215,3 @@ std::string SolarSystem::method() const {
 void SolarSystem::setMethod(const std::string &method) {
     m_method = method;
 }
-
-
