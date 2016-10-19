@@ -119,9 +119,25 @@
 \section{Introduction}
 \lettrine[nindent=0em,lines=2]{E}{}arth has been orbitin the Sun for billions of years. Even with several hundred natural satellites in a complex scheme of orbits is our solar system a stable physical system. Although the system has been stable over a long time, is is convenient to simulate the system to understand how it will react in different situations. Simulations gives also an usefull source of information about the fundaments of our solar system. This projects will build a numerical solver based on the gravitatonal force between two massive objects in combination with Newton's second and third law of motion. The methods tested for the solver is Euler's method and the Verlet velocity method, both methods commonly used for solving differential equations. The solver will be controlled by solving simple systems and compared to analytical results beforde introduced to more advanced systems where analytical solutions are impossible to find. Further, relativistic corrections will be implemented in the simulator to reduce unwanted effects such as perihelion distortion. The physics and numerical methods used in the project are described in more detail in section \ref{sec:methods}. How theese are combined into a simulator is described in section \ref{sec:implementation}, and the output form test and experiments are described in section \ref{sec:results}. A summary of the most important findings are found in section \ref{sec:conclusion}.
 %----------------------------------------------------------------------------
-\section{Methods}
+\section{Theory and Methods}
 \label{sec:methods}
+\subsection{Gravitational force}
+Newton published a formula for describing the gravitational force in 1XXX, wich i still in use today. Where the gravitational force between two massive objects depends on the masses of the objects and the distance between them.
+\begin{equation}
+F_G = G\frac{M_AM_B}{r_{AB}^2} \label{eq:G_force}
+\end{equation}
+The two masses $M_A$ and $M_B$ belongs to object $A$ and $B$ respectively and $r_{AB}$ is the distance between them. $G$ is a gravitational force constant, called CONSTANT.
+For objects in high speed or in a strong gravitational field, it is necessary to add a relativistic correction to the classical force. 
+\begin{equation}
+F_{G,relativistic}= F_{G}\left(1+\frac{3|r\times v|^2}{r^2c^2}\right) \label{eq:G_force_rel}
+\end{equation}
+In equation \ref{eq:G_force_rel} the classical force is multiplied with a relativistic correction where $|r\times v|$ is the angular velocity and $c$ is the light speed in vacuum.
 
+\subsection{Euler's method}
+Euler's method is directly based on a taylor expansion to the first degree.
+\begin{equation*}
+f(x+h)=f(x)+hf'(x)+\mathcal{O}(h^2)
+\end{equation*}
 %----------------------------------------------------------------------------
 \newpage
 \section{Implementation}
