@@ -15,6 +15,10 @@ void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
     //return m_satellites.back();
 }
 
+void SolarSystem::check() {
+    cout << "method: " << m_method << endl;
+}
+
 void SolarSystem::createSolarSystem(std::string inputfile) {
     m_numberofsatellites = 0;
     m_satellites.clear();  // Clear m_satellites (vector of Satellites)

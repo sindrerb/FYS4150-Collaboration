@@ -45,6 +45,11 @@ public:
     void setHalfTimeStep(double halfTimeStep);
     double halfTimeStepSquared() const;
     void setHalfTimeStepSquared(double halfTimeStepSquared);
+    std::string method() const;
+    void setMethod(const std::string &method);
+
+    void check(); // DEBUGGER FUNCTION
+
 
 private:
     // member variables
