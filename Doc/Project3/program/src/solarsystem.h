@@ -10,16 +10,12 @@ class SolarSystem
 public:
     // Constructors
     SolarSystem();
-    void createSatellite(double mass, vec3 position, vec3 velocity);
 
     // Class functions for initsializing systems(<vector>) of satellites
     void createSolarSystem(std::string inputfile);
+    void createSatellite(double mass, vec3 position, vec3 velocity);
 
-    //File handeling
-    void printHeader(double time, int iterations, std::string outputfile);
-    void printPositions(double time,std::string outputfile);
-
-    //Interactions
+    // Computational functions
     void shiftAccelerations();
     void clearNewAccelerations();
     void updatePositionsEuler();
@@ -27,16 +23,15 @@ public:
     void updatePositionsVerlet();
     void updateVelocitiesVerlet();
     void updateForces();
-
+    void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
-    //Evolve the system
-    void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
+    //File handeling functions
+    void printHeader(double time, int iterations, std::string outputfile);
+    void printPositions(double time,std::string outputfile);
 
-
+    // Setters and Getters for member variables
     std::vector<Satellite> satellites() const;
-
-    // Setters and Getters for member variables (enabeling Unit tests)
     int numberofsatellites() const;
     void setNumberofsatellites(int numberofsatellites);
     double timeStep() const;
@@ -47,23 +42,21 @@ public:
     void setHalfTimeStepSquared(double halfTimeStepSquared);
     std::string method() const;
     void setMethod(const std::string &method);
-
-    void check(); // DEBUGGER FUNCTION
-
+    int startIteration() const;
+    void setStartIteration(int startIteration);
 
 private:
     // member variables
     std::vector<Satellite> m_satellites;
     std::vector<std::string> m_names;
+    std::string m_method;
     int m_numberofsatellites;
+    int m_startIteration;
     double m_timeStep;
     double m_halfTimeStep;
     double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
     double SPEED_OF_LIGHT = 173*365;
-    int m_startIteration;
-    std::string m_method;
-
 };
 
 #endif // SOLARSYSTEM_H
