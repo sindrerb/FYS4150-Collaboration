@@ -24,7 +24,7 @@ for celestial in celestials:
         n+=1
         
     exponentint = line.find('^',Mass)+1
-    massint = line.find('kg',exponent)
+    massint = line.find('kg',exponentint)
     mantissaint = line.find('=',Mass)+1
     solarmass = 0;
     if(mantissaint == 0):
@@ -33,7 +33,7 @@ for celestial in celestials:
     if(celestial=="sun"):
         solarexp = int(line[exponentint:massint])
         solarmantissa = float(line[mantissaint:mantissaint+8])
-        output.write('1.00e0 \t')
+        output.write('1.0000e00 \t')
     else:
         celestialexp = int(line[exponentint:massint])-solarexp
         celestialmantissa = float(line[mantissaint:mantissaint+8])/solarmantissa
@@ -43,10 +43,12 @@ for celestial in celestials:
     while(data.readline()[0:2]!='$$' and n<100):
         n+=1
     line = data.readline()[52:193]
+    pos = line[:70]
+    vel = line[70:].split(',')
+    vel = [float(x)*365.25 for x in vel]
+    vel = ',  '.join([str(x) for x in vel])
+    line = pos +"  "+ vel
     line = line.replace(",", " ")    
     line = line.replace("E", "e")    
-    if(celestial=="sun"):
-        output.write(' 0 0 0 0 0 0\n')
-    else:
-        output.write(line+'\n')
+    output.write(line+'\n')
 output.close()
