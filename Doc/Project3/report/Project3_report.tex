@@ -117,12 +117,11 @@
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------
 \section{Introduction}
-\lettrine[nindent=0em,lines=2]{Q}uantum \blindtext
+\lettrine[nindent=0em,lines=2]{E}{}arth has been orbitin the Sun for billions of years. Even with several hundred natural satellites in a complex scheme of orbits is our solar system a stable physical system. Although the system has been stable over a long time, is is convenient to simulate the system to understand how it will react in different situations. Simulations gives also an usefull source of information about the fundaments of our solar system. This projects will build a numerical solver based on the gravitatonal force between two massive objects in combination with Newton's second and third law of motion. The methods tested for the solver is Euler's method and the Verlet velocity method, both methods commonly used for solving differential equations. The solver will be controlled by solving simple systems and compared to analytical results beforde introduced to more advanced systems where analytical solutions are impossible to find. Further, relativistic corrections will be implemented in the simulator to reduce unwanted effects such as perihelion distortion. The physics and numerical methods used in the project are described in more detail in section \ref{sec:methods}. How theese are combined into a simulator is described in section \ref{sec:implementation}, and the output form test and experiments are described in section \ref{sec:results}. A summary of the most important findings are found in section \ref{sec:conclusion}.
 %----------------------------------------------------------------------------
 \section{Methods}
 \label{sec:methods}
-\blindtext
-\blindtext
+
 %----------------------------------------------------------------------------
 \newpage
 \section{Implementation}
@@ -192,10 +191,13 @@ All code and results are found in the GitHub repository\nl
 \end{tabular}
 \end{table}
 \begin{figure}[p]
-%\includegraphics[width=0.5\textwidth]{figures/iterations.png} 
-		\caption{Graph over the number of iterations for a given set of mesh points $N$. The solid red line is proportional to $N^2$ as a comparison.}\label{fig:iterations}
+\includegraphics[width=0.5\textwidth]{figures/earthEsc.eps} 
+		\caption{Illustration of a set of earth initial velocities and their respective path.}\label{fig:earth_vel}
 \end{figure}
-
+\begin{figure}[p]
+\includegraphics[trim={0 2.5cm 0 2.5cm},width=0.5\textwidth, clip]{figures/earthJup.eps} 
+		\caption{Illustration of different paths of earth in a system with a stationary Sun at (0,0,0) and Jupiter (-5.2,0,0). $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:earth_vel}
+\end{figure}
 %----------------------------------------------------------------------------
 \section{Summary and Conclusion}
 \label{sec:conclusion}
