@@ -166,23 +166,48 @@ x_{i+1}=x_i+hv_i+\frac{h^2}{2}a_i + \mathcal{O}(h^3)
 \newpage
 \section{Implementation}
 \label{sec:implementation}
-
+\subsection{Seperating equations}
+The system may be vectorized in Cartesian coordinates, where the gravitational force between two massive objects with mass $M_\circ$ and $M_\planet$ may be represented as 
 \begin{equation}
-F_{G}=G\frac{M_\circ M_\planet}{r^2}
-\end{equation} 
-where $M_\circ$ and $M_\planet$ are the masses of two arbitrary objects. Decomposing the force into Cartesian coordinates, the components may be represented
+\vec F=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
+\end{equation}
+By Newton's second law the acceleration may be represented as
 \begin{equation*}
-\hspace{-0.5cm}F_x=-\frac{GM_\circ M_\planet x}{r^3},F_y=-\frac{GM_\circ M_\planet y}{r^3},F_z=-\frac{GM_\circ M_\planet z}{r^3}
+\vec a_\planet M_\planet=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
 \end{equation*}
-By Newton's second law the the relation between acceleration and position, we have the relation between the position of the planet and the total force component acting on the planet.
+Where the relation between acceleration and position, gives the differential equation
 \begin{equation*}
-\frac{d^2x}{dt^2}=\frac{F_x}{M_\planet},\hspace{0.6cm}\frac{d^2y}{dt^2}=\frac{F_y}{M_\planet},\hspace{0.6cm}\frac{d^2z}{dt^2}=\frac{F_z}{M_\planet}
+\frac{\partial^2}{\partial t^2}\begin{bmatrix}
+x_\planet\\
+y_\planet\\
+z_\planet
+\end{bmatrix}
+ =-\frac{GM_\circ}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
 \end{equation*}
-Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of earth masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
+The second order differential equation may be seperated into two first order differential equations.
+\begin{equation*}
+\frac{\partial \vec r_\planet}{\partial t} = \vec v_\planet\hspace{1cm}
+\frac{\partial \vec v_\planet}{\partial t} =-\frac{GM_\circ}{r^3}\vec r_\planet
+\end{equation*}
+
+Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of solar masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
 \begin{equation}
 GM_\sun = 4\pi^2 \frac{\AU^3}{\Yr^2} \label{eq:units}
 \end{equation}
-Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces Earth masses, Astronomical Units and Years as natural units for this system.\nl
+Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces solar masses, Astronomical Units and Years as natural units for this system.\nl
+
 In total the system gets three sets of coupled differential equations per object in the system, which has to be solved to describe the system properly.
 \begin{align}
 &\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
