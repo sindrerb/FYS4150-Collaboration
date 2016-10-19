@@ -102,7 +102,7 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 \begin{abstract}
-
+\blindtext
 \end{abstract}
 }
 
@@ -133,16 +133,40 @@ F_{G,relativistic}= F_{G}\left(1+\frac{3|r\times v|^2}{r^2c^2}\right) \label{eq:
 \end{equation}
 In equation \ref{eq:G_force_rel} the classical force is multiplied with a relativistic correction where $|r\times v|$ is the angular velocity and $c$ is the light speed in vacuum.
 
-\subsection{Euler's method}
-Euler's method is directly based on a taylor expansion to the first degree.
+\subsection{Forward euler method}
+Forward euler method is directly based on a taylor expansion to the first degree.
+\begin{equation}
+f(x+h)=f(x)+hf'(x)+\mathcal{O}(h^2) \label{eq:euler_cont}
+\end{equation}
+Using equation \ref{eq:euler_cont} to discrete values one get a nummerical approximation of the next step based on the present information. 
+\begin{equation}
+f_{i+1}=f_i+hf'_i+\mathcal{O}(h^2) \label{eq:euler_disc}
+\end{equation}
+Where $x\rightarrow x=x_0+ih$ and $f_i=f(x_i)$. This is an example of a stiff explicit equation. Since the equation is explicit, only a interval of steplengths are suited with respect to accuaracy.
+
+\subsection{Verlet velocity method}
+Verlet velocity method uses forward euler method as a fundament, but introduces a new taylor expansion of the velocity $v'(x)$ .
 \begin{equation*}
-f(x+h)=f(x)+hf'(x)+\mathcal{O}(h^2)
+v'(x+h)=v'(x)+hv''(x)+\mathcal{O}(h^2)
 \end{equation*}
+While discretizing the variables and using the relation $a(x)=v'(x)$, $v''_i$ may be expressed using $a_i$ and $a_{i+1}$.
+\begin{equation*}
+v''_i=\frac{a_{i+1}-a_i}{h}+\mathcal{O}(h) 
+\end{equation*}
+Inserted into a discretized second order taylor expansion of $v(x)$, an expression for $v_{i+1}$ is achieved.
+\begin{equation}
+v_{i+1}=v_i+h\frac{a_{i+1}+a_i}{2} + \mathcal{O}(h^3)
+\end{equation}
+A second order taylor expansion is also used to approximate $x_{i+1}$ where $x'_i=v_i$ and $x''_i=a_i$
+\begin{equation}
+x_{i+1}=x_i+hv_i+\frac{h^2}{2}a_i + \mathcal{O}(h^3)
+\end{equation}
+
 %----------------------------------------------------------------------------
 \newpage
 \section{Implementation}
 \label{sec:implementation}
-Every planet in our solar system is affected by the gravitational force from the sun and other nearby planets. Where the gravitational force is
+
 \begin{equation}
 F_{G}=G\frac{M_\circ M_\planet}{r^2}
 \end{equation} 
