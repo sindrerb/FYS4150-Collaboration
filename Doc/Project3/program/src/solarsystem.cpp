@@ -7,6 +7,12 @@
 
 SolarSystem::SolarSystem() {
     m_satellites.empty();
+    m_numberofsatellites = 0;
+    m_names.empty();
+    m_timeStep = 0;
+    m_halfTimeStep = 0;
+    m_halfTimeStepSquared = 0;
+    m_startIteration = 0;
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
