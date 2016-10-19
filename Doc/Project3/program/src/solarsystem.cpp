@@ -66,23 +66,27 @@ void SolarSystem::clearNewAccelerations() {
     }
 }
 
-void SolarSystem::updatePositions() {
-    for(int i=0;i<m_numberofsatellites;i++) {
-        if(m_method=="euler"){
-            m_satellites[i].g_position =  NumericalSolver::solveEuler(m_satellites[i].g_position,m_satellites[i].g_velocity,m_timeStep);
-        }else{
-            m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_halfTimeStepSquared);
-        }
+void SolarSystem::updatePositionsEuler() {
+    for (int i = m_startIteration; i < m_numberofsatellites; i++) {
+        m_satellites[i].g_position =  NumericalSolver::solveEuler(m_satellites[i].g_position,m_satellites[i].g_velocity,m_timeStep);
     }
 }
 
-void SolarSystem::updateVelocities(){
-    for(int i=0;i<m_numberofsatellites;i++) {
-        if(m_method=="euler"){
-            m_satellites[i].g_velocity = NumericalSolver::solveEuler(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_timeStep);
-        }else{
-            m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_halfTimeStep);
-        }
+void SolarSystem::updatePositionsVerlet() {
+    for (int i = m_startIteration; i < m_numberofsatellites; i++) {
+        m_satellites[i].g_position =  NumericalSolver::solveVerletPos(m_satellites[i].g_position,m_satellites[i].g_velocity,m_satellites[i].g_new_acceleration,m_timeStep,m_halfTimeStepSquared);
+    }
+}
+
+void SolarSystem::updateVelocitiesEuler(){
+    for (int i = m_startIteration; i < m_numberofsatellites; i++) {
+        m_satellites[i].g_velocity = NumericalSolver::solveEuler(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_timeStep);
+    }
+}
+
+void SolarSystem::updateVelocitiesVerlet(){
+    for (int i = m_startIteration; i < m_numberofsatellites; i++) {
+        m_satellites[i].g_velocity = NumericalSolver::solveVerletVel(m_satellites[i].g_velocity,m_satellites[i].g_old_acceleration,m_satellites[i].g_new_acceleration,m_halfTimeStep);
     }
 }
 

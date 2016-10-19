@@ -22,8 +22,10 @@ public:
     //Interactions
     void shiftAccelerations();
     void clearNewAccelerations();
-    void updatePositions();
-    void updateVelocities();
+    void updatePositionsEuler();
+    void updateVelocitiesEuler();
+    void updatePositionsVerlet();
+    void updateVelocitiesVerlet();
     void updateForces();
 
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
