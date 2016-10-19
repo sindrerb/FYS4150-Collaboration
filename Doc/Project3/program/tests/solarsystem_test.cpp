@@ -56,14 +56,17 @@ SCENARIO( "Using functions to update values " ) {
     system.createSatellite(0, vec3(0,0,0), vec3(0,0,0));
     system.createSatellite(1, vec3(1,1,1), vec3(1,1,1));
     system.createSatellite(2, vec3(2,2,2), vec3(2,2,2));
+    system.setMethod("euler");
     double timeSpan = 100;
-    double iterations = 1000;
+    int iterations = 1000;
     double timeStep = timeSpan/iterations;
     system.setTimeStep( timeStep );
     system.setHalfTimeStep( timeStep * 0.5);
     system.setHalfTimeStepSquared( timeStep*timeStep*0.5 );
-    system.updateForces();
 
+//    system.updateForces();
+    system.updatePositionsEuler();
+    system.check();
 //    system.simulate(timeSpan,iterations,"test.txt");
 
     GIVEN( "Three satellite objects" ) {
@@ -74,7 +77,17 @@ SCENARIO( "Using functions to update values " ) {
 
 
         WHEN( "Updating position using velocity verlet" ) {
-            REQUIRE( satellite1.position().x() != 1 );
+            REQUIRE( satellite1.g_position.x() == 0 );
+            REQUIRE( satellite1.g_position.y() == 0 );
+            REQUIRE( satellite1.g_position.z() == 0 );
+
+            REQUIRE( satellite2.g_position.x() != 1 );
+            REQUIRE( satellite2.g_position.y() != 1 );
+            REQUIRE( satellite2.g_position.z() != 1 );
+
+            REQUIRE( satellite3.g_position.x() != 2 );
+            REQUIRE( satellite3.g_position.y() != 2 );
+            REQUIRE( satellite3.g_position.z() != 2 );
         }
     }
 }
