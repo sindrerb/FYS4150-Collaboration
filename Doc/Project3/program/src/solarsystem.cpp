@@ -13,6 +13,7 @@ SolarSystem::SolarSystem() {    // Initializes all member variables
     m_halfTimeStep = 0;
     m_halfTimeStepSquared = 0;
     m_startIteration = 0;
+    //m_perihelionPrevious = PERIHELION_DISTANCE;
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
@@ -37,7 +38,7 @@ void SolarSystem::createSolarSystem(std::string inputfile) {
     }
 }
 
-void SolarSystem::simulate(double finaltime, int iterations,int startIteration,std::string method, std::string outputfile){
+void SolarSystem::simulate (double finaltime, int iterations,int startIteration,std::string method, std::string outputfile ) {
     double duration;
     m_method = method;
     m_startIteration = startIteration;
@@ -48,14 +49,26 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
     if (m_method == "euler" ) {         // Check computational method
         printHeader(finaltime,iterations,outputfile);
         updateForces();
-        while(duration<finaltime) {
+        while ( duration < finaltime ) {
             updatePositionsEuler();
             updateForces();
             updateVelocitiesEuler();
             printPositions(duration,outputfile);
             duration += m_timeStep;
         }
-    } else {
+    }
+    else if ( m_method == "relativistic" ) {
+        updateForces();
+        while ( duration < finaltime ) {
+            updatePositionsVerlet();
+            updateForces();
+            updateVelocitiesVerlet();
+            printPerihelionAngle ( outputfile );
+            //printPositions(duration,outputfile);
+            duration += m_timeStep;
+        }
+    }
+    else {
         printHeader(finaltime,iterations,outputfile);
         updateForces();
         while(duration<finaltime) {
@@ -138,6 +151,19 @@ vec3 SolarSystem::gravitationalForce( Satellite planetA, Satellite planetB ) {
     return force;
 }
 
+double SolarSystem::perihelionAngle( Satellite planet ) { //Calculate perihelion angle
+    double angle, argument;
+    angle = 0;
+    if (planet.g_position.x() > 0.0000001){
+        argument = planet.g_position.y()/planet.g_position.x();
+        angle = atan(argument);
+        return angle;
+    }
+    else {
+        return 42;
+    }
+}
+
 /****************************************/
 /*          PRINT FUNCTIONS             */
 /****************************************/
@@ -161,6 +187,43 @@ void SolarSystem::printPositions(double time,std::string outputfile){
     outfile << "\n";
     outfile.close();
 }
+
+void SolarSystem::printPerihelionAngle(std::string outputfile) {
+    std::fstream outfile(outputfile, std::ios::app);
+    double perhelionangle, positionNow;
+    positionNow = m_satellites[1].g_position.length();
+    if (positionNow <= PERIHELION_MAX){
+        perhelionangle = perihelionAngle( m_satellites[1] );
+        outfile << "angle: " << perhelionangle << "\n";
+    }
+    else{
+        outfile << "out of bounds" << "\n";
+    outfile.close();
+    }
+}
+
+//void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {
+//    std::fstream outfile(outputfile, std::ios::app);
+//    double perhelionangle, positionNow;
+//    positionNow = planet.position().length();
+//    outfile << "distance:   " << positionNow << "\n";
+//    if (positionNow <= PERIHELION_MAX){
+//        m_perihelionNext = positionNow;
+//        if (m_perihelionPrevious > m_perihelionNext) {
+//            m_perihelionPrevious = m_perihelionNext;
+//            perhelionangle = perihelionAngle( planet );
+//            outfile << "angle: " << perhelionangle << "    position: " << planet.position().x() << "," << planet.position().y() << "," << planet.position().z() << "\n";
+//        }
+//        else {
+//            outfile << "out of distance" << "\n";
+//        }
+//    }
+//    else{
+//    outfile.close();
+//    }
+//}
+
+
 
 /****************************************/
 /*          Setters and getters         */
