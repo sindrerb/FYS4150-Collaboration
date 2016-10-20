@@ -24,26 +24,39 @@ public:
     void updateVelocitiesVerlet();
     void updateForces();
     void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
+    void calculateEnergies();
+    void calculateTotalEnergy();
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //File handeling functions
     void printHeader(double time, int iterations, std::string outputfile);
     void printPositions(double time,std::string outputfile);
 
-    // Setters and Getters for member variables
+    // Getters
     std::vector<Satellite> satellites() const;
-    int numberofsatellites() const;
-    void setNumberofsatellites(int numberofsatellites);
-    double timeStep() const;
-    void setTimeStep(double timeStep);
-    double halfTimeStep() const;
-    void setHalfTimeStep(double halfTimeStep);
-    double halfTimeStepSquared() const;
-    void setHalfTimeStepSquared(double halfTimeStepSquared);
     std::string method() const;
-    void setMethod(const std::string &method);
+    int numberofsatellites() const;
     int startIteration() const;
+    double timeStep() const;
+    double halfTimeStep() const;
+    double halfTimeStepSquared() const;
+    double kineticEnergy() const;
+    double potentialEnergy() const;
+    double totalEnergy() const;
+
+    // Setters
+    void setMethod(const std::string &method);
+    void setNumberofsatellites(int numberofsatellites);
     void setStartIteration(int startIteration);
+    void setTimeStep(double timeStep);
+    void setHalfTimeStep(double halfTimeStep);
+    void setHalfTimeStepSquared(double halfTimeStepSquared);
+    void setKineticEnergy(double kineticEnergy);
+    void setPotentialEnergy(double potentialEnergy);
+    void setTotalEnergy(double totalEnergy);
+
+    // Test functions
+    void testSimulater(double finaltime, int iterations, int startIteration, std::string method);
 
 private:
     // member variables
@@ -57,6 +70,9 @@ private:
     double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
     double SPEED_OF_LIGHT = 173*365;
+    double m_kineticEnergy;
+    double m_potentialEnergy;
+    double m_totalEnergy;
 };
 
 #endif // SOLARSYSTEM_H
