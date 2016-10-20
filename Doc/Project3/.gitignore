@@ -4,6 +4,9 @@
 ### celestialData generator ###
 celestialData/
 
+### debug folder###
+debug/
+
 ### OSX ###
 *.DS_Store
 .AppleDouble
