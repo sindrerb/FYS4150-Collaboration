@@ -18,7 +18,7 @@
   commentstyle=\itshape\color{purple!40!black},
   identifierstyle=\color{blue},
   stringstyle=\color{orange},
-  xleftmargin=0.5cm
+  xleftmargin=0.8cm
 }
 
 
@@ -166,10 +166,11 @@ x_{i+1}=x_i+hv_i+\frac{h^2}{2}a_i + \mathcal{O}(h^3)
 \newpage
 \section{Implementation}
 \label{sec:implementation}
-\subsection{Seperating equations}
+\subsection{Simplifying the problem}
 The system may be vectorized in Cartesian coordinates, where the gravitational force between two massive objects with mass $M_\circ$ and $M_\planet$ may be represented as 
 \begin{equation}
-\vec F=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+\vec F=-\frac{GM_\circ M_\planet}{r_{\planet\circ
+}^3}\begin{bmatrix}
 x_\planet-x_\circ\\
 y_\planet-y_\circ\\
 z_\planet-z_\circ
@@ -177,7 +178,8 @@ z_\planet-z_\circ
 \end{equation}
 By Newton's second law the acceleration may be represented as
 \begin{equation*}
-\vec a_\planet M_\planet=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+\vec a_\planet M_\planet=-\frac{GM_\circ M_\planet}{r_{\planet\circ
+}^3}\begin{bmatrix}
 x_\planet-x_\circ\\
 y_\planet-y_\circ\\
 z_\planet-z_\circ
@@ -190,50 +192,55 @@ x_\planet\\
 y_\planet\\
 z_\planet
 \end{bmatrix}
- =-\frac{GM_\circ}{r^3}\begin{bmatrix}
+ =-\frac{GM_\circ}{r_{\planet\circ
+}^3}\begin{bmatrix}
 x_\planet-x_\circ\\
 y_\planet-y_\circ\\
 z_\planet-z_\circ
 \end{bmatrix}
 \end{equation*}
 The second order differential equation may be seperated into two first order differential equations.
-\begin{equation*}
-\frac{\partial \vec r_\planet}{\partial t} = \vec v_\planet\hspace{1cm}
-\frac{\partial \vec v_\planet}{\partial t} =-\frac{GM_\circ}{r^3}\vec r_\planet
-\end{equation*}
+\begin{equation}
+\frac{\partial \vec r_\planet}{\partial t} = \vec v_\planet\hspace{0.2cm}(a)\hspace{1cm}
+\frac{\partial \vec v_\planet}{\partial t} =-\frac{GM_\circ}{r_{\planet\circ
+}^3}\vec r_\planet\hspace{0.2cm}(b)\label{eq:sep_diff_cont}
+\end{equation}
 
 Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of solar masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
 \begin{equation}
 GM_\sun = 4\pi^2 \frac{\AU^3}{\Yr^2} \label{eq:units}
 \end{equation}
-Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces solar masses, Astronomical Units and Years as natural units for this system.\nl
+Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Inserted in equation \ref{eq:sep_diff_cont} more conventient units are acheved.
+\begin{equation}
+\frac{\partial \vec r_\planet}{\partial t} = \vec v_\planet\hspace{0.2cm}(a)\hspace{1cm}
+\frac{\partial \vec v_\planet}{\partial t} =-\frac{4\pi^2 }{r_{\planet\circ
+}^3}\frac{M_\circ}{M_\sun} \vec r_\planet\hspace{0.2cm}(b)\label{eq:sep_diff_cont_unit}
+\end{equation}
+Equation \ref{eq:sep_diff_cont_unit} introduces solar masses, Astronomical Units and Years as natural units for this system to reduce floating point operations and ALT FOR SMÅ TALL. 
 
-In total the system gets three sets of coupled differential equations per object in the system, which has to be solved to describe the system properly.
-\begin{align}
-&\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
-&\frac{dy}{dt}=v_y &\wedge \hspace{0.5cm} &\frac{dv_y}{dt}=\frac{F_y}{M_\planet}\label{eq:set_y}\\
-&\frac{dz}{dt}=v_v &\wedge \hspace{0.5cm} &\frac{dv_z}{dt}=\frac{F_z}{M_\planet}\label{eq:set_z}
-\end{align}
-The system may be described with numerical methods by discretizing equations (\ref{eq:set_x}-\ref{eq:set_z}). Letting  $t\rightarrow t_i=t_0+ih, i\in \mathbb{N}$, $x\rightarrow x_i$ and $v\rightarrow v_i$ be the new discretized relations with the initial conditions $x(t_0)=x_0$ and $v(t_0)=v_0$ where $x_0$ and $v_0$ is known, and $h=\frac{t_{max}-t_0}{N} $. The equations may be solved by Euler's method resulting in an algorithm with an error $\err{h^2}$ at each calculation. Here $a_{k,i}=\frac{F_k(k_i)}{M_\planet}$ where $k$ represents an axis label.
+\subsection{Discretizing the system}
+The system may be described with numerical methods by discretizing equation \ref{eq:sep_diff_cont_unit}. Letting  $t\rightarrow t_i=t_0+ih,\ i\in \mathbb{N}$,\ $x\rightarrow x_i$ and $v\rightarrow v_i$ be the new discretized relations with the initial conditions $x(t_0)=x_0$ and $v(t_0)=v_0$. 
+\begin{equation}
+\frac{d \vec r_i}{h} = \vec v_i\hspace{0.2cm}(a)\hspace{1cm}
+\frac{d \vec v_i}{h} =-\frac{4\pi^2}{r_{\planet\circ
+}^3}\frac{M_\circ}{M_\sun}\vec r_i\hspace{0.2cm}(b)\label{eq:sep_diff_disc}
+\end{equation}
+Values for a time $t=t+h$ can be estimated in an algoritm using forward euler method.
 \begin{lstlisting}[style=customc]
-x[i+1]=x[i]+h*xV[i]
-y[i+1]=y[i]+h*yV[i]
-z[i+1]=z[i]+h*zV[i]
-xV[i+1]=xV[i]+h*xA[i]
-yV[i+1]=yV[i]+h*yA[i]
-zV[i+1]=zV[i]+h*zA[i]
+r[i+1]=r[i]+h*v[i]
+v[i+1]=v[i]+h*a[i]
 \end{lstlisting}
-
-Or with the more stable Verlet Vocity method reducing the error to $\err{h^3}$ for a calculation. 
+Or with the more stable Verlet Vocity method.
 \begin{lstlisting}[style=customc]
-x[i+1]=x[i]+h*xV[i]+0.5*h*xA[i]
-y[i+1]=y[i]+h*yV[i]+0.5*h*yA[i]
-z[i+1]=z[i]+h*zV[i]+0.5*h*zA[i]
-xV[i+1]=xV[i]+0.5*h*h*(xA[i+1]+xA[i])
-yV[i+1]=yV[i]+0.5*h*h*(yA[i+1]+yA[i])
-zV[i+1]=zV[i]+0.5*h*h*(zA[i+1]+zA[i])
+r[i+1]=r[i]+h*v[i]+0.5*h*a[i]
+v[i+1]=v[i]+0.5*h*h*(a[i+1]+a[i])
 \end{lstlisting}
-These algorithms were implemented in a script that simulates the dynamics of the Sun and Earth. 
+Where is defined by a summation of contributions by every other celestial body, wich is defined by equation \ref{eq:sep_diff_disc}.b. 
+\begin{equation}
+a_{\planet,i} = 4\pi^2\sum \frac{\vec r_i}{r_{\planet\circ
+}^3}\frac{M_\circ}{M_\sun}\label{eq:acc}
+\end{equation}
+Both algorithms were implemented in a script that simulates the dynamics of celestial bodies. And tested on a simple reference system. 
 
 All code and results are found in the GitHub repository\nl
 {\small \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project3}{github.com/sindrerb/FYS4150-Collaboration/}}
@@ -241,18 +248,18 @@ All code and results are found in the GitHub repository\nl
 \label{sec:results}
 
 	
-	\begin{table}[h]
-\caption{Table showing the three lowest computed eigenvalues $\lambda$ with $N$ mesh points, compared to the exact $\lambda_0=3$,$\lambda_1=7$ and $\lambda_2=11$.}\label{tbl:convergence}
-		\centering
-		\begin{tabular}{|l|l|l|l|}\hline
-			$N$ & $\lambda_0$ & $\lambda_1$ & $\lambda_2$\\ \hline
-			10 & 2.68672 & 6.11302 & 11.0574\\
-			50 & 2.98745 & 6.93692 & 10.8453\\
-			100& 2.99687 & 6.98432 & 10.9617\\
-			200& 2.99916 & 6.99610 & 10.9904\\
-			300& 2.99961 & 6.99828 & 10.9958\\
-			400& 2.99986 & 6.99903 & 10.9976\\
-			500& 2.99993 & 6.99937 & 10.9986\\\hline
+\begin{table}[h]
+\caption{Table showing the distance bewteen initial posistion and final position in AU, for a orbit of $r=1AU$ and $v_0=2\pi AU/Yr$. }\label{tbl:convergence}
+\centering
+\begin{tabular}{|c|l|l|}\hline
+Iterations & Euler & Verlet\\ \hline
+1e1 & 6.4380e+00 & 7.5967e-01\\
+1e2 & 2.3012e+00 & 7.1158e-02\\
+1e3 & 3.6485e-01 & 6.4100e-03\\
+1e4 & 3.7865e-02 & 4.4906e-05\\
+1e5 & 3.8441e-03 & 4.4087e-05\\
+1e6 & 4.2994e-04 & 5.0362e-05\\
+1e7 & 8.1899e-05 & 4.4079e-05\\ \hline
 \end{tabular}
 \end{table}
 \begin{figure}[p]
@@ -261,7 +268,7 @@ All code and results are found in the GitHub repository\nl
 \end{figure}
 \begin{figure}[p]
 \includegraphics[trim={0 2.5cm 0 2.5cm},width=0.5\textwidth, clip]{figures/earthJup.eps} 
-		\caption{Illustration of different paths of earth in a system with a stationary Sun at (0,0,0) and Jupiter (-5.2,0,0). $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:earth_vel}
+		\caption{Illustration of different paths of Earth and Jupiter in a system with a stationary Sun. $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:earth_vel}
 \end{figure}
 %----------------------------------------------------------------------------
 \section{Summary and Conclusion}
