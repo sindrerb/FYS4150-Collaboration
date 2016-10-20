@@ -26,6 +26,7 @@ public:
     void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
     void calculateEnergies();
     void calculateTotalEnergy();
+    void calculateAngularMomentum();
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //File handeling functions
@@ -43,6 +44,7 @@ public:
     double kineticEnergy() const;
     double potentialEnergy() const;
     double totalEnergy() const;
+    vec3 angularMomentum() const;
 
     // Setters
     void setMethod(const std::string &method);
@@ -54,9 +56,11 @@ public:
     void setKineticEnergy(double kineticEnergy);
     void setPotentialEnergy(double potentialEnergy);
     void setTotalEnergy(double totalEnergy);
+    void setAngularMomentum(vec3 angularMomentum);
 
     // Test functions
     void testSimulater(double finaltime, int iterations, int startIteration, std::string method);
+
 
 private:
     // member variables
@@ -73,6 +77,7 @@ private:
     double m_kineticEnergy;
     double m_potentialEnergy;
     double m_totalEnergy;
+    vec3 m_angularMomentum;
 };
 
 #endif // SOLARSYSTEM_H

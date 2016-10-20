@@ -16,6 +16,7 @@ SolarSystem::SolarSystem() {    // Initializes all member variables
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
     m_totalEnergy = 0;
+    m_angularMomentum = vec3(0,0,0);
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
@@ -148,8 +149,8 @@ void SolarSystem::calculateEnergies() {     // Calculates kinetic and potential 
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
 
-    for(int i=0; i < m_numberofsatellites; i++) {
-        for(int j=i+1; j<m_numberofsatellites; j++) {
+    for (int i=0; i < m_numberofsatellites; i++) {
+        for (int j=i+1; j<m_numberofsatellites; j++) {
             double relativeDistance = m_satellites[i].relativeDistanceTo( m_satellites[j] );                // Distance between bodies
             m_potentialEnergy -= G * m_satellites[i].mass() * m_satellites[j].mass() / relativeDistance ;   // Potential energy to total
         }
@@ -160,6 +161,13 @@ void SolarSystem::calculateEnergies() {     // Calculates kinetic and potential 
 
 void SolarSystem::calculateTotalEnergy() {
     m_totalEnergy = m_kineticEnergy + m_potentialEnergy;
+}
+
+void SolarSystem::calculateAngularMomentum() {
+    setAngularMomentum( vec3(0,0,0) );   // set angular momentum to zero
+    for (int i = 0; i < m_numberofsatellites; i++) {
+            m_angularMomentum += m_satellites[i].g_position.cross( m_satellites[i].g_velocity ) / m_satellites[i].mass();
+    }
 }
 
 /****************************************/
@@ -265,6 +273,17 @@ void SolarSystem::setTotalEnergy(double totalEnergy) {
     m_totalEnergy = totalEnergy;
 }
 
+vec3 SolarSystem::angularMomentum() const {
+    return m_angularMomentum;
+}
+
+void SolarSystem::setAngularMomentum(vec3 angularMomentum) {
+    m_angularMomentum = angularMomentum;
+}
+
+/****************************************/
+/*        Function for unit tests       */
+/****************************************/
 void SolarSystem::testSimulater(double finaltime, int iterations,int startIteration,std::string method){ // Removed file handeling, enabeling unit test
     double duration;
     m_method = method;
@@ -295,3 +314,5 @@ void SolarSystem::testSimulater(double finaltime, int iterations,int startIterat
         }
     }
 }
+
+

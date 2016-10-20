@@ -266,13 +266,11 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" )
                 system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
                 system.calculateEnergies();
                 double TotalEnergyAfterSimulation = system.totalEnergy();
-                THEN( "Total energy is conserved (what an an error less than 1e-4)") {
+                THEN( "Total energy is conserved (with an error less than 1e-4)") {
                     REQUIRE( TotalEnergyBeforeSimulation == Approx(TotalEnergyAfterSimulation).epsilon(1e-4)  );
                 }
             }
         }
-
-
     }
 }
 
