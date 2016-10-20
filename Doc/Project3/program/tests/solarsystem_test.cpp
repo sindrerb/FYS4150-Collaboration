@@ -221,3 +221,58 @@ SCENARIO( "Testing computational function","[computational]"  ) {
         }
     }
 }
+
+SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" ) {
+    GIVEN( "System with two satellites" ) {
+        SolarSystem system;
+
+        system.createSatellite(1, vec3(0,0,0), vec3(0,0,0));
+        system.createSatellite(3e-6, vec3(1,0,0), vec3(0,2*M_PI,0) );
+
+        system.setMethod("euler");
+        system.setStartIteration( 1 );
+        double timeSpan = 10; // Years
+        int iterations = 100000;
+        double timeStep = timeSpan/iterations;
+        system.setTimeStep( timeStep );
+        system.setHalfTimeStep( timeStep * 0.5);
+        system.setHalfTimeStepSquared( timeStep * timeStep * 0.5 );
+
+        double kineticEnergyTwoSatelliteSystem = system.kineticEnergy();
+        double potentialEnergyTwoSatelliteSystem = system.potentialEnergy();
+        double totalEnergyTwoSatelliteSystem = system.totalEnergy();
+        THEN( "Energies is calculated from constructor" ) {
+            REQUIRE( system.kineticEnergy() != 0 );
+            REQUIRE( system.potentialEnergy() != 0 );
+            REQUIRE( system.totalEnergy() <= 0 );
+        }
+
+        system.createSatellite(954e-6, vec3(-5.2, 0, 0), vec3(0, -2.75 ,0));
+        double kineticEnergyThreeSatelliteSystem = system.kineticEnergy();
+        double potentialEnergyThreeSatelliteSystem = system.potentialEnergy();
+        double totalEnergyThreeSatelliteSystem = system.totalEnergy();
+
+        WHEN( "Another planet is added to the system" ) {
+            THEN( "Energies of the new system change" ){
+                REQUIRE( system.kineticEnergy() != 0 );
+                REQUIRE( system.potentialEnergy() != 0 );
+                REQUIRE( system.totalEnergy() <= 0 );
+                REQUIRE( kineticEnergyTwoSatelliteSystem != kineticEnergyThreeSatelliteSystem );
+                REQUIRE( potentialEnergyTwoSatelliteSystem != potentialEnergyThreeSatelliteSystem );
+                REQUIRE( totalEnergyTwoSatelliteSystem != totalEnergyThreeSatelliteSystem );
+            }
+            AND_WHEN( "Simulating satellite motion over a period of 10 yeras" ) {
+                double TotalEnergyBeforeSimulation = system.totalEnergy();
+                system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+                system.calculateEnergies();
+                double TotalEnergyAfterSimulation = system.totalEnergy();
+                THEN( "Total energy is conserved (what an an error less than 1e-4)") {
+                    REQUIRE( TotalEnergyBeforeSimulation == Approx(TotalEnergyAfterSimulation).epsilon(1e-4)  );
+                }
+            }
+        }
+
+
+    }
+}
+
