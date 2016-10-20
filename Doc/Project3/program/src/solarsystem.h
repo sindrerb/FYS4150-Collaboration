@@ -10,7 +10,7 @@ class SolarSystem
 public:
     // Constructors
     SolarSystem();
-    Satellite &createSatellite(double mass, vec3 position, vec3 velocity);
+    void createSatellite(double mass, vec3 position, vec3 velocity);
 
     // Class functions for initsializing systems(<vector>) of satellites
     void createSolarSystem(std::string inputfile);
@@ -22,14 +22,33 @@ public:
     //Interactions
     void shiftAccelerations();
     void clearNewAccelerations();
-    void updatePositions();
-    void updateVelocities();
+    void updatePositionsEuler();
+    void updateVelocitiesEuler();
+    void updatePositionsVerlet();
+    void updateVelocitiesVerlet();
     void updateForces();
 
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //Evolve the system
-    void simulate(double finaltime, int iterations, std::string outputfile);
+    void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
+
+
+    std::vector<Satellite> satellites() const;
+
+    // Setters and Getters for member variables (enabeling Unit tests)
+    int numberofsatellites() const;
+    void setNumberofsatellites(int numberofsatellites);
+    double timeStep() const;
+    void setTimeStep(double timeStep);
+    double halfTimeStep() const;
+    void setHalfTimeStep(double halfTimeStep);
+    double halfTimeStepSquared() const;
+    void setHalfTimeStepSquared(double halfTimeStepSquared);
+    std::string method() const;
+    void setMethod(const std::string &method);
+
+    void check(); // DEBUGGER FUNCTION
 
 
 private:
@@ -38,8 +57,12 @@ private:
     std::vector<std::string> m_names;
     int m_numberofsatellites;
     double m_timeStep;
-    double m_timeStepSquared = m_timeStep*m_timeStep;
+    double m_halfTimeStep;
+    double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
+    double SPEED_OF_LIGHT = 173*365;
+    int m_startIteration;
+    std::string m_method;
 
 };
 

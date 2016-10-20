@@ -102,7 +102,7 @@
 \date{\today} % Leave empty to omit a date
 \renewcommand{\maketitlehookd}{%
 \begin{abstract}
-
+\blindtext
 \end{abstract}
 }
 
@@ -117,33 +117,97 @@
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------
 \section{Introduction}
-\lettrine[nindent=0em,lines=2]{Q}uantum \blindtext
+\lettrine[nindent=0em,lines=2]{E}{}arth has been orbitin the Sun for billions of years. Even with several hundred natural satellites in a complex scheme of orbits is our solar system a stable physical system. Although the system has been stable over a long time, is is convenient to simulate the system to understand how it will react in different situations. Simulations gives also an usefull source of information about the fundaments of our solar system. This projects will build a numerical solver based on the gravitatonal force between two massive objects in combination with Newton's second and third law of motion. The methods tested for the solver is Euler's method and the Verlet velocity method, both methods commonly used for solving differential equations. The solver will be controlled by solving simple systems and compared to analytical results beforde introduced to more advanced systems where analytical solutions are impossible to find. Further, relativistic corrections will be implemented in the simulator to reduce unwanted effects such as perihelion distortion. The physics and numerical methods used in the project are described in more detail in section \ref{sec:methods}. How theese are combined into a simulator is described in section \ref{sec:implementation}, and the output form test and experiments are described in section \ref{sec:results}. A summary of the most important findings are found in section \ref{sec:conclusion}.
 %----------------------------------------------------------------------------
-\section{Methods}
+\section{Theory and Methods}
 \label{sec:methods}
-\blindtext
-\blindtext
+\subsection{Gravitational force}
+Newton published a formula for describing the gravitational force in 1XXX, wich i still in use today. Where the gravitational force between two massive objects depends on the masses of the objects and the distance between them.
+\begin{equation}
+F_G = G\frac{M_AM_B}{r_{AB}^2} \label{eq:G_force}
+\end{equation}
+The two masses $M_A$ and $M_B$ belongs to object $A$ and $B$ respectively and $r_{AB}$ is the distance between them. $G$ is a gravitational force constant, called CONSTANT.
+For objects in high speed or in a strong gravitational field, it is necessary to add a relativistic correction to the classical force. 
+\begin{equation}
+F_{G,relativistic}= F_{G}\left(1+\frac{3|r\times v|^2}{r^2c^2}\right) \label{eq:G_force_rel}
+\end{equation}
+In equation \ref{eq:G_force_rel} the classical force is multiplied with a relativistic correction where $|r\times v|$ is the angular velocity and $c$ is the light speed in vacuum.
+
+\subsection{Forward euler method}
+Forward euler method is directly based on a taylor expansion to the first degree.
+\begin{equation}
+f(x+h)=f(x)+hf'(x)+\mathcal{O}(h^2) \label{eq:euler_cont}
+\end{equation}
+Using equation \ref{eq:euler_cont} to discrete values one get a nummerical approximation of the next step based on the present information. 
+\begin{equation}
+f_{i+1}=f_i+hf'_i+\mathcal{O}(h^2) \label{eq:euler_disc}
+\end{equation}
+Where $x\rightarrow x=x_0+ih$ and $f_i=f(x_i)$. This is an example of a stiff explicit equation. Since the equation is explicit, only a interval of steplengths are suited with respect to accuaracy.
+
+\subsection{Verlet velocity method}
+Verlet velocity method uses forward euler method as a fundament, but introduces a new taylor expansion of the velocity $v'(x)$ .
+\begin{equation*}
+v'(x+h)=v'(x)+hv''(x)+\mathcal{O}(h^2)
+\end{equation*}
+While discretizing the variables and using the relation $a(x)=v'(x)$, $v''_i$ may be expressed using $a_i$ and $a_{i+1}$.
+\begin{equation*}
+v''_i=\frac{a_{i+1}-a_i}{h}+\mathcal{O}(h) 
+\end{equation*}
+Inserted into a discretized second order taylor expansion of $v(x)$, an expression for $v_{i+1}$ is achieved.
+\begin{equation}
+v_{i+1}=v_i+h\frac{a_{i+1}+a_i}{2} + \mathcal{O}(h^3)
+\end{equation}
+A second order taylor expansion is also used to approximate $x_{i+1}$ where $x'_i=v_i$ and $x''_i=a_i$
+\begin{equation}
+x_{i+1}=x_i+hv_i+\frac{h^2}{2}a_i + \mathcal{O}(h^3)
+\end{equation}
+
 %----------------------------------------------------------------------------
 \newpage
 \section{Implementation}
 \label{sec:implementation}
-Every planet in our solar system is affected by the gravitational force from the sun and other nearby planets. Where the gravitational force is
+\subsection{Seperating equations}
+The system may be vectorized in Cartesian coordinates, where the gravitational force between two massive objects with mass $M_\circ$ and $M_\planet$ may be represented as 
 \begin{equation}
-F_{G}=G\frac{M_\circ M_\planet}{r^2}
-\end{equation} 
-where $M_\circ$ and $M_\planet$ are the masses of two arbitrary objects. Decomposing the force into Cartesian coordinates, the components may be represented
+\vec F=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
+\end{equation}
+By Newton's second law the acceleration may be represented as
 \begin{equation*}
-\hspace{-0.5cm}F_x=-\frac{GM_\circ M_\planet x}{r^3},F_y=-\frac{GM_\circ M_\planet y}{r^3},F_z=-\frac{GM_\circ M_\planet z}{r^3}
+\vec a_\planet M_\planet=-\frac{GM_\circ M_\planet}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
 \end{equation*}
-By Newton's second law the the relation between acceleration and position, we have the relation between the position of the planet and the total force component acting on the planet.
+Where the relation between acceleration and position, gives the differential equation
 \begin{equation*}
-\frac{d^2x}{dt^2}=\frac{F_x}{M_\planet},\hspace{0.6cm}\frac{d^2y}{dt^2}=\frac{F_y}{M_\planet},\hspace{0.6cm}\frac{d^2z}{dt^2}=\frac{F_z}{M_\planet}
+\frac{\partial^2}{\partial t^2}\begin{bmatrix}
+x_\planet\\
+y_\planet\\
+z_\planet
+\end{bmatrix}
+ =-\frac{GM_\circ}{r^3}\begin{bmatrix}
+x_\planet-x_\circ\\
+y_\planet-y_\circ\\
+z_\planet-z_\circ
+\end{bmatrix}
 \end{equation*}
-Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of earth masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
+The second order differential equation may be seperated into two first order differential equations.
+\begin{equation*}
+\frac{\partial \vec r_\planet}{\partial t} = \vec v_\planet\hspace{1cm}
+\frac{\partial \vec v_\planet}{\partial t} =-\frac{GM_\circ}{r^3}\vec r_\planet
+\end{equation*}
+
+Using the fact that Earth orbits the Sun in an almost circular motion \citep{NASA:orbit}, units of solar masses may be achieved by setting the centripetal force of the orbit equal to the gravitational force and solve for $GM_\sun$. Where $M_\sun$ is the mass of the Sun.
 \begin{equation}
 GM_\sun = 4\pi^2 \frac{\AU^3}{\Yr^2} \label{eq:units}
 \end{equation}
-Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces Earth masses, Astronomical Units and Years as natural units for this system.\nl
+Astronomical Units $\AU$ and years $\Yr$ are defined as the distance from Earth to the sun and the orbit time of Earth respectively. Equation \ref{eq:units} introduces solar masses, Astronomical Units and Years as natural units for this system.\nl
+
 In total the system gets three sets of coupled differential equations per object in the system, which has to be solved to describe the system properly.
 \begin{align}
 &\frac{dx}{dt}=v_x &\wedge \hspace{0.5cm} &\frac{dv_x}{dt}=\frac{F_x}{M_\planet}\label{eq:set_x}\\
@@ -192,10 +256,13 @@ All code and results are found in the GitHub repository\nl
 \end{tabular}
 \end{table}
 \begin{figure}[p]
-%\includegraphics[width=0.5\textwidth]{figures/iterations.png} 
-		\caption{Graph over the number of iterations for a given set of mesh points $N$. The solid red line is proportional to $N^2$ as a comparison.}\label{fig:iterations}
+\includegraphics[width=0.5\textwidth]{figures/earthEsc.eps} 
+		\caption{Illustration of a set of earth initial velocities and their respective path.}\label{fig:earth_vel}
 \end{figure}
-
+\begin{figure}[p]
+\includegraphics[trim={0 2.5cm 0 2.5cm},width=0.5\textwidth, clip]{figures/earthJup.eps} 
+		\caption{Illustration of different paths of earth in a system with a stationary Sun at (0,0,0) and Jupiter (-5.2,0,0). $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:earth_vel}
+\end{figure}
 %----------------------------------------------------------------------------
 \section{Summary and Conclusion}
 \label{sec:conclusion}

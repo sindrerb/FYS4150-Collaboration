@@ -1,6 +1,12 @@
 
 # Created by https://www.gitignore.io/api/qt,c++,pycharm,python,ipythonnotebook,osx,windows,linux,git,sublimetext,latex
 
+### celestialData generator ###
+celestialData/
+
+### debug folder###
+debug/
+
 ### OSX ###
 *.DS_Store
 .AppleDouble
@@ -348,9 +354,9 @@ GitHub.sublime-settings
 *.dvi
 *-converted-to.*
 # these rules might exclude image files for figures etc.
-# *.ps
-# *.eps
-# *.pdf
+ *.ps
+ *.eps
+ *.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
