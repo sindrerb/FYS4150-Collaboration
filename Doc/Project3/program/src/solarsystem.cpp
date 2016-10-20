@@ -16,7 +16,7 @@ SolarSystem::SolarSystem() {    // Initializes all member variables
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
     m_totalEnergy = 0;
-    m_angularMomentum = vec3(0,0,0);
+    m_angularMomentum.setToZero();
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
@@ -164,7 +164,7 @@ void SolarSystem::calculateTotalEnergy() {
 }
 
 void SolarSystem::calculateAngularMomentum() {
-    setAngularMomentum( vec3(0,0,0) );   // set angular momentum to zero
+    m_angularMomentum.setToZero();   // set angular momentum to zero
     for (int i = 0; i < m_numberofsatellites; i++) {
             m_angularMomentum += m_satellites[i].g_position.cross( m_satellites[i].g_velocity ) / m_satellites[i].mass();
     }

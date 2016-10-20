@@ -26,6 +26,8 @@ public:
     void setX(double x) { components[0] = x; }
     void setY(double y) { components[1] = y; }
     void setZ(double z) { components[2] = z; }
+    void setToZero() { set(0,0,0); }
+    void set(double x, double y, double z);
 
     // Convenience functions
     void print();
