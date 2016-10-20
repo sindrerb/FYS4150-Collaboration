@@ -5,7 +5,7 @@
 #include <fstream>
 
 
-SolarSystem::SolarSystem() {
+SolarSystem::SolarSystem() {    // Initializes all member variables
     m_satellites.empty();
     m_numberofsatellites = 0;
     m_names.empty();
@@ -18,23 +18,17 @@ SolarSystem::SolarSystem() {
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
     m_satellites.push_back( Satellite(mass, position, velocity) );
     m_numberofsatellites += 1;
-    //return m_satellites.back();
-}
-
-void SolarSystem::check() {
-    cout << "method: " << m_method << endl;
 }
 
 void SolarSystem::createSolarSystem(std::string inputfile) {
+    m_satellites.clear();       // Clear m_satellites
     m_numberofsatellites = 0;
-    m_satellites.clear();  // Clear m_satellites (vector of Satellites)
-
-    // Delcare inital values from file
-    std::fstream myfile(inputfile , std::ios_base::in);
-    if(!myfile.good()) {
+    std::fstream myfile(inputfile , std::ios_base::in); // Delcare inital values from file
+    if(!myfile.good()) {        // Check if missing file
         std::cout << "Error reading file " << inputfile << ". Make sure it is in executable dir" << endl;
         terminate();
     }
+
     std::string name;
     double mass , posX, posY, posZ, veloX, veloY, veloZ;
     while (myfile >> name >> mass >> posX >> posY >> posZ >> veloX >> veloY >> veloZ) {
@@ -51,7 +45,7 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
     m_halfTimeStep = m_timeStep*0.5;
     m_halfTimeStepSquared = m_timeStep*m_timeStep*0.5;
     duration = 0;
-    if (m_method == "euler" ) {
+    if (m_method == "euler" ) {         // Check computational method
         printHeader(finaltime,iterations,outputfile);
         updateForces();
         while(duration<finaltime) {
@@ -75,7 +69,7 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
 }
 
 /****************************************/
-/*              CALCULATIONS            */
+/*     Computational Functions          */
 /****************************************/
 void SolarSystem::shiftAccelerations() {
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
@@ -113,38 +107,36 @@ void SolarSystem::updateVelocitiesVerlet(){
     }
 }
 
-void SolarSystem::updateForces(){
-    shiftAccelerations();
+void SolarSystem::updateForces(){       // Calculate forces and update satellite accelerations ( F = ma )
+    shiftAccelerations();               // Enables use of Verlets method
     clearNewAccelerations();
     vec3 gravity;
-    for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        for ( int k = 0; k < m_startIteration; k++) {
+    for (int i = m_startIteration; i < m_numberofsatellites; i++) {     // Run over a set of satellites
+        for ( int k = 0; k < m_startIteration; k++) {                   // Enable stationary satellites
             gravity = gravitationalForce( m_satellites[i], m_satellites[k] );
             m_satellites[i].g_new_acceleration -= gravity * m_satellites[k].mass();
         }
 
-        for (int j = i+1; j < m_numberofsatellites; j++) {
+        for (int j = i+1; j < m_numberofsatellites; j++) {              // Run over the other satellites in the system
             gravity = gravitationalForce(m_satellites[i], m_satellites[j]);
 
             m_satellites[i].g_new_acceleration -= gravity * m_satellites[j].mass();
             m_satellites[j].g_new_acceleration += gravity * m_satellites[i].mass();
         }
     }
-    //m_satellites[1].g_new_acceleration.print();
 }
 
-vec3 SolarSystem::gravitationalForce(Satellite planetA,Satellite planetB){
+vec3 SolarSystem::gravitationalForce( Satellite planetA, Satellite planetB ) {
     vec3 force;
-    double R = planetA.relativeDistanceTo(planetB);
-    force = FOUR_PI_SQUARED*(planetA.g_position-planetB.g_position)/(R*R*R);
-    if(m_method == "relativistic"){
-        double RC = R*SPEED_OF_LIGHT;
+    double R = planetA.relativeDistanceTo( planetB );
+    force = FOUR_PI_SQUARED*( planetA.g_position - planetB.g_position )/( R*R*R );
+    if (m_method == "relativistic") {
+        double RC = R * SPEED_OF_LIGHT;
         vec3 angularMomentum = planetA.g_position.cross(planetA.g_velocity);
-        force = force*(1+(3*angularMomentum.lengthSquared())/(RC*RC));
+        force = force * ( 1 + ( 3 * angularMomentum.lengthSquared() ) / ( RC*RC) ) ;
     }
     return force;
 }
-
 
 /****************************************/
 /*          PRINT FUNCTIONS             */
@@ -153,7 +145,7 @@ void SolarSystem::printHeader(double time, int iterations, std::string outputfil
     std::ofstream outfile(outputfile);
     outfile << "Simulation of solar system over " << time << " years, with "<< iterations <<" iterations, using " << m_method << "´s method." << endl;
     outfile << "Time \t";
-    for(int i=0; i<m_numberofsatellites;i++) {
+    for (int i = 0; i < m_numberofsatellites; i++) {
         outfile << m_names[i] << "\t \t";
     }
     outfile << "\n";
@@ -163,15 +155,16 @@ void SolarSystem::printHeader(double time, int iterations, std::string outputfil
 void SolarSystem::printPositions(double time,std::string outputfile){
     std::ofstream outfile(outputfile,std::ios::app);
     outfile << time;
-    for(int i=0; i<m_numberofsatellites;i++) {
-        outfile <<",\t"<< m_satellites[i].g_position[0]<<","<<m_satellites[i].g_position[1]<<","<<m_satellites[i].g_position[2];
+    for (int i = 0; i < m_numberofsatellites; i++) {
+        outfile << ",\t" << m_satellites[i].g_position[0] << "," << m_satellites[i].g_position[1] << "," << m_satellites[i].g_position[2];
     }
     outfile << "\n";
     outfile.close();
 }
 
-
-//Setters and getters for membervariables
+/****************************************/
+/*          Setters and getters         */
+/****************************************/
 std::vector<Satellite> SolarSystem::satellites() const {
     return m_satellites;
 }
@@ -214,4 +207,12 @@ std::string SolarSystem::method() const {
 
 void SolarSystem::setMethod(const std::string &method) {
     m_method = method;
+}
+
+int SolarSystem::startIteration() const {
+    return m_startIteration;
+}
+
+void SolarSystem::setStartIteration(int startIteration) {
+    m_startIteration = startIteration;
 }
