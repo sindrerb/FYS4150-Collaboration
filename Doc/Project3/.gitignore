@@ -348,9 +348,9 @@ GitHub.sublime-settings
 *.dvi
 *-converted-to.*
 # these rules might exclude image files for figures etc.
-# *.ps
-# *.eps
-# *.pdf
+ *.ps
+ *.eps
+ *.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
