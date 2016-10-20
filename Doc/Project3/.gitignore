@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/qt,c++,pycharm,python,ipythonnotebook,osx,windows,linux,git,sublimetext,latex
 
+### celestialData generator ###
+celestialData/
+
 ### OSX ###
 *.DS_Store
 .AppleDouble
