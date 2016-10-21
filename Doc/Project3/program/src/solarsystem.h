@@ -1,6 +1,7 @@
 #ifndef SOLARSYSTEM_H
 #define SOLARSYSTEM_H
 #include <iostream>
+#include <iomanip>
 #include "vec3.h"
 #include "satellite.h"
 #include "matrix.h"

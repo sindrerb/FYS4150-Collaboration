@@ -153,13 +153,9 @@ vec3 SolarSystem::gravitationalForce( Satellite planetA, Satellite planetB ) {
 }
 
 double SolarSystem::perihelionAngle( vec3 vector ) { //Calculate perihelion angle
-    double angle, x;
-    x = vector.x();
-    if(x > 0.0000001){
-    //angle = atan2(vector.y(),vector.x());
-    angle = atan(vector.y()/x);
+    double angle;
+    angle = atan2(vector.y(),vector.x());
     return angle * ARCSECONDS_SCALE;
-    }
 }
 
 /****************************************/
@@ -200,6 +196,7 @@ void SolarSystem::printPerihelionAngle(std::string outputfile) {
     m_perihelionPrevPrevious = m_perihelionPrevious;
     m_perihelionPrevious = positionNow;
     vectorPrevious = vectorNow;
+    cout << vectorPrevious.x() << endl;
 }
 
 //void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {

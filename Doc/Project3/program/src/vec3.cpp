@@ -29,7 +29,6 @@ void vec3::print(string name)
     cout << name << " = ";
     print();
 }
-
 vec3 vec3::cross(vec3 otherVector)
 {
     return vec3(y()*otherVector.z()-z()*otherVector.y(), z()*otherVector.x()-x()*otherVector.z(), x()*otherVector.y()-y()*otherVector.x());
