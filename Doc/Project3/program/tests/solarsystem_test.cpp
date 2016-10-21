@@ -324,3 +324,56 @@ SCENARIO( "Checking that angular momementum is conserved", "[angularMomentum]" )
     }
 }
 
+SCENARIO( "Comparing computation time for Euler and Verlet", "[timer]") {
+    GIVEN( "Three satellite system" ) {
+        SolarSystem system;
+
+        system.createSatellite(1, vec3(-2,0,0), vec3(2,1,0));
+        system.createSatellite(3e-6, vec3(1,0,0), vec3(0,2*M_PI,0) );
+        system.createSatellite(954e-6, vec3(-5.2, 0, 0), vec3(0, -2.75 ,0));
+
+        system.setStartIteration( 1 );
+        double timeSpan = 10; // Years
+        int iterations = 100000;
+        double timeStep = timeSpan/iterations;
+        system.setTimeStep( timeStep );
+        system.setHalfTimeStep( timeStep * 0.5);
+        system.setHalfTimeStepSquared( timeStep * timeStep * 0.5 );
+
+        std::clock_t start;
+        WHEN( "Simulating with Euler" ) {
+            system.setMethod("euler");
+            double calculationTime1;
+            for ( int i = 0; i < 10; i++) {
+                start = std::clock();
+                system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+                calculationTime1 =+ ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            }
+            calculationTime1 = calculationTime1 / 10;
+
+
+            AND_WHEN( "Simulating with Verlet" ) {
+                system.setMethod("verlet");
+
+                THEN( "simulation times equal" ) {
+                    double calculationTime2;
+                    for ( int i = 0; i < 10; i++) {
+                        start = std::clock();
+                        system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+                        calculationTime2 += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+                    }
+                    calculationTime2 = calculationTime2 / 10;
+
+                    REQUIRE( calculationTime1 != calculationTime2 );
+                    std::cout << "Simulates 10 times over 10 years with timestep 1e-4 seconds " << endl;
+                    std::cout << "Average simulation times using:" << endl;
+                    std::cout << "\t Euler: \t" << calculationTime1 << " s." << endl;
+                    std::cout << "\t Verlet: \t" << calculationTime2 << " s." << endl;
+                    std::cout << "\t differance: \t" << abs( calculationTime2 - calculationTime1 ) << " s." << endl;
+                    std::cout << " Verlet is on average "  << calculationTime1/calculationTime2 * 100 << " % faster than Euler with the given parameters." << endl;
+                }
+            }
+        }
+    }
+}
+
