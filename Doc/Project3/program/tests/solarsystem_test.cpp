@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "../src/solarsystem.h"
 #include "../src/vec3.h"
+#include <time.h>
 
 SCENARIO( "Creating vector of Satellites in SolarSystem" ) {
     SolarSystem system;
@@ -248,6 +249,7 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" )
         }
 
         system.createSatellite(954e-6, vec3(-5.2, 0, 0), vec3(0, -2.75 ,0));
+
         double kineticEnergyThreeSatelliteSystem = system.kineticEnergy();
         double potentialEnergyThreeSatelliteSystem = system.potentialEnergy();
         double totalEnergyThreeSatelliteSystem = system.totalEnergy();
@@ -263,11 +265,22 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" )
             }
             AND_WHEN( "Simulating satellite motion over a period of 10 yeras" ) {
                 double TotalEnergyBeforeSimulation = system.totalEnergy();
+
+                std::clock_t start;
+                double calculationTime;
+                start = std::clock();
+
                 system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+
+                calculationTime = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
                 system.calculateEnergies();
+
                 double TotalEnergyAfterSimulation = system.totalEnergy();
                 THEN( "Total energy is conserved (with an error less than 1e-4)") {
                     REQUIRE( TotalEnergyBeforeSimulation == Approx(TotalEnergyAfterSimulation).epsilon(1e-4)  );
+                    std::cout << "Simulation time: " << calculationTime << " s." << endl;
+                    std::cout << "For system consisting of " << system.numberofsatellites() << " sattelites over " << timeSpan << " years, with a timestep of " << timeStep << " s. "<< endl;
                 }
             }
         }
