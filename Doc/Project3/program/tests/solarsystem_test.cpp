@@ -78,17 +78,17 @@ SCENARIO( "Testing updateForces();","[acceleration]" ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_old_acceleration.x() == satellite1.g_new_acceleration.x() );
-                REQUIRE( satellite1.g_old_acceleration.y() == satellite1.g_new_acceleration.y() );
-                REQUIRE( satellite1.g_old_acceleration.z() == satellite1.g_new_acceleration.z() );
+                REQUIRE( satellite1.accelerationOld().x() == satellite1.acceleration().x() );
+                REQUIRE( satellite1.accelerationOld().y() == satellite1.acceleration().y() );
+                REQUIRE( satellite1.accelerationOld().z() == satellite1.acceleration().z() );
 
-                REQUIRE( satellite2.g_old_acceleration.x() == satellite2.g_new_acceleration.x() );
-                REQUIRE( satellite2.g_old_acceleration.y() == satellite2.g_new_acceleration.y() );
-                REQUIRE( satellite2.g_old_acceleration.z() == satellite2.g_new_acceleration.z() );
+                REQUIRE( satellite2.accelerationOld().x() == satellite2.acceleration().x() );
+                REQUIRE( satellite2.accelerationOld().y() == satellite2.acceleration().y() );
+                REQUIRE( satellite2.accelerationOld().z() == satellite2.acceleration().z() );
 
-                REQUIRE( satellite3.g_old_acceleration.x() == satellite3.g_new_acceleration.x() );
-                REQUIRE( satellite3.g_old_acceleration.y() == satellite3.g_new_acceleration.y() );
-                REQUIRE( satellite3.g_old_acceleration.z() == satellite3.g_new_acceleration.z() );
+                REQUIRE( satellite3.accelerationOld().x() == satellite3.acceleration().x() );
+                REQUIRE( satellite3.accelerationOld().y() == satellite3.acceleration().y() );
+                REQUIRE( satellite3.accelerationOld().z() == satellite3.acceleration().z() );
             }
         }
     }
@@ -117,17 +117,17 @@ SCENARIO( "Testing computational function","[computational]"  ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_old_acceleration.x() == satellite1.g_new_acceleration.x() );
-                REQUIRE( satellite1.g_old_acceleration.y() == satellite1.g_new_acceleration.y() );
-                REQUIRE( satellite1.g_old_acceleration.z() == satellite1.g_new_acceleration.z() );
+                REQUIRE( satellite1.accelerationOld().x() == satellite1.acceleration().x() );
+                REQUIRE( satellite1.accelerationOld().y() == satellite1.acceleration().y() );
+                REQUIRE( satellite1.accelerationOld().z() == satellite1.acceleration().z() );
 
-                REQUIRE( satellite2.g_old_acceleration.x() == satellite2.g_new_acceleration.x() );
-                REQUIRE( satellite2.g_old_acceleration.y() == satellite2.g_new_acceleration.y() );
-                REQUIRE( satellite2.g_old_acceleration.z() == satellite2.g_new_acceleration.z() );
+                REQUIRE( satellite2.accelerationOld().x() == satellite2.acceleration().x() );
+                REQUIRE( satellite2.accelerationOld().y() == satellite2.acceleration().y() );
+                REQUIRE( satellite2.accelerationOld().z() == satellite2.acceleration().z() );
 
-                REQUIRE( satellite3.g_old_acceleration.x() == satellite3.g_new_acceleration.x() );
-                REQUIRE( satellite3.g_old_acceleration.y() == satellite3.g_new_acceleration.y() );
-                REQUIRE( satellite3.g_old_acceleration.z() == satellite3.g_new_acceleration.z() );
+                REQUIRE( satellite3.accelerationOld().x() == satellite3.acceleration().x() );
+                REQUIRE( satellite3.accelerationOld().y() == satellite3.acceleration().y() );
+                REQUIRE( satellite3.accelerationOld().z() == satellite3.acceleration().z() );
             }
         }
 
@@ -139,17 +139,17 @@ SCENARIO( "Testing computational function","[computational]"  ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_position.x() == 0 );
-                REQUIRE( satellite1.g_position.y() == 0 );
-                REQUIRE( satellite1.g_position.z() == 0 );
+                REQUIRE( satellite1.position().x() == 0 );
+                REQUIRE( satellite1.position().y() == 0 );
+                REQUIRE( satellite1.position().z() == 0 );
 
-                REQUIRE( satellite2.g_position.x() != 1 );
-                REQUIRE( satellite2.g_position.y() != 1 );
-                REQUIRE( satellite2.g_position.z() != 1 );
+                REQUIRE( satellite2.position().x() != 1 );
+                REQUIRE( satellite2.position().y() != 1 );
+                REQUIRE( satellite2.position().z() != 1 );
 
-                REQUIRE( satellite3.g_position.x() != 2 );
-                REQUIRE( satellite3.g_position.y() != 2 );
-                REQUIRE( satellite3.g_position.z() != 2 );
+                REQUIRE( satellite3.position().x() != 2 );
+                REQUIRE( satellite3.position().y() != 2 );
+                REQUIRE( satellite3.position().z() != 2 );
             }
         }
 
@@ -161,17 +161,17 @@ SCENARIO( "Testing computational function","[computational]"  ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_velocity.x() == 0 );
-                REQUIRE( satellite1.g_velocity.y() == 0 );
-                REQUIRE( satellite1.g_velocity.z() == 0 );
+                REQUIRE( satellite1.velocity().x() == 0 );
+                REQUIRE( satellite1.velocity().y() == 0 );
+                REQUIRE( satellite1.velocity().z() == 0 );
 
-                REQUIRE( satellite2.g_velocity.x() == 1 );
-                REQUIRE( satellite2.g_velocity.y() == 1 );
-                REQUIRE( satellite2.g_velocity.z() == 1 );
+                REQUIRE( satellite2.velocity().x() == 1 );
+                REQUIRE( satellite2.velocity().y() == 1 );
+                REQUIRE( satellite2.velocity().z() == 1 );
 
-                REQUIRE( satellite3.g_velocity.x() == 2 );
-                REQUIRE( satellite3.g_velocity.y() == 2 );
-                REQUIRE( satellite3.g_velocity.z() == 2 );
+                REQUIRE( satellite3.velocity().x() == 2 );
+                REQUIRE( satellite3.velocity().y() == 2 );
+                REQUIRE( satellite3.velocity().z() == 2 );
             }
         }
 
@@ -185,17 +185,17 @@ SCENARIO( "Testing computational function","[computational]"  ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_position.x() == 0 );
-                REQUIRE( satellite1.g_position.y() == 0 );
-                REQUIRE( satellite1.g_position.z() == 0 );
+                REQUIRE( satellite1.position().x() == 0 );
+                REQUIRE( satellite1.position().y() == 0 );
+                REQUIRE( satellite1.position().z() == 0 );
 
-                REQUIRE( satellite2.g_position.x() != 1 );
-                REQUIRE( satellite2.g_position.y() != 1 );
-                REQUIRE( satellite2.g_position.z() != 1 );
+                REQUIRE( satellite2.position().x() != 1 );
+                REQUIRE( satellite2.position().y() != 1 );
+                REQUIRE( satellite2.position().z() != 1 );
 
-                REQUIRE( satellite3.g_position.x() != 2 );
-                REQUIRE( satellite3.g_position.y() != 2 );
-                REQUIRE( satellite3.g_position.z() != 2 );
+                REQUIRE( satellite3.position().x() != 2 );
+                REQUIRE( satellite3.position().y() != 2 );
+                REQUIRE( satellite3.position().z() != 2 );
             }
         }
 
@@ -207,17 +207,17 @@ SCENARIO( "Testing computational function","[computational]"  ) {
                 Satellite satellite2 = satellites[1];
                 Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.g_velocity.x() == 0 );
-                REQUIRE( satellite1.g_velocity.y() == 0 );
-                REQUIRE( satellite1.g_velocity.z() == 0 );
+                REQUIRE( satellite1.velocity().x() == 0 );
+                REQUIRE( satellite1.velocity().y() == 0 );
+                REQUIRE( satellite1.velocity().z() == 0 );
 
-                REQUIRE( satellite2.g_velocity.x() != 1 );
-                REQUIRE( satellite2.g_velocity.y() != 1 );
-                REQUIRE( satellite2.g_velocity.z() != 1 );
+                REQUIRE( satellite2.velocity().x() != 1 );
+                REQUIRE( satellite2.velocity().y() != 1 );
+                REQUIRE( satellite2.velocity().z() != 1 );
 
-                REQUIRE( satellite3.g_velocity.x() != 2 );
-                REQUIRE( satellite3.g_velocity.y() != 2 );
-                REQUIRE( satellite3.g_velocity.z() != 2 );
+                REQUIRE( satellite3.velocity().x() != 2 );
+                REQUIRE( satellite3.velocity().y() != 2 );
+                REQUIRE( satellite3.velocity().z() != 2 );
             }
         }
     }
