@@ -151,17 +151,10 @@ vec3 SolarSystem::gravitationalForce( Satellite planetA, Satellite planetB ) {
     return force;
 }
 
-double SolarSystem::perihelionAngle( Satellite planet ) { //Calculate perihelion angle
-    double angle, argument;
-    angle = 0;
-    if (planet.g_position.x() > 0.0000001){
-        argument = planet.g_position.y()/planet.g_position.x();
-        angle = atan(argument);
-        return angle * ARCSECONDS_SCALE;
-    }
-    else {
-        return 42;
-    }
+double SolarSystem::perihelionAngle( vec3 vector ) { //Calculate perihelion angle
+    double angle;
+    angle = atan2(vector.y(),vector.x());
+    return angle * ARCSECONDS_SCALE;
 }
 
 /****************************************/
@@ -191,20 +184,18 @@ void SolarSystem::printPositions(double time,std::string outputfile){
 void SolarSystem::printPerihelionAngle(std::string outputfile) {
     std::fstream outfile(outputfile, std::ios::app);
     double perhelionangle, positionNow;
+    vec3 vectorNow, vectorPrevious;
     positionNow = m_satellites[1].g_position.length();
-    if (positionNow <= PERIHELION_MAX){
-        if (positionNow > m_perihelionPrevious) {
-            m_perihelionPrevious = positionNow;
+    vectorNow = m_satellites[1].g_position;
+    if ( positionNow > m_perihelionPrevious && m_perihelionPrevious < m_perihelionPrevPrevious ){
+        perhelionangle = perihelionAngle( vectorPrevious );
+        outfile << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << vectorPrevious.x() << vectorPrevious.y() << "\n";
+        outfile.close();
         }
-        else {
-        perhelionangle = perihelionAngle( m_satellites[1] );
-        outfile << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << "\n";
-        m_perihelionPrevious = 0;
-        }
-    }
-    else{
-    outfile.close();
-    }
+    m_perihelionPrevPrevious = m_perihelionPrevious;
+    m_perihelionPrevious = positionNow;
+    vectorPrevious = vectorNow;
+    cout << vectorPrevious << endl;
 }
 
 //void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {

@@ -25,7 +25,7 @@ public:
     void updateForces();
     void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
-    double perihelionAngle (Satellite planet);
+    double perihelionAngle (vec3 vector);
 
     //File handeling functions
     void printHeader(double time, int iterations, std::string outputfile);
@@ -58,12 +58,12 @@ private:
     double m_timeStep;
     double m_halfTimeStep;
     double m_halfTimeStepSquared;
-    double m_perihelionPrevious;
-    //double m_perihelionNow;
+    double m_perihelionPrevious = 1;
+    double m_perihelionPrevPrevious = 1;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
     double SPEED_OF_LIGHT = 173*365; //[AU/Yr]
     double PERIHELION_DISTANCE = 0.3075; //[AU]
-    double PERIHELION_MAX = 0.30751;
+    double PERIHELION_MAX = 0.308;
     double ARCSECONDS_SCALE = 206264.806;
 
 };
