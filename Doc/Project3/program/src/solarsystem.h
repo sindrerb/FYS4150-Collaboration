@@ -26,6 +26,7 @@ public:
     void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
     void calculateEnergies();
     void calculateTotalEnergy();
+    void calculateCenterOfMass();
     void calculateAngularMomentum();
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
@@ -45,6 +46,7 @@ public:
     double potentialEnergy() const;
     double totalEnergy() const;
     vec3 angularMomentum() const;
+    vec3 centerOfMass() const;
 
     // Setters
     void setMethod(const std::string &method);
@@ -57,10 +59,10 @@ public:
     void setPotentialEnergy(double potentialEnergy);
     void setTotalEnergy(double totalEnergy);
     void setAngularMomentum(vec3 angularMomentum);
+    void setCenterOfMass(const vec3 &centerOfMass);
 
     // Test functions
     void testSimulater(double finaltime, int iterations, int startIteration, std::string method);
-
 
 private:
     // member variables
@@ -78,6 +80,7 @@ private:
     double m_potentialEnergy;
     double m_totalEnergy;
     vec3 m_angularMomentum;
+    vec3 m_centerOfMass;
 };
 
 #endif // SOLARSYSTEM_H

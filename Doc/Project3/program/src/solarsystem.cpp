@@ -17,12 +17,14 @@ SolarSystem::SolarSystem() {    // Initializes all member variables
     m_potentialEnergy = 0;
     m_totalEnergy = 0;
     m_angularMomentum.setToZero();
+    m_centerOfMass.setToZero();
 }
 
 void SolarSystem::createSatellite(double mass, vec3 position, vec3 velocity) {
     m_satellites.push_back( Satellite(mass, position, velocity) );
     m_numberofsatellites += 1;
     calculateEnergies();    // Updates the energy of the system
+    calculateAngularMomentum();
 }
 
 void SolarSystem::createSolarSystem(std::string inputfile) {
@@ -41,6 +43,7 @@ void SolarSystem::createSolarSystem(std::string inputfile) {
         createSatellite( mass, vec3(posX,posY,posZ), vec3(veloX,veloY,veloZ));
     }
     calculateEnergies();
+    calculateAngularMomentum();
 }
 
 void SolarSystem::simulate(double finaltime, int iterations,int startIteration,std::string method, std::string outputfile){
@@ -163,10 +166,25 @@ void SolarSystem::calculateTotalEnergy() {
     m_totalEnergy = m_kineticEnergy + m_potentialEnergy;
 }
 
+void SolarSystem::calculateCenterOfMass() {
+    m_centerOfMass.setToZero();
+    double systemTotalMass = 0;
+
+    for (int i = 0; i < m_numberofsatellites; i++) {
+        systemTotalMass += m_satellites[i].mass();
+        for ( int j = 0; j <m_numberofsatellites; j++) {
+            m_centerOfMass += m_satellites[j].g_position * m_satellites[j].mass();
+        }
+    }
+    m_centerOfMass = centerOfMass() / systemTotalMass;
+}
+
 void SolarSystem::calculateAngularMomentum() {
     m_angularMomentum.setToZero();   // set angular momentum to zero
+    calculateCenterOfMass();
     for (int i = 0; i < m_numberofsatellites; i++) {
-            m_angularMomentum += m_satellites[i].g_position.cross( m_satellites[i].g_velocity ) / m_satellites[i].mass();
+        vec3 distanceVetor = m_satellites[i].g_position - m_centerOfMass;
+        m_angularMomentum += distanceVetor.cross( m_satellites[i].g_position * m_satellites[i].mass() ) ;
     }
 }
 
@@ -281,6 +299,14 @@ void SolarSystem::setAngularMomentum(vec3 angularMomentum) {
     m_angularMomentum = angularMomentum;
 }
 
+vec3 SolarSystem::centerOfMass() const {
+    return m_centerOfMass;
+}
+
+void SolarSystem::setCenterOfMass(const vec3 &centerOfMass) {
+    m_centerOfMass = centerOfMass;
+}
+
 /****************************************/
 /*        Function for unit tests       */
 /****************************************/
@@ -314,5 +340,7 @@ void SolarSystem::testSimulater(double finaltime, int iterations,int startIterat
         }
     }
 }
+
+
 
 
