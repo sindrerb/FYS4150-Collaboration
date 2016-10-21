@@ -340,12 +340,13 @@ SCENARIO( "Comparing computation time for Euler and Verlet", "[timer]") {
         system.setHalfTimeStep( timeStep * 0.5);
         system.setHalfTimeStepSquared( timeStep * timeStep * 0.5 );
 
-        std::clock_t start;
+
         WHEN( "Simulating with Euler" ) {
             system.setMethod("euler");
-            double calculationTime1;
+            std::clock_t start;
+            double calculationTime1 = 0;
+            start = std::clock();
             for ( int i = 0; i < 10; i++) {
-                start = std::clock();
                 system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
                 calculationTime1 =+ ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
             }
@@ -356,9 +357,9 @@ SCENARIO( "Comparing computation time for Euler and Verlet", "[timer]") {
                 system.setMethod("verlet");
 
                 THEN( "simulation times equal" ) {
-                    double calculationTime2;
+                    double calculationTime2 = 0;
+                    start = std::clock();
                     for ( int i = 0; i < 10; i++) {
-                        start = std::clock();
                         system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
                         calculationTime2 += ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
                     }
