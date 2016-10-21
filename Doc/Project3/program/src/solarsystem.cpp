@@ -157,7 +157,7 @@ double SolarSystem::perihelionAngle( Satellite planet ) { //Calculate perihelion
     if (planet.g_position.x() > 0.0000001){
         argument = planet.g_position.y()/planet.g_position.x();
         angle = atan(argument);
-        return angle;
+        return angle * ARCSECONDS_SCALE;
     }
     else {
         return 42;
@@ -193,11 +193,16 @@ void SolarSystem::printPerihelionAngle(std::string outputfile) {
     double perhelionangle, positionNow;
     positionNow = m_satellites[1].g_position.length();
     if (positionNow <= PERIHELION_MAX){
+        if (positionNow > m_perihelionPrevious) {
+            m_perihelionPrevious = positionNow;
+        }
+        else {
         perhelionangle = perihelionAngle( m_satellites[1] );
-        outfile << "angle: " << perhelionangle << "\n";
+        outfile << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << "\n";
+        m_perihelionPrevious = 0;
+        }
     }
     else{
-        outfile << "out of bounds" << "\n";
     outfile.close();
     }
 }

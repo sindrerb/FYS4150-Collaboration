@@ -58,12 +58,13 @@ private:
     double m_timeStep;
     double m_halfTimeStep;
     double m_halfTimeStepSquared;
-    //double m_perihelionPrevious;
-    //double m_perihelionNext;
+    double m_perihelionPrevious;
+    //double m_perihelionNow;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
     double SPEED_OF_LIGHT = 173*365; //[AU/Yr]
     double PERIHELION_DISTANCE = 0.3075; //[AU]
-    double PERIHELION_MAX = 0.3076;
+    double PERIHELION_MAX = 0.30751;
+    double ARCSECONDS_SCALE = 206264.806;
 
 };
 
