@@ -339,6 +339,7 @@ void SolarSystem::testSimulater(double finaltime, int iterations,int startIterat
             duration += m_timeStep;
         }
     }
+    calculateAngularMomentum();
 }
 
 

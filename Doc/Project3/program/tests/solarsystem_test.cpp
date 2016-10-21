@@ -223,14 +223,14 @@ SCENARIO( "Testing computational function","[computational]"  ) {
     }
 }
 
-SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" ) {
+SCENARIO( "Check that potential and kinetic energy is conserved", "[energies]" ) {
     GIVEN( "System with two satellites" ) {
         SolarSystem system;
 
         system.createSatellite(1, vec3(0,0,0), vec3(0,0,0));
         system.createSatellite(3e-6, vec3(1,0,0), vec3(0,2*M_PI,0) );
 
-        system.setMethod("euler");
+        system.setMethod("verlet");
         system.setStartIteration( 1 );
         double timeSpan = 10; // Years
         int iterations = 100000;
@@ -263,7 +263,7 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" )
                 REQUIRE( potentialEnergyTwoSatelliteSystem != potentialEnergyThreeSatelliteSystem );
                 REQUIRE( totalEnergyTwoSatelliteSystem != totalEnergyThreeSatelliteSystem );
             }
-            AND_WHEN( "Simulating satellite motion over a period of 10 yeras" ) {
+            AND_WHEN( "Simulating satellite motion over a period of 10 yeras, using Verlets method" ) {
                 double TotalEnergyBeforeSimulation = system.totalEnergy();
 
                 std::clock_t start;
@@ -282,6 +282,43 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[Energies]" )
                     std::cout << "Simulation time: " << calculationTime << " s." << endl;
                     std::cout << "For system consisting of " << system.numberofsatellites() << " sattelites over " << timeSpan << " years, with a timestep of " << timeStep << " s. "<< endl;
                 }
+            }
+        }
+    }
+}
+
+SCENARIO( "Checking that angular momementum is conserved", "[angularMomentum]" ) {
+    GIVEN( "Three satellite system" ) {
+        SolarSystem system;
+
+        system.createSatellite(1, vec3(-2,0,0), vec3(2,1,0));
+        system.createSatellite(3e-6, vec3(1,0,0), vec3(0,2*M_PI,0) );
+        system.createSatellite(954e-6, vec3(-5.2, 0, 0), vec3(0, -2.75 ,0));
+
+        system.setMethod("verlet");
+        system.setStartIteration( 1 );
+        double timeSpan = 10; // Years
+        int iterations = 100000;
+        double timeStep = timeSpan/iterations;
+        system.setTimeStep( timeStep );
+        system.setHalfTimeStep( timeStep * 0.5);
+        system.setHalfTimeStepSquared( timeStep * timeStep * 0.5 );
+
+        WHEN( "Simulating over given time" ) {
+            vec3 angularMomentumBeforeSimulation = system.angularMomentum();
+            vec3 centerOfMassBeforeSimulation = system.centerOfMass();
+
+            system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+
+            vec3 angularMomentumAfterSimulation = system.angularMomentum();
+            vec3 centerOfMassAfterSimulation = system.centerOfMass();
+            THEN( "Angular momentum should be conserved (with epislon 1e-10)" ) {
+                REQUIRE ( system.numberofsatellites() == 3  );
+                REQUIRE( angularMomentumAfterSimulation.x() == Approx( angularMomentumBeforeSimulation.x() ).epsilon( 1e-10 ) ) ;
+                REQUIRE( angularMomentumAfterSimulation.y() == Approx( angularMomentumBeforeSimulation.y() ).epsilon( 1e-10 ) ) ;
+                REQUIRE( angularMomentumAfterSimulation.z() == Approx( angularMomentumBeforeSimulation.z() ).epsilon( 1e-10 ) ) ;
+                cout << "Center of mass \n\t before:\t" << centerOfMassBeforeSimulation << "\n\t and after:\t" << centerOfMassAfterSimulation << endl;
+                cout << "Angular momentum \n\t before:\t " << angularMomentumBeforeSimulation << "\n\t and after:\t " << angularMomentumAfterSimulation << endl;
             }
         }
     }
