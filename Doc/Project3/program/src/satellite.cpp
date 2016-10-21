@@ -14,7 +14,7 @@ Satellite::Satellite(double mass, vec3 position, vec3 velocity) {
     m_velocity = velocity;
 }
 
-double Satellite::relativeDistanceTo(const Satellite &satelliteName) {
+double Satellite::relativeDistanceTo(Satellite &satelliteName) {
     vec3 distanceVector = position() - satelliteName.position();
     double dr = distanceVector.length();
     return dr;
@@ -31,7 +31,7 @@ void Satellite::setVelocity(const vec3 &velocity) {
     m_velocity = velocity;
 }
 
-vec3 Satellite::acceleration() const {
+vec3 &Satellite::acceleration() {
     return m_acceleration;
 }
 
@@ -39,7 +39,7 @@ void Satellite::setAcceleration(const vec3 &acceleration) {
     m_acceleration = acceleration;
 }
 
-vec3 Satellite::accelerationOld() const {
+vec3 &Satellite::accelerationOld() {
     return m_accelerationOld;
 }
 
@@ -51,11 +51,11 @@ double Satellite::mass() const {
     return m_mass;
 }
 
-vec3 Satellite::position() const {
+vec3 &Satellite::position() {
     return m_position;
 }
 
-vec3 Satellite::velocity() const {
+vec3 &Satellite::velocity() {
     return m_velocity;
 }
 

@@ -82,37 +82,37 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
 /****************************************/
 void SolarSystem::shiftAccelerations() {
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].accelerationOld() =  m_satellites[i].acceleration();
+        m_satellites[i].setAccelerationOld( m_satellites[i].acceleration() );
     }
 }
 
 void SolarSystem::clearNewAccelerations() {
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].acceleration() = vec3(0,0,0);
+        m_satellites[i].setAcceleration( vec3(0,0,0) );
     }
 }
 
 void SolarSystem::updatePositionsEuler() {
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].position() =  NumericalSolver::solveEuler(m_satellites[i].position(), m_satellites[i].velocity(), m_timeStep);
+        m_satellites[i].setPosition( NumericalSolver::solveEuler(m_satellites[i].position(), m_satellites[i].velocity(), m_timeStep) );
     }
 }
 
 void SolarSystem::updatePositionsVerlet() {
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].position() =  NumericalSolver::solveVerletPos(m_satellites[i].position(), m_satellites[i].velocity(), m_satellites[i].acceleration(), m_timeStep, m_halfTimeStepSquared);
+        m_satellites[i].setPosition( NumericalSolver::solveVerletPos(m_satellites[i].position(), m_satellites[i].velocity(), m_satellites[i].acceleration(), m_timeStep, m_halfTimeStepSquared) );
     }
 }
 
 void SolarSystem::updateVelocitiesEuler(){
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].velocity() = NumericalSolver::solveEuler(m_satellites[i].velocity(), m_satellites[i].accelerationOld(), m_timeStep);
+        m_satellites[i].setVelocity( NumericalSolver::solveEuler(m_satellites[i].velocity(), m_satellites[i].accelerationOld(), m_timeStep) );
     }
 }
 
 void SolarSystem::updateVelocitiesVerlet(){
     for (int i = m_startIteration; i < m_numberofsatellites; i++) {
-        m_satellites[i].velocity() = NumericalSolver::solveVerletVel(m_satellites[i].velocity(), m_satellites[i].accelerationOld(), m_satellites[i].acceleration(), m_halfTimeStep);
+        m_satellites[i].setVelocity( NumericalSolver::solveVerletVel(m_satellites[i].velocity(), m_satellites[i].accelerationOld(), m_satellites[i].acceleration(), m_halfTimeStep) );
     }
 }
 
@@ -127,8 +127,7 @@ void SolarSystem::updateForces(){       // Calculate forces and update satellite
         }
 
         for (int j = i+1; j < m_numberofsatellites; j++) {              // Run over the other satellites in the system
-            gravity = gravitationalForce(m_satellites[i], m_satellites[j]);
-
+            gravity = gravitationalForce( m_satellites[i], m_satellites[j] );
             m_satellites[i].acceleration() -= gravity * m_satellites[j].mass();
             m_satellites[j].acceleration() += gravity * m_satellites[i].mass();
         }
@@ -168,15 +167,14 @@ void SolarSystem::calculateTotalEnergy() {
 
 void SolarSystem::calculateCenterOfMass() {
     m_centerOfMass.setToZero();
-    double systemTotalMass = 0;
-
+    double totalMassOfSystem = 0;
     for (int i = 0; i < m_numberofsatellites; i++) {
-        systemTotalMass += m_satellites[i].mass();
+        totalMassOfSystem += m_satellites[i].mass();
         for ( int j = 0; j <m_numberofsatellites; j++) {
             m_centerOfMass += m_satellites[j].position() * m_satellites[j].mass();
         }
     }
-    m_centerOfMass = centerOfMass() / systemTotalMass;
+    m_centerOfMass = m_centerOfMass / totalMassOfSystem;
 }
 
 void SolarSystem::calculateAngularMomentum() {
@@ -215,7 +213,7 @@ void SolarSystem::printPositions(double time,std::string outputfile){
 /****************************************/
 /*          Setters and getters         */
 /****************************************/
-std::vector<Satellite> SolarSystem::satellites() const {
+std::vector<Satellite> &SolarSystem::satellites()  {
     return m_satellites;
 }
 
@@ -310,7 +308,7 @@ void SolarSystem::setCenterOfMass(const vec3 &centerOfMass) {
 /****************************************/
 /*        Function for unit tests       */
 /****************************************/
-void SolarSystem::testSimulater(double finaltime, int iterations,int startIteration,std::string method){ // Removed file handeling, enabeling unit test
+void SolarSystem::testSimulater(double finaltime, int iterations,int startIteration,std::string method) { // Removed file handeling, enabeling unit test
     double duration;
     m_method = method;
     m_startIteration = startIteration;

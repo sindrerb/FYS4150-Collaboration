@@ -97,10 +97,12 @@ SCENARIO( "Testing updateForces();","[acceleration]" ) {
 SCENARIO( "Testing computational function","[computational]"  ) {
     GIVEN( "System with three satellites" ) {
         SolarSystem system;
+
         system.createSatellite(10, vec3(0,0,0), vec3(0,0,0));
         system.createSatellite(1, vec3(1,1,1), vec3(1,1,1));
         system.createSatellite(2, vec3(2,2,2), vec3(2,2,2));
-        system.setMethod("euler");
+
+        //        system.setMethod("euler");
         system.setStartIteration( 1 );
         double timeSpan = 10; // Years
         int iterations = 10000;
@@ -112,66 +114,58 @@ SCENARIO( "Testing computational function","[computational]"  ) {
         WHEN( "shifting Acceleration" ) {
             THEN ("Old acceleration gets value of new acceleration") {
                 system.shiftAccelerations();
-                vector<Satellite> satellites = system.satellites();
-                Satellite satellite1 = satellites[0];
-                Satellite satellite2 = satellites[1];
-                Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.accelerationOld().x() == satellite1.acceleration().x() );
-                REQUIRE( satellite1.accelerationOld().y() == satellite1.acceleration().y() );
-                REQUIRE( satellite1.accelerationOld().z() == satellite1.acceleration().z() );
+                //                vector<Satellite> &satellites = system.satellites();
 
-                REQUIRE( satellite2.accelerationOld().x() == satellite2.acceleration().x() );
-                REQUIRE( satellite2.accelerationOld().y() == satellite2.acceleration().y() );
-                REQUIRE( satellite2.accelerationOld().z() == satellite2.acceleration().z() );
+                REQUIRE( system.satellites()[0].accelerationOld().x() == Approx( system.satellites()[0].acceleration().x() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[0].accelerationOld().y() == Approx( system.satellites()[0].acceleration().y() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[0].accelerationOld().z() == Approx( system.satellites()[0].acceleration().z() ).epsilon(1e-4) );
 
-                REQUIRE( satellite3.accelerationOld().x() == satellite3.acceleration().x() );
-                REQUIRE( satellite3.accelerationOld().y() == satellite3.acceleration().y() );
-                REQUIRE( satellite3.accelerationOld().z() == satellite3.acceleration().z() );
+                REQUIRE( system.satellites()[1].accelerationOld().x() == Approx( system.satellites()[1].acceleration().x() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[1].accelerationOld().y() == Approx( system.satellites()[1].acceleration().y() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[1].accelerationOld().z() == Approx( system.satellites()[1].acceleration().z() ).epsilon(1e-4) );
+
+                REQUIRE( system.satellites()[2].accelerationOld().x() == Approx( system.satellites()[2].acceleration().x() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[2].accelerationOld().y() == Approx( system.satellites()[2].acceleration().y() ).epsilon(1e-4) );
+                REQUIRE( system.satellites()[2].accelerationOld().z() == Approx( system.satellites()[2].acceleration().z() ).epsilon(1e-4) );
             }
         }
 
         AND_WHEN( "updating position using Euler" ) {
             THEN ("position changes") {
+
                 system.updatePositionsEuler();
-                vector<Satellite> satellites = system.satellites();
-                Satellite satellite1 = satellites[0];
-                Satellite satellite2 = satellites[1];
-                Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.position().x() == 0 );
-                REQUIRE( satellite1.position().y() == 0 );
-                REQUIRE( satellite1.position().z() == 0 );
+                REQUIRE( system.satellites()[0].position().x() == 0 );
+                REQUIRE( system.satellites()[0].position().y() == 0 );
+                REQUIRE( system.satellites()[0].position().z() == 0 );
 
-                REQUIRE( satellite2.position().x() != 1 );
-                REQUIRE( satellite2.position().y() != 1 );
-                REQUIRE( satellite2.position().z() != 1 );
+                REQUIRE( system.satellites()[1].position().x() != 1.0 );
+                REQUIRE( system.satellites()[1].position().y() != 1.0 );
+                REQUIRE( system.satellites()[1].position().z() != 1.0 );
 
-                REQUIRE( satellite3.position().x() != 2 );
-                REQUIRE( satellite3.position().y() != 2 );
-                REQUIRE( satellite3.position().z() != 2 );
+                REQUIRE( system.satellites()[2].position().x() != 2.0 );
+                REQUIRE( system.satellites()[2].position().y() != 2.0 );
+                REQUIRE( system.satellites()[2].position().z() != 2.0 );
             }
         }
 
         AND_WHEN( "updating velocity using Euler" ) {
             THEN ("velocity changes") {
+
                 system.updateVelocitiesEuler();
-                vector<Satellite> satellites = system.satellites();
-                Satellite satellite1 = satellites[0];
-                Satellite satellite2 = satellites[1];
-                Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.velocity().x() == 0 );
-                REQUIRE( satellite1.velocity().y() == 0 );
-                REQUIRE( satellite1.velocity().z() == 0 );
+                REQUIRE( system.satellites()[0].velocity().x() == 0 );
+                REQUIRE( system.satellites()[0].velocity().y() == 0 );
+                REQUIRE( system.satellites()[0].velocity().z() == 0 );
 
-                REQUIRE( satellite2.velocity().x() == 1 );
-                REQUIRE( satellite2.velocity().y() == 1 );
-                REQUIRE( satellite2.velocity().z() == 1 );
+                REQUIRE( system.satellites()[1].velocity().x() == 1.0 );
+                REQUIRE( system.satellites()[1].velocity().y() == 1.0 );
+                REQUIRE( system.satellites()[1].velocity().z() == 1.0 );
 
-                REQUIRE( satellite3.velocity().x() == 2 );
-                REQUIRE( satellite3.velocity().y() == 2 );
-                REQUIRE( satellite3.velocity().z() == 2 );
+                REQUIRE( system.satellites()[2].velocity().x() == 2.0 );
+                REQUIRE( system.satellites()[2].velocity().y() == 2.0 );
+                REQUIRE( system.satellites()[2].velocity().z() == 2.0 );
             }
         }
 
@@ -179,45 +173,39 @@ SCENARIO( "Testing computational function","[computational]"  ) {
 
         AND_WHEN( "updating position using Verlet" ) {
             THEN ("position changes") {
+
                 system.updatePositionsVerlet();
-                vector<Satellite> satellites = system.satellites();
-                Satellite satellite1 = satellites[0];
-                Satellite satellite2 = satellites[1];
-                Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.position().x() == 0 );
-                REQUIRE( satellite1.position().y() == 0 );
-                REQUIRE( satellite1.position().z() == 0 );
+                REQUIRE( system.satellites()[0].position().x() == 0 );
+                REQUIRE( system.satellites()[0].position().y() == 0 );
+                REQUIRE( system.satellites()[0].position().z() == 0 );
 
-                REQUIRE( satellite2.position().x() != 1 );
-                REQUIRE( satellite2.position().y() != 1 );
-                REQUIRE( satellite2.position().z() != 1 );
+                REQUIRE( system.satellites()[1].position().x() != 1.0 );
+                REQUIRE( system.satellites()[1].position().y() != 1.0 );
+                REQUIRE( system.satellites()[1].position().z() != 1.0 );
 
-                REQUIRE( satellite3.position().x() != 2 );
-                REQUIRE( satellite3.position().y() != 2 );
-                REQUIRE( satellite3.position().z() != 2 );
+                REQUIRE( system.satellites()[2].position().x() != 2.0 );
+                REQUIRE( system.satellites()[2].position().y() != 2.0 );
+                REQUIRE( system.satellites()[2].position().z() != 2.0 );
             }
         }
 
         AND_WHEN( "updating velocity using Verlet" ) {
             THEN ("velocity changes") {
+
                 system.updateVelocitiesVerlet();
-                vector<Satellite> satellites = system.satellites();
-                Satellite satellite1 = satellites[0];
-                Satellite satellite2 = satellites[1];
-                Satellite satellite3 = satellites[2];
 
-                REQUIRE( satellite1.velocity().x() == 0 );
-                REQUIRE( satellite1.velocity().y() == 0 );
-                REQUIRE( satellite1.velocity().z() == 0 );
+                REQUIRE( system.satellites()[0].velocity().x() == 0 );
+                REQUIRE( system.satellites()[0].velocity().y() == 0 );
+                REQUIRE( system.satellites()[0].velocity().z() == 0 );
 
-                REQUIRE( satellite2.velocity().x() != 1 );
-                REQUIRE( satellite2.velocity().y() != 1 );
-                REQUIRE( satellite2.velocity().z() != 1 );
+                REQUIRE( system.satellites()[1].velocity().x() != 1.0 );
+                REQUIRE( system.satellites()[1].velocity().y() != 1.0 );
+                REQUIRE( system.satellites()[1].velocity().z() != 1.0 );
 
-                REQUIRE( satellite3.velocity().x() != 2 );
-                REQUIRE( satellite3.velocity().y() != 2 );
-                REQUIRE( satellite3.velocity().z() != 2 );
+                REQUIRE( system.satellites()[2].velocity().x() != 2.0 );
+                REQUIRE( system.satellites()[2].velocity().y() != 2.0 );
+                REQUIRE( system.satellites()[2].velocity().z() != 2.0 );
             }
         }
     }
@@ -270,7 +258,7 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[energies]" )
                 double calculationTime;
                 start = std::clock();
 
-                system.testSimulater( timeSpan, iterations, system.startIteration(), system.method() );
+                system.testSimulater( timeSpan, iterations, iterations, system.method() );
 
                 calculationTime = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 

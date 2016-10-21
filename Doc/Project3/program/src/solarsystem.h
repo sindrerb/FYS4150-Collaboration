@@ -10,7 +10,6 @@ class SolarSystem
 public:
     // Constructors
     SolarSystem();
-
     // Class functions for initsializing systems(<vector>) of satellites
     void createSolarSystem(std::string inputfile);
     void createSatellite(double mass, vec3 position, vec3 velocity);
@@ -35,7 +34,8 @@ public:
     void printPositions(double time,std::string outputfile);
 
     // Getters
-    std::vector<Satellite> satellites() const;
+    std::vector<Satellite> &satellites();
+
     std::string method() const;
     int numberofsatellites() const;
     int startIteration() const;
