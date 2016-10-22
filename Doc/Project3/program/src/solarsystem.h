@@ -66,6 +66,7 @@ private:
     double PERIHELION_DISTANCE = 0.3075; //[AU]
     double PERIHELION_MAX = 0.308;
     double ARCSECONDS_SCALE = 206264.806;
+    vec3 m_vectorPrevious;
 
 };
 
