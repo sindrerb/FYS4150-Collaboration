@@ -69,6 +69,13 @@ double vec3::length()
     return sqrt(lengthSquared());
 }
 
+void vec3::set(double x, double y, double z)
+{
+    components[0] = x;
+    components[1] = y;
+    components[2] = z;
+}
+
 vec3 &vec3::operator+=(double rhs)
 {
     components[0] += rhs;

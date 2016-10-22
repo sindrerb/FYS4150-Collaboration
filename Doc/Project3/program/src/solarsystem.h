@@ -10,7 +10,6 @@ class SolarSystem
 public:
     // Constructors
     SolarSystem();
-
     // Class functions for initsializing systems(<vector>) of satellites
     void createSolarSystem(std::string inputfile);
     void createSatellite(double mass, vec3 position, vec3 velocity);
@@ -24,26 +23,46 @@ public:
     void updateVelocitiesVerlet();
     void updateForces();
     void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
+    void calculateEnergies();
+    void calculateTotalEnergy();
+    void calculateCenterOfMass();
+    void calculateAngularMomentum();
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //File handeling functions
     void printHeader(double time, int iterations, std::string outputfile);
     void printPositions(double time,std::string outputfile);
 
-    // Setters and Getters for member variables
-    std::vector<Satellite> satellites() const;
-    int numberofsatellites() const;
-    void setNumberofsatellites(int numberofsatellites);
-    double timeStep() const;
-    void setTimeStep(double timeStep);
-    double halfTimeStep() const;
-    void setHalfTimeStep(double halfTimeStep);
-    double halfTimeStepSquared() const;
-    void setHalfTimeStepSquared(double halfTimeStepSquared);
+    // Getters
+    std::vector<Satellite> &satellites();
+
     std::string method() const;
-    void setMethod(const std::string &method);
+    int numberofsatellites() const;
     int startIteration() const;
+    double timeStep() const;
+    double halfTimeStep() const;
+    double halfTimeStepSquared() const;
+    double kineticEnergy() const;
+    double potentialEnergy() const;
+    double totalEnergy() const;
+    vec3 angularMomentum() const;
+    vec3 centerOfMass() const;
+
+    // Setters
+    void setMethod(const std::string &method);
+    void setNumberofsatellites(int numberofsatellites);
     void setStartIteration(int startIteration);
+    void setTimeStep(double timeStep);
+    void setHalfTimeStep(double halfTimeStep);
+    void setHalfTimeStepSquared(double halfTimeStepSquared);
+    void setKineticEnergy(double kineticEnergy);
+    void setPotentialEnergy(double potentialEnergy);
+    void setTotalEnergy(double totalEnergy);
+    void setAngularMomentum(vec3 angularMomentum);
+    void setCenterOfMass(const vec3 &centerOfMass);
+
+    // Test functions
+    void testSimulater(double finaltime, int iterations, int startIteration, std::string method);
 
 private:
     // member variables
@@ -57,6 +76,11 @@ private:
     double m_halfTimeStepSquared;
     double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
     double SPEED_OF_LIGHT = 173*365;
+    double m_kineticEnergy;
+    double m_potentialEnergy;
+    double m_totalEnergy;
+    vec3 m_angularMomentum;
+    vec3 m_centerOfMass;
 };
 
 #endif // SOLARSYSTEM_H

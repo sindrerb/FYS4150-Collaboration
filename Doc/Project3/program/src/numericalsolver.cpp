@@ -16,6 +16,6 @@ vec3 NumericalSolver::solveVerletPos(vec3 x, vec3 dx, vec3 ddx, double step, dou
 }
 
 vec3 NumericalSolver::solveVerletVel(vec3 dx, vec3 ddx1, vec3 ddx0, double halfStep) {
-    return dx + halfStep*(ddx1+ddx0);
+    return dx + halfStep * (ddx1 + ddx0);
 }
 
