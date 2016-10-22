@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{blindtext} % Package to generate dummy text throughout this template 
 \usepackage{graphicx}
+\usepackage{tikz}
 \usepackage{natbib}
 \usepackage{lmodern}
 \usepackage{color}
@@ -161,7 +162,51 @@ A second order taylor expansion is also used to approximate $x_{i+1}$ where $x'_
 \begin{equation}
 x_{i+1}=x_i+hv_i+\frac{h^2}{2}a_i + \mathcal{O}(h^3)
 \end{equation}
+\subsection{Reference systems}
+To compare values from the simulator with analytical results, a system of Earth orbiting the Sun in a circular orbit was chosen. The initial  position of Earth was set to $r_0=(1AU,0,0)$, then the velocity will be $\frac{2\pi AU}{Yr}$ normal to $r$ in order to get a circular orbit, in other words $v_0=(0,2\pi AU/Yr,0)$ as illustrated in Figure \ref{fig:two_body_system}. The Sun were held constant in the center. One advance with the system is that Earth will be in the initial position after one year.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=2.5]
+\draw[->](1,0.13)--(1,0.7)node[midway,right]{$v=2\pi AU$};
+\draw[fill=white](0,0) circle(0.2)node[above]{$M_\sun$};
+\draw[dashed](0,0) circle(1);
+\filldraw[fill=white](1,0) circle(0.13)node[anchor=north west]{$M_E$};
+\draw(0,0)--(1,0)node[midway,above]{$r=1AU$};
+\end{tikzpicture}
+\caption{Map over initial conditions of a reference system with Earth orbiting the Sun in a circular orbit.}\label{fig:two_body_system}
+\end{figure}
+The escape velocity of this system is given at the limit where the kinetic energy exceeds the potential energy.
+\begin{align*}
+E_k&\geq -E_p\\
+\frac{1}{2}M_E v_{Esc}^2 &\geq \frac{GM_\sun M_E}{r}\\  
+v_{Esc} &\geq \sqrt{8\pi^2}
+\end{align*}
+Another usefull system in case of a reference is Earth and Jupiter in circular orbits of the Sun. The initial conditions of the system are set to\\ $r_E=(1,0,0)$, $v_E=(0,6.28,0)$, $r_J=(0,5.2,0)$, $v_J=(-2.75,0,0)$, $r_\sun=(0,0,0)$, $v_\sun=(0,0,0)$, illustrated in Figure \ref{fig:three_body_system}. With the Sun locked in it's position, Jupiter and Earth orbits in a circilar orbit if interactions between the planets are neglected. Allowing inetactions complicates the problem, where numerics are more suited than analytical methods. If all bodies are free to move, also a center of mass has to be concidered.
+$$R_{CM}=\frac{r_JM_J+r_EM_E+r_\sun M_\sun}{M_J+M_E+M_\sun} = ()$$
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\draw[->](1.5,0)--(1.5,3)node[midway,right]{$v_E$};
+\draw[->](0,5.2)--(-2,5.2)node[midway,above]{$v_J$};
+%\draw[->](-0.35,-0.1)--(-0.2,-1)node[left]{$v_S$};
 
+%\draw[dashed](0,0) circle(0.4);
+\draw[dashed](0,0) circle(1.5);
+\draw[dashed](0,0) circle(5.2);
+\draw[fill=white](0,0) circle(0.3)node[anchor=south]{$M_\sun$};
+\filldraw[fill=white](1.5,0) circle(0.2)node[anchor=west]{$M_E$};
+\filldraw[fill=white](0,5.2) circle(0.2)node[anchor=north]{$M_J$};
+\end{tikzpicture}
+\caption{Map over initial conditions of a reference system with Earth, Jupiter and the Sun orbiting a common mass center.}\label{fig:three_body_system}
+\end{figure}
+To stabilize the three body system, the total momentum must sum to zero. This gives a new initial condition on $v_\sun$.
+\begin{align*}
+P_J+P_E+P_\sun &= 0\\
+P_\sun &= M_Jv_J+M_E+v_E\\
+v_\sun &= \frac{M_Jv_J+M_E+v_E}{M_\sun}
+\end{align*}
+\subsection*{Unit tests}
+Since this project rely strongly on consertving momentum and energy of the system, a varaiaty of unit test was implemented using Catch. The unit test where set to check important class functions in addition to conservation of physical properties.
 %----------------------------------------------------------------------------
 \newpage
 \section{Implementation}
@@ -240,16 +285,15 @@ Where is defined by a summation of contributions by every other celestial body, 
 a_{\planet,i} = 4\pi^2\sum \frac{\vec r_i}{r_{\planet\circ
 }^3}\frac{M_\circ}{M_\sun}\label{eq:acc}
 \end{equation}
-Both algorithms were implemented in a script that simulates the dynamics of celestial bodies. And tested on a simple reference system. 
+Both algorithms were implemented in a script that simulates the dynamics of celestial bodies. A two body reference system of the Sun and Earth was simulated where the accuaracy of the methods were tested for a varaiaty of iterations per year. Whit a converged number of iterations, the initial velocity where increased until the escape velocity was reached.
 
 All code and results are found in the GitHub repository\nl
 {\small \href{https://github.com/sindrerb/FYS4150-Collaboration/tree/master/Doc/Project3}{github.com/sindrerb/FYS4150-Collaboration/}}
 \section{Results and discussion}
 \label{sec:results}
-
-	
+The simulator created in the project turned out to be an efficient simulator with small errors. Used on the simple two body system with Earth orbiting the Sun in a circular path, the accuaracy of the algorithm could be measured in terms of offset after one orbit, as listed in Table \ref{tbl:convergence}. The results shows clearly that the Verlet velocity method gives a higher precision at a given number of iterations. From Figrue \ref{fig:acc} offset seems to converge to an order $1e-05$ which is probably due to the difference of $2\pi$ and the initial conditions of $6.283$. 
 \begin{table}[h]
-\caption{Table showing the distance bewteen initial posistion and final position in AU, for a orbit of $r=1AU$ and $v_0=2\pi AU/Yr$. }\label{tbl:convergence}
+\caption{Table showing the offset of Earth in AU, after one orbit with $r_0=1AU$ and initial velocity $v_0=6.283 AU/Yr$ normal to $r_0$. }\label{tbl:convergence}
 \centering
 \begin{tabular}{|c|l|l|}\hline
 Iterations & Euler & Verlet\\ \hline
@@ -262,13 +306,20 @@ Iterations & Euler & Verlet\\ \hline
 1e7 & 8.1899e-05 & 4.4079e-05\\ \hline
 \end{tabular}
 \end{table}
-\begin{figure}[p]
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth]{figures/acc.eps} 
+		\caption{Plotted data from Table \ref{tbl:convergence}, showing offset of Earth form the analytical circular path after one year. Is is clear that Verlet method is more accurate, also a convergence of Verlet is seen at 1e4 iterations.}\label{fig:acc}
+\end{figure}
+The escape velocity was by trial and error, found to be $v_{Esc}=8.8857 AU/Yr$, this is in good agreement of the theoretical value of $v_{Esc}=\sqrt{8\pi^2}$. A brief illustration of the escape velocity and the evolvment of the path is given in Figure \ref{fig:earth_vel}.
+\begin{figure}[t]
 \includegraphics[width=0.5\textwidth]{figures/earthEsc.eps} 
 		\caption{Illustration of a set of earth initial velocities and their respective path.}\label{fig:earth_vel}
 \end{figure}
+
 \begin{figure}[p]
-\includegraphics[trim={0 2.5cm 0 2.5cm},width=0.5\textwidth, clip]{figures/earthJup.eps} 
-		\caption{Illustration of different paths of Earth and Jupiter in a system with a stationary Sun. $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:jupiter_mass}
+\centering
+\includegraphics[trim={0 2.5cm 0 2.5cm},width=0.45\textwidth, clip]{figures/earthJup.eps} 
+\caption{Illustration of different paths of Earth and Jupiter in a system with a stationary Sun. $M$ describes the Jupiter mass used in the simulation and $M_J$ is the original Jupiter mass, length units given in $AU$}\label{fig:jupiter_mass}
 \end{figure}
 \begin{figure}[p]
 \includegraphics[width=0.5\textwidth]{figures/sunEarthJupiter.eps} 
