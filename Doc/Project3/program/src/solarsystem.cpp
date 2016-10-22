@@ -64,8 +64,8 @@ void SolarSystem::simulate (double finaltime, int iterations,int startIteration,
             updatePositionsVerlet();
             updateForces();
             updateVelocitiesVerlet();
-            printPerihelionAngle ( outputfile );
-            //printPositions(duration,outputfile);
+            //printPerihelionAngle ( outputfile );
+            printPositions ( duration , outputfile );
             duration += m_timeStep;
         }
     }
@@ -194,12 +194,14 @@ void SolarSystem::printPerihelionAngle(std::string outputfile) {
     vectorNow = m_satellites[1].g_position;
     if ( positionNow > m_perihelionPrevious && m_perihelionPrevious < m_perihelionPrevPrevious ){
         perhelionangle = perihelionAngle( vectorPrevious );
-        outfile << std::setprecision(9) << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << vectorPrevious.x() << vectorPrevious.y() << "\n";
+        outfile << std::setprecision(9) << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << "\n";
+        cout << "x,y =    " << vectorPrevious.x() << "," << vectorPrevious.y() << endl;
         outfile.close();
         }
     m_perihelionPrevPrevious = m_perihelionPrevious;
     m_perihelionPrevious = positionNow;
     vectorPrevious = vectorNow;
+    cout << vectorNow[0] << endl;
 }
 
 //void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {
