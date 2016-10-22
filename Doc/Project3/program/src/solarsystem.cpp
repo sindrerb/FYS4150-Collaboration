@@ -59,15 +59,13 @@ void SolarSystem::simulate (double finaltime, int iterations,int startIteration,
         }
     }
     else if ( m_method == "relativistic" ) {
-        printHeader(finaltime,iterations,outputfile);
-        m_vectorPrevious = satellites()[1].position();
         updateForces();
         while ( duration < finaltime ) {
             updatePositionsVerlet();
             updateForces();
             updateVelocitiesVerlet();
-            printPerihelionAngle ( outputfile );
-            //printPositions ( duration , outputfile );
+            //printPerihelionAngle ( outputfile );
+            printPositions ( duration , outputfile );
             duration += m_timeStep;
         }
     }
@@ -191,18 +189,19 @@ void SolarSystem::printPositions(double time,std::string outputfile){
 void SolarSystem::printPerihelionAngle(std::string outputfile) {
     std::fstream outfile(outputfile, std::ios::app);
     double perhelionangle, positionNow;
-    vec3 vectorNow;
+    vec3 vectorNow, vectorPrevious;
     positionNow = m_satellites[1].g_position.length();
     vectorNow = m_satellites[1].g_position;
     if ( positionNow > m_perihelionPrevious && m_perihelionPrevious < m_perihelionPrevPrevious ){
-        perhelionangle = perihelionAngle( m_vectorPrevious );
+        perhelionangle = perihelionAngle( vectorPrevious );
         outfile << std::setprecision(9) << "angle: " << perhelionangle << "     distance: " << m_perihelionPrevious << "\n";
-        //cout << "x,y =    " << m_vectorPrevious.x() << "," << m_vectorPrevious.y() << endl;
+        cout << "x,y =    " << vectorPrevious.x() << "," << vectorPrevious.y() << endl;
         outfile.close();
         }
     m_perihelionPrevPrevious = m_perihelionPrevious;
     m_perihelionPrevious = positionNow;
-    m_vectorPrevious = vectorNow;
+    vectorPrevious = vectorNow;
+    cout << vectorNow[0] << endl;
 }
 
 //void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {
