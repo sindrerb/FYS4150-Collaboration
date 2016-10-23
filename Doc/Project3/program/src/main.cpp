@@ -38,11 +38,6 @@ int main(int argc, char *argv[]){
         cout << "Type preffered time step : ";
         cin >> timeStep;
 
-//        if(simulationMethod!="euler" && simulationMethod!="verlet" && simulationMethod!="relativistic") {
-//            cout << "Did not recognize the argument "<<simulationMethod<<", running with verlet method.\n";
-//            simulationMethod = "verlet";
-//        }
-
         if (simulationMethod == "perihelion") {
             infile = "perihelion.txt";
             outfile = "perihelionOUT.txt";
@@ -51,7 +46,7 @@ int main(int argc, char *argv[]){
             outfile    = "solarSystemOUT.txt";
         }
 
-        int iterations = timeSpan/timeStep;
+        long int iterations = timeSpan/timeStep;
 
         cout << "********************************************************************************" << endl;
         cout << "                               SIMULATING                                       " << endl;
