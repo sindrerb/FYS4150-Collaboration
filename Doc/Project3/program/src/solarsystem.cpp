@@ -73,8 +73,7 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
             updatePositionsVerlet();
             updateForces();
             updateVelocitiesVerlet();
-            findPerihelionPosition();
-            printPerihelionAngleToFile( outputfile );
+            findPerihelionPosition( outputfile );
             //printPositions ( duration , outputfile );
             duration += m_timeStep;
         }
@@ -200,12 +199,13 @@ void SolarSystem::calculateAngularMomentum() {
     }
 }
 
-void SolarSystem::findPerihelionPosition() {
+void SolarSystem::findPerihelionPosition( std::string outputfile ) {
     double currentDistance = m_satellites[1].position().length();
     vec3 currentPositionVector = m_satellites[1].position();
     if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
         if (m_vectorPrevious.x() > 1e-5) {
             m_perihelionAngle = atan( m_vectorPrevious.x() / m_vectorPrevious.y() ) * ARCSECONDS_SCALE;
+            printPerihelionAngleToFile( outputfile );
         }
     }
     m_previousPreviousDistance = m_previousDistance;

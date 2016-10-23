@@ -27,7 +27,7 @@ public:
     void calculateTotalEnergy();
     void calculateCenterOfMass();
     void calculateAngularMomentum();
-    void findPerihelionPosition();
+    void findPerihelionPosition( std::string outputfile );
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //File handeling functions
