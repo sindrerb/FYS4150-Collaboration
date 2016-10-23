@@ -205,6 +205,7 @@ void SolarSystem::findPerihelionPosition( std::string outputfile ) {
 //    vec3 currentPositionVector = m_satellites[1].position();
     if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
         m_perihelionAngle = atan2( m_vectorPrevious.y() , m_vectorPrevious.x() ) * ARCSECONDS_SCALE;
+        m_perihelionPosition = m_vectorPrevious;
         printPerihelionAngleToFile( outputfile );
     }
     m_previousPreviousDistance = m_previousDistance;
@@ -238,7 +239,7 @@ void SolarSystem::printPositions(double time,std::string outputfile){
 
 void SolarSystem::printPerihelionAngleToFile(std::string outputfile) {
     std::fstream outfile(outputfile, std::ios::app);
-    outfile << std::setprecision(9) << "angle: " << m_perihelionAngle << "     distance: " << m_previousDistance << "\n";
+    outfile << std::setprecision(9) << "angle: " << m_perihelionAngle << "\t distance: " << m_previousDistance << "\t Position(x,y,z): " << m_perihelionPosition.x() << " , " << m_perihelionPosition.y() << " , " << m_perihelionPosition.z() << endl;
     outfile.close();
 }
 
