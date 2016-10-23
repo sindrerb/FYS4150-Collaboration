@@ -65,6 +65,19 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
             printPositions(duration,outputfile);
             duration += m_timeStep;
         }
+    } else if ( m_method == "relativistic" ) {
+        printHeader(finaltime,iterations,outputfile);
+        m_vectorPrevious = satellites()[1].position();
+        updateForces();
+        while ( duration < finaltime ) {
+            updatePositionsVerlet();
+            updateForces();
+            updateVelocitiesVerlet();
+            findPerihelionPosition();
+            printPerihelionAngleToFile( outputfile );
+            //printPositions ( duration , outputfile );
+            duration += m_timeStep;
+        }
     } else {
         printHeader(finaltime,iterations,outputfile);
         updateForces();
@@ -193,7 +206,6 @@ void SolarSystem::findPerihelionPosition() {
     if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
         if (m_vectorPrevious.x() > 1e-5) {
             m_perihelionAngle = atan( m_vectorPrevious.x() / m_vectorPrevious.y() ) * ARCSECONDS_SCALE;
-            printPerihelionAngleToFile( "PerihelionAngles.txt" );
         }
     }
     m_previousPreviousDistance = m_previousDistance;
