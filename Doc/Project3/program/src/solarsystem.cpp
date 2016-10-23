@@ -60,12 +60,13 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
         printHeader(finaltime,iterations,outputfile);
         updateForces();
         while(duration<finaltime) {
+            printPositions(duration,outputfile);
             updatePositionsEuler();
             updateForces();
             updateVelocitiesEuler();
-            printPositions(duration,outputfile);
             duration += m_timeStep;
         }
+        printPositions(duration,outputfile);
     } else if ( m_method == "perihelion" ) {
         printHeader(finaltime,iterations,outputfile);
         m_vectorPrevious = satellites()[1].position();
@@ -82,12 +83,13 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
         printHeader(finaltime,iterations,outputfile);
         updateForces();
         while(duration<finaltime) {
+            printPositions(duration,outputfile);
             updatePositionsVerlet();
             updateForces();
             updateVelocitiesVerlet();
-            printPositions(duration,outputfile);
             duration += m_timeStep;
         }
+        printPositions(duration,outputfile);
     }
 }
 
