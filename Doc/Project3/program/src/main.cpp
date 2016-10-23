@@ -14,7 +14,6 @@ int main(int argc, char *argv[]){
 //    if(argc>6){
         double timeSpan, timeStep;
         int startIteration;
-        int iterations = timeSpan/timeStep;
         string infile,outfile,solarCenter,simulationMethod;
 //        timeSpan   = atof(argv[1]);
 //        iterations = int(atof(argv[2]));
@@ -26,7 +25,7 @@ int main(int argc, char *argv[]){
         cout << "************************************************************************************************" << endl;
         cout << "USAGE INFO" << endl;
 
-        cout << "Type preffered simulation method: ( \"euler\", \"verlet\" or \"relativistic\" ) " ;
+        cout << "Type preffered simulation method ( \"euler\", \"verlet\" or \"relativistic\" ) : " ;
         cin >> simulationMethod ;
 
         cout << "Type 0 - for moving sun. Type 1 - for stationary sun: " ;
@@ -39,8 +38,6 @@ int main(int argc, char *argv[]){
         cout << "Type preffered time step : ";
         cin >> timeStep;
 
-
-
         if(simulationMethod!="euler" && simulationMethod!="verlet" && simulationMethod!="relativistic") {
             cout << "Did not recognize the argument "<<simulationMethod<<", running with verlet method.\n";
             simulationMethod = "verlet";
@@ -49,10 +46,18 @@ int main(int argc, char *argv[]){
         infile     = "solarSystem.txt";//string(argv[5]);
         outfile    = "testOutput.txt";//string(argv[6]);
 
+        int iterations = timeSpan/timeStep;
+
+        cout << "************************************************************************************************" << endl;
+        cout << "                                       SIMULATING                                               " << endl;
+        cout << "************************************************************************************************" << endl;
+        cout << "\nSimulating system from: "<<infile<<" \n\t using:\t "<<simulationMethod<<"\n\t over:\t "<<timeSpan<<" years\n\t with:\t "<<iterations<<" iterations.\n" << endl;
+
         SolarSystem solarSystem;
         solarSystem.createSolarSystem(infile);
         solarSystem.simulate(timeSpan,iterations,startIteration,simulationMethod,outfile);
-        cout << "Running simulation from "<<infile<<" using "<<simulationMethod<<" with "<<startIteration<<" locked objects, over "<<timeSpan<<" years with "<<iterations<<" iterations.\nWriting to "<<outfile<<endl;
+        cout << "Wrote information to: "<< outfile << endl;
+//        cout << "Running simulation from "<<infile<<" using "<<simulationMethod<<" with "<<startIteration<<" locked objects, over "<<timeSpan<<" years with "<<iterations<<" iterations.\nWriting to "<<outfile<<endl;
         return 0;
 //    } else {
 //        cout <<"Write arguments:\n -Time span in years\n -Iterations(example: 1e5)\n -Number of locked objects (N first planets in inputfile))\n -Simulation method (euler,verlet,relativistic)\n -Inputfile\n -Outputfile\n";

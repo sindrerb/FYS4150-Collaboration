@@ -22,7 +22,7 @@ public:
     void updatePositionsVerlet();
     void updateVelocitiesVerlet();
     void updateForces();
-    void simulate(double finaltime, int iterations, int startIteration, std::string method, std::string outputfile);
+    void simulate(double finaltime, int timeStep, int startIteration, std::string method, std::string outputfile);
     void calculateEnergies();
     void calculateTotalEnergy();
     void calculateCenterOfMass();
