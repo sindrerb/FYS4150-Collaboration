@@ -58,11 +58,11 @@ void SolarSystem::simulate (double finaltime, int iterations,int startIteration,
             duration += m_timeStep;
         }
     }
-    else if ( m_method == "relativistic" ) {
-        printHeader(finaltime,iterations,outputfile);
-        m_vectorPrevious = satellites()[1].position();
+    else if ( m_method == "relativistic" ) { // Check computational method
         updateForces();
         while ( duration < finaltime ) {
+            printHeader(finaltime,iterations,outputfile);
+            m_vectorPrevious = satellites()[1].position();
             updatePositionsVerlet();
             updateForces();
             updateVelocitiesVerlet();
@@ -72,7 +72,7 @@ void SolarSystem::simulate (double finaltime, int iterations,int startIteration,
         }
     }
     else {
-        printHeader(finaltime,iterations,outputfile);
+        printHeader(finaltime,iterations,outputfile); // Use Verlet and non-relativistic calculations
         updateForces();
         while(duration<finaltime) {
             updatePositionsVerlet();
@@ -203,29 +203,8 @@ void SolarSystem::printPerihelionAngle(std::string outputfile) {
     m_perihelionPrevPrevious = m_perihelionPrevious;
     m_perihelionPrevious = positionNow;
     m_vectorPrevious = vectorNow;
+    //cout << vectorNow[0] << endl;
 }
-
-//void SolarSystem::printPerihelionAngle( Satellite planet, std::string outputfile) {
-//    std::fstream outfile(outputfile, std::ios::app);
-//    double perhelionangle, positionNow;
-//    positionNow = planet.position().length();
-//    outfile << "distance:   " << positionNow << "\n";
-//    if (positionNow <= PERIHELION_MAX){
-//        m_perihelionNext = positionNow;
-//        if (m_perihelionPrevious > m_perihelionNext) {
-//            m_perihelionPrevious = m_perihelionNext;
-//            perhelionangle = perihelionAngle( planet );
-//            outfile << "angle: " << perhelionangle << "    position: " << planet.position().x() << "," << planet.position().y() << "," << planet.position().z() << "\n";
-//        }
-//        else {
-//            outfile << "out of distance" << "\n";
-//        }
-//    }
-//    else{
-//    outfile.close();
-//    }
-//}
-
 
 
 /****************************************/
