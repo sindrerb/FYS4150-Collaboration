@@ -25,6 +25,10 @@ int main(int argc, char *argv[]){
         cout << "********************************************************************************" << endl;
         cout << "USAGE INFO" << endl;
 
+        cout << "Type inputfile: " ;
+        cin >> infile;
+        outfile = infile.substr(0, infile.find('.'))+"OUT.txt";
+
         cout << "Type preffered simulation method ( \"euler\", \"verlet\" or \"perihelion\" ) : " ;
         cin >> simulationMethod ;
 
@@ -35,16 +39,8 @@ int main(int argc, char *argv[]){
         cin >> timeSpan;
 
         cout << "\n Values that work well\n\t euler: 1e-6 \n\t verlet: 1e-4 \n\t relativistic: 1e-9)" << endl; ;
-        cout << "Type preffered time step : ";
+        cout << "Type preffered number of time steps per year: ";
         cin >> timeStep;
-
-        if (simulationMethod == "perihelion") {
-            infile = "perihelion.txt";
-            outfile = "perihelionOUT.txt";
-        } else  {
-            infile     = "solarSystem.txt";
-            outfile    = "solarSystemOUT.txt";
-        }
 
         long int iterations = timeSpan/timeStep;
 
