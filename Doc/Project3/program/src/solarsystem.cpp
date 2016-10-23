@@ -66,7 +66,7 @@ void SolarSystem::simulate(double finaltime, int iterations,int startIteration,s
             printPositions(duration,outputfile);
             duration += m_timeStep;
         }
-    } else if ( m_method == "relativistic" ) {
+    } else if ( m_method == "perihelion" ) {
         printHeader(finaltime,iterations,outputfile);
         m_vectorPrevious = satellites()[1].position();
         updateForces();
@@ -152,7 +152,7 @@ vec3 SolarSystem::gravitationalForce( Satellite planetA, Satellite planetB ) {
     vec3 force;
     double R = planetA.relativeDistanceTo( planetB );
     force = FOUR_PI_SQUARED * ( planetA.position() - planetB.position() )/( R*R*R );
-    if (m_method == "relativistic") {
+    if (m_method == "relativistic" || m_method == "perihelion") {
         double RC = R * SPEED_OF_LIGHT;
         vec3 angularMomentum = planetA.position().cross(planetA.velocity());
         force = force * ( 1 + ( 3 * angularMomentum.lengthSquared() ) / ( RC*RC) ) ;
@@ -202,14 +202,14 @@ void SolarSystem::calculateAngularMomentum() {
 
 void SolarSystem::findPerihelionPosition( std::string outputfile ) {
     double currentDistance = m_satellites[1].relativeDistanceTo( m_satellites[0] );
-    vec3 currentPositionVector = m_satellites[1].position();
+//    vec3 currentPositionVector = m_satellites[1].position();
     if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
-        m_perihelionAngle = atan2( m_vectorPrevious.y() , m_vectorPrevious.x() );// * ARCSECONDS_SCALE;
+        m_perihelionAngle = atan2( m_vectorPrevious.y() , m_vectorPrevious.x() ) * ARCSECONDS_SCALE;
         printPerihelionAngleToFile( outputfile );
     }
     m_previousPreviousDistance = m_previousDistance;
     m_previousDistance = currentDistance;
-    m_vectorPrevious = m_satellites[1].position() - m_satellites[0].position();
+    m_vectorPrevious = m_satellites[1].position();
 }
 
 /****************************************/
