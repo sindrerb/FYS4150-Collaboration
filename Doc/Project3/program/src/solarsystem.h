@@ -27,11 +27,13 @@ public:
     void calculateTotalEnergy();
     void calculateCenterOfMass();
     void calculateAngularMomentum();
+    void findPerihelionPosition();
     vec3 gravitationalForce(Satellite planetA,Satellite planetB);
 
     //File handeling functions
     void printHeader(double time, int iterations, std::string outputfile);
     void printPositions(double time,std::string outputfile);
+    void printPerihelionAngleToFile(string outputfile);
 
     // Getters
     std::vector<Satellite> &satellites();
@@ -65,6 +67,11 @@ public:
     void testSimulater(double finaltime, int iterations, int startIteration, std::string method);
 
 private:
+    // Constants
+    double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
+    double SPEED_OF_LIGHT = 173*365;
+    double ARCSECONDS_SCALE = 206264.806;
+
     // member variables
     std::vector<Satellite> m_satellites;
     std::vector<std::string> m_names;
@@ -74,11 +81,13 @@ private:
     double m_timeStep;
     double m_halfTimeStep;
     double m_halfTimeStepSquared;
-    double FOUR_PI_SQUARED = 64*atan(1)*atan(1);
-    double SPEED_OF_LIGHT = 173*365;
     double m_kineticEnergy;
     double m_potentialEnergy;
     double m_totalEnergy;
+    double m_perihelionAngle = 0;
+    double m_previousDistance = 1;
+    double m_previousPreviousDistance = 1;
+    vec3 m_vectorPrevious;
     vec3 m_angularMomentum;
     vec3 m_centerOfMass;
 };

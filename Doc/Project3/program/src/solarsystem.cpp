@@ -1,6 +1,7 @@
 #include "solarsystem.h"
 #include "satellite.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <fstream>
 
@@ -186,6 +187,20 @@ void SolarSystem::calculateAngularMomentum() {
     }
 }
 
+void SolarSystem::findPerihelionPosition() {
+    double currentDistance = m_satellites[1].position().length();
+    vec3 currentPositionVector = m_satellites[1].position();
+    if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
+        if (m_vectorPrevious.x() > 1e-5) {
+            m_perihelionAngle = atan( m_vectorPrevious.x() / m_vectorPrevious.y() ) * ARCSECONDS_SCALE;
+            printPerihelionAngleToFile( "PerihelionAngles.txt" );
+        }
+    }
+    m_previousPreviousDistance = m_previousDistance;
+    m_previousDistance = currentDistance;
+    m_vectorPrevious = currentPositionVector;
+}
+
 /****************************************/
 /*          PRINT FUNCTIONS             */
 /****************************************/
@@ -207,6 +222,12 @@ void SolarSystem::printPositions(double time,std::string outputfile){
         outfile << ",\t" << m_satellites[i].position().x() << "," << m_satellites[i].position().y() << "," << m_satellites[i].position().z();
     }
     outfile << "\n";
+    outfile.close();
+}
+
+void SolarSystem::printPerihelionAngleToFile(std::string outputfile) {
+    std::fstream outfile(outputfile, std::ios::app);
+    outfile << std::setprecision(9) << "angle: " << m_perihelionAngle << "     distance: " << m_previousDistance << "\n";
     outfile.close();
 }
 
