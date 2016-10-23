@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
+#include <math.h>
 
 
 SolarSystem::SolarSystem() {    // Initializes all member variables
@@ -200,17 +201,15 @@ void SolarSystem::calculateAngularMomentum() {
 }
 
 void SolarSystem::findPerihelionPosition( std::string outputfile ) {
-    double currentDistance = m_satellites[1].position().length();
+    double currentDistance = m_satellites[1].relativeDistanceTo( m_satellites[0] );
     vec3 currentPositionVector = m_satellites[1].position();
     if ( currentDistance > m_previousDistance && m_previousDistance < m_previousPreviousDistance ) {
-        if (m_vectorPrevious.x() > 1e-5) {
-            m_perihelionAngle = atan( m_vectorPrevious.x() / m_vectorPrevious.y() ) * ARCSECONDS_SCALE;
-            printPerihelionAngleToFile( outputfile );
-        }
+        m_perihelionAngle = atan2( m_vectorPrevious.y() , m_vectorPrevious.x() );// * ARCSECONDS_SCALE;
+        printPerihelionAngleToFile( outputfile );
     }
     m_previousPreviousDistance = m_previousDistance;
     m_previousDistance = currentDistance;
-    m_vectorPrevious = currentPositionVector;
+    m_vectorPrevious = m_satellites[1].position() - m_satellites[0].position();
 }
 
 /****************************************/

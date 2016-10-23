@@ -20,9 +20,9 @@ int main(int argc, char *argv[]){
 //        startIteration = atoi(argv[3]);
 //        simulationMethod = string(argv[4]);
 
-        cout << "************************************************************************************************" << endl;
-        cout << "                               SOLAR SYSTEM SIMULATER 9000                                      " << endl;
-        cout << "************************************************************************************************" << endl;
+        cout << "********************************************************************************" << endl;
+        cout << "                       SOLAR SYSTEM SIMULATER 9000                              " << endl;
+        cout << "********************************************************************************" << endl;
         cout << "USAGE INFO" << endl;
 
         cout << "Type preffered simulation method ( \"euler\", \"verlet\" or \"relativistic\" ) : " ;
@@ -48,9 +48,9 @@ int main(int argc, char *argv[]){
 
         int iterations = timeSpan/timeStep;
 
-        cout << "************************************************************************************************" << endl;
-        cout << "                                       SIMULATING                                               " << endl;
-        cout << "************************************************************************************************" << endl;
+        cout << "********************************************************************************" << endl;
+        cout << "                               SIMULATING                                       " << endl;
+        cout << "********************************************************************************" << endl;
         cout << "\nSimulating system from: "<<infile<<" \n\t using:\t "<<simulationMethod<<"\n\t over:\t "<<timeSpan<<" years\n\t with:\t "<<iterations<<" iterations.\n" << endl;
 
         SolarSystem solarSystem;

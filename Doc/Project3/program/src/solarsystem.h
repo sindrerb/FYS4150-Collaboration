@@ -85,9 +85,9 @@ private:
     double m_potentialEnergy;
     double m_totalEnergy;
     double m_perihelionAngle = 0;
-    double m_previousDistance = 1;
-    double m_previousPreviousDistance = 1;
-    vec3 m_vectorPrevious;
+    double m_previousDistance = 0;
+    double m_previousPreviousDistance = 0;
+    vec3 m_vectorPrevious = vec3(0,0,0);
     vec3 m_angularMomentum;
     vec3 m_centerOfMass;
 };
