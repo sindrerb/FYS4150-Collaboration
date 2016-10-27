@@ -28,12 +28,12 @@ SCENARIO( "Creating satellite objects" ) {
 
             THEN( "All equal Zero" ) {
 
-                REQUIRE( satellite.g_position.x() == 0 );
-                REQUIRE( satellite.g_position.y() == 0 );
-                REQUIRE( satellite.g_position.z() == 0 );
-                REQUIRE( satellite.g_velocity.x() == 0 );
-                REQUIRE( satellite.g_velocity.y() == 0 );
-                REQUIRE( satellite.g_velocity.z() == 0 );
+                REQUIRE( satellite.position().x() == 0 );
+                REQUIRE( satellite.position().y() == 0 );
+                REQUIRE( satellite.position().z() == 0 );
+                REQUIRE( satellite.velocity().x() == 0 );
+                REQUIRE( satellite.velocity().y() == 0 );
+                REQUIRE( satellite.velocity().z() == 0 );
             }
         }
     }
