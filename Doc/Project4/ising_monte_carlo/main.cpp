@@ -1,9 +1,11 @@
 #include <iostream>
+#include "matrix.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "Hello World!" << endl;
-    return 0;
+    Matrix A,B,C;
+    A.setZeros(2,3);
+    A.print("A");
 }
