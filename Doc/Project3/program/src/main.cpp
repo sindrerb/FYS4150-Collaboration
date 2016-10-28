@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]){
+int main(){
 //    if(argc>6){
         double timeSpan, timeStep;
         int startIteration;

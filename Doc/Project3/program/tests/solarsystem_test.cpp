@@ -268,7 +268,7 @@ SCENARIO( "Check that potential and kinetic energy is conserved", "[energies]" )
                 THEN( "Total energy is conserved (with an error less than 1e-4)") {
                     REQUIRE( TotalEnergyBeforeSimulation == Approx(TotalEnergyAfterSimulation).epsilon(1e-4)  );
                     std::cout << "Simulation time: " << calculationTime << " s." << endl;
-                    std::cout << "For system consisting of " << system.numberofsatellites() << " sattelites over " << timeSpan << " years, with a timestep of " << timeStep << " s. "<< endl;
+                    std::cout << "For system consisting of " << system.numberofsatellites() << " sattelites over " << timeSpan << " years, with a timestep of " << timeStep << " Yr. "<< endl;
                 }
             }
         }
@@ -354,12 +354,12 @@ SCENARIO( "Comparing computation time for Euler and Verlet", "[timer]") {
                     calculationTime2 = calculationTime2 / 10;
 
                     REQUIRE( calculationTime1 != calculationTime2 );
-                    std::cout << "Simulates 10 times over 10 years with timestep 1e-4 seconds " << endl;
+                    std::cout << "Simulates 10 times over 10 years with timestep 1e-4 Yr " << endl;
                     std::cout << "Average simulation times using:" << endl;
                     std::cout << "\t Euler: \t" << calculationTime1 << " s." << endl;
                     std::cout << "\t Verlet: \t" << calculationTime2 << " s." << endl;
                     std::cout << "\t differance: \t" << abs( calculationTime2 - calculationTime1 ) << " s." << endl;
-                    std::cout << " Verlet is on average "  << calculationTime1/calculationTime2 * 100 << " % faster than Euler with the given parameters." << endl;
+                    std::cout << " Euler uses "  << calculationTime1/calculationTime2 * 100 << " % of the Verlet time." << endl;
                 }
             }
         }
