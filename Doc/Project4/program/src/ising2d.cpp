@@ -1,5 +1,7 @@
 #include "ising2d.h"
 
+
+
 Ising2D::Ising2D() {
     nSpin = 0;
     magneticMoment=0;
@@ -21,13 +23,13 @@ void Ising2D::InitializeGroundState() {
             lattice[i] = new int[nSpin];
             for(int j = 0;j<nSpin;j++){
                 lattice[i][j] = spin;
-                printf(" %i ",spin);
+                printf(" %i ",spin); //Just for debug
             }
-            printf("\n");
+            printf("\n"); //Just for debug
         }
         magneticMoment = nSpin*nSpin;
         energy = -2*nSpin*nSpin;
-        printf("%f\t%f \n",magneticMoment,energy);
+        printf("%f\t%f \n",magneticMoment,energy); //Just for debug
     } else {
         printf("Bad usage of InitializeGroundState, number of spin is zero or negative.");
     }
@@ -45,11 +47,19 @@ void Ising2D::InitializeRandomState() {
                 spin = spin*2-1;
                 lattice[i][j] = spin;
                 magneticMoment += spin;
-                printf(" %i ",spin);
+                printf(" %i ",spin); //Just for debug
+            }
+            printf("\n"); //Just for debug
+        }
+        printf("---------\n"); //Just for debug
+        energy = 0;
+        for(int i = 0;i<nSpin;i++){
+            for(int j = 0;j<nSpin;j++){
+                energy -= lattice[i][j]*(lattice[periodic(i,nSpin,-1)][j]+lattice[i][periodic(j,nSpin,-1)]);
             }
             printf("\n");
         }
-        printf("%f\t%f \n",magneticMoment,energy);
+        printf("M=%f\t E=%f \n",magneticMoment,energy); //Just for debug
     } else {
         printf("Bad usage of InitializeRandomState, number of spin is zero or negative.");
     }
