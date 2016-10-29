@@ -2,6 +2,7 @@
 #include "matrix.h"
 #include "mpi.h"
 #include <fstream>
+#include "ising2d.h"
 
 using namespace std;
 
@@ -11,8 +12,9 @@ ofstream ofile;
 int main(int argc, char *argv[])
 {
     char *outfilename;
-    long idum; //Random seed
+    long random = rand(); //Random seed
     int my_rank,n_processes;
+    Ising2D ising(2);
 
     //  MPI initializations
     MPI_Init (&argc, &argv);
@@ -27,7 +29,11 @@ int main(int argc, char *argv[])
       outfilename=argv[1];
       ofile.open(outfilename);
     }
-    printf( "Running on %d of %d\n", my_rank, n_processes );
+    srand(random-my_rank);
+    printf( "Running on %d of %d \n", my_rank, rand());
+    ising.InitializeRandomState();
+
+    ising.delteLattice();
     MPI_Finalize();
     ofile.close();
     return 0;
