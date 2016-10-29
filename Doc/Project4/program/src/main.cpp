@@ -12,6 +12,7 @@ ofstream ofile;
 int main(int argc, char *argv[])
 {
     char *outfilename;
+    srand(time(NULL));
     long random = rand(); //Random seed
     int my_rank,n_processes;
     Ising2D ising(2);
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     MPI_Init (&argc, &argv);
     MPI_Comm_size (MPI_COMM_WORLD, &n_processes);
     MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
+
     if (my_rank == 0 && argc <= 1) {
       cout << "Bad Usage: " << argv[0] <<
         " read output file" << endl;
@@ -29,9 +31,11 @@ int main(int argc, char *argv[])
       outfilename=argv[1];
       ofile.open(outfilename);
     }
+
     srand(random-my_rank);
-    printf( "Running on %d of %d \n", my_rank, rand());
+    printf( "Running process %d of %d processes\n", my_rank, n_processes);
     ising.InitializeRandomState();
+    //ising.InitializeGroundState();
 
     ising.delteLattice();
     MPI_Finalize();
