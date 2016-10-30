@@ -13,14 +13,18 @@ private:
     int **lattice;
     double energy;
     double magneticMoment;
+    double w[17];
+    double average[5];
 
 public:
     Ising2D();
     Ising2D(int spins);
     void InitializeGroundState();
     void InitializeRandomState();
+    void generate(int start, int end, double temperature);
     void delteLattice();
-    void Metropolis(int nSpin,int maxCycles, double temperature);
+    void Metropolis();
+    double *fetch();
 };
 
 #endif // ISING2D_H
