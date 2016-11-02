@@ -22,28 +22,26 @@ int main(int argc, char *argv[])
     int n_spins,mcs,my_rank,n_processes;
     double total_average[5],initial_temp,final_temp,temp_step;
 
-    n_spins = 2;
-    mcs = 100000;
-    initial_temp = 1;
-    final_temp = 2;
-    temp_step = 0.01;
-
-    Ising2D ising(n_spins);
     //  MPI initializations
     MPI_Init (&argc, &argv);
     MPI_Comm_size (MPI_COMM_WORLD, &n_processes);
     MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
-    if (my_rank == 0 && argc <= 1) {
+    if (my_rank == 0 && argc <= 5) {
       cout << "Bad Usage: " << argv[0] <<
-        " read output file" << endl;
+        " read output file" << endl;m
       exit(1);
     }
-    if (my_rank == 0 && argc > 1) {
+    if (my_rank == 0 && argc > 5) {
       outfilename=argv[1];
       ofile.open(outfilename);
+      n_spins = atoi(argv[2]);
+      mcs = atoi(argv[3]);
+      initial_temp = atof(argv[4]);
+      final_temp = atof(argv[5]);
+      temp_step = atof(argv[6]);
     }
+    Ising2D ising(n_spins);
     double *average = new double[5];
-
 
     //Divide cycles over the nodes
     int no_intervalls = mcs/n_processes;
@@ -59,6 +57,7 @@ int main(int argc, char *argv[])
         for(int i = 0; i<5;i++){
             MPI_Reduce(&average[i], &total_average[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         }
+        cout << temperature << total_average[0] << endl;
         if(my_rank == 0){
             output(n_spins,mcs,temperature,total_average);
         }

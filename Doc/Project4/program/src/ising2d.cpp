@@ -52,7 +52,6 @@ void Ising2D::InitializeRandomState() {
             //printf("\n"); //Just for debug
         }
         //printf("---------\n"); //Just for debug
-        energy = 0;
         for(int i = 0;i<nSpin;i++){
             for(int j = 0;j<nSpin;j++){
                 energy -= lattice[i][j]*(lattice[periodic(i,nSpin,-1)][j]+lattice[i][periodic(j,nSpin,-1)]);
@@ -82,7 +81,6 @@ void Ising2D::generate(int start, int end, double temperature){
 
     //Initialize average
     for( int i = 0; i < 5; i++) average[i] = 0.;
-
 
     for (int cycles = start; cycles <= end; cycles++){
         //Initialize energy and magnetic moment for each cycle
