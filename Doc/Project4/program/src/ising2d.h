@@ -1,30 +1,29 @@
 #ifndef ISING2D_H
 #define ISING2D_H
 #include <random>
-
-inline int periodic(int i, int limit, int add) {
-  return (i+limit+add) % (limit);
-}
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 
 class Ising2D
 {
 private:
     int nSpin=0;
     int **lattice;
+    int ***pseudoLattice;
+    double *w;
+    double *expectationValues;
     double energy;
     double magneticMoment;
-    double w[17];
-    double average[5];
+
 
 public:
     Ising2D();
     Ising2D(int spins);
-    void InitializeGroundState();
-    void InitializeRandomState();
-    void generate(int start, int end, double temperature);
+    void InitializeLattice();
+    double* Metropolis(int start, int end, double temperature);
     void delteLattice();
-    void Metropolis();
-    double *fetch();
+    void output(std::string outputFile,int totalMonteCarloCycles, double temperature, double *totalResult);
 };
 
 #endif // ISING2D_H

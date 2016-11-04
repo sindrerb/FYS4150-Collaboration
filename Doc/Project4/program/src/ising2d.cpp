@@ -1,139 +1,145 @@
 #include "ising2d.h"
 
 Ising2D::Ising2D() {
-    nSpin = 0;
-    magneticMoment=0;
-    energy = 0;
-    for( int i = 0; i < 5; i++) average[i] = 0.;
+
 }
 
 Ising2D::Ising2D(int spins) {
     nSpin = spins;
-    magneticMoment=0;
     energy = 0;
-    for( int i = 0; i < 5; i++) average[i] = 0.;
+
 }
 
-void Ising2D::InitializeGroundState() {
-    if(nSpin>0){
-        int spin;
-        lattice = new int*[nSpin];
-        for(int i = 0;i<nSpin;i++){
-            spin = 1;
-            lattice[i] = new int[nSpin];
-            for(int j = 0;j<nSpin;j++){
-                lattice[i][j] = spin;
-                //printf(" %i ",spin); //Just for debug
-            }
-            //printf("\n"); //Just for debug
+void Ising2D::InitializeLattice() {
+    // Initialize lattice with values
+    lattice = new int*[nSpin];
+    for(int i = 0; i<nSpin;i++) {
+        lattice[i] = new int[nSpin];
+        for(int j = 0; j<nSpin;j++) {
+            lattice[i][j] = 1;
         }
-        magneticMoment = nSpin*nSpin;
-        energy = -2*nSpin*nSpin;
-        //printf("%f\t%f \n",magneticMoment,energy); //Just for debug
-    } else {
-        printf("Bad usage of InitializeGroundState, number of spin is zero or negative.");
     }
-}
+    energy = -2*nSpin*nSpin;
+    magneticMoment = nSpin*nSpin;
+    //Pseudo lattice containting pointers to the original lattice
+    int corner = 0;
+    //Initialize pseudo lattice with empty pointers
+    pseudoLattice = new int**[nSpin+2];
+    for(int i = 0; i<nSpin+2;i++) {
+        pseudoLattice[i] = new int*[nSpin+2];
+        for(int j = 0; j<nSpin+2;j++) {
+            pseudoLattice[i][j] = NULL;
+        }
+    }
+    //Set pointers to lattice
+    for(int i = 1; i<nSpin+1;i++) {
+        for(int j = 1; j<nSpin+1;j++) {
+            pseudoLattice[i][j] = &lattice[i-1][j-1];
+        }
+    }
+    for(int i = 1; i<nSpin+1;i++) {
+        pseudoLattice[0][i] = &lattice[nSpin-1][i-1];
+        pseudoLattice[nSpin+1][i] = &lattice[0][i-1];
+        pseudoLattice[i][0] = &lattice[i-1][nSpin-1];
+        pseudoLattice[i][nSpin+1] = &lattice[i-1][0];
+    }
+    pseudoLattice[0][0] = &corner;
+    pseudoLattice[0][nSpin+1] = &corner;
+    pseudoLattice[nSpin+1][0] = &corner;
+    pseudoLattice[nSpin+1][nSpin+1] = &corner;
 
-void Ising2D::InitializeRandomState() {
-    //spinLattice.setOnes(nSpin,nSpin);
-    int spin;
-    if(nSpin>0){
-        lattice = new int*[nSpin];
-        for(int i = 0;i<nSpin;i++){
-            lattice[i] = new int[nSpin];
-            for(int j = 0;j<nSpin;j++){
-                spin = rand()%2;
-                spin = spin*2-1;
-                lattice[i][j] = spin;
-                magneticMoment += spin;
-                //printf(" %i ",spin); //Just for debug
-            }
-            //printf("\n"); //Just for debug
-        }
-        //printf("---------\n"); //Just for debug
-        for(int i = 0;i<nSpin;i++){
-            for(int j = 0;j<nSpin;j++){
-                energy -= lattice[i][j]*(lattice[periodic(i,nSpin,-1)][j]+lattice[i][periodic(j,nSpin,-1)]);
-            }
-            //printf("\n");
-        }
-        //printf("M=%f\t E=%f \n",magneticMoment,energy); //Just for debug
-    } else {
-        printf("Bad usage of InitializeRandomState, number of spin is zero or negative.");
-    }
+//    for(int i = 0; i<nSpin+2;i++) {
+//        for(int j = 0; j<nSpin+2;j++) {
+//            printf("%i  ", *pseudoLattice[i][j]);
+//        }  printf("\n");
+//    }
 }
 
 void Ising2D::delteLattice(){
-    if(nSpin>0){
-        for (int i = 0; i < nSpin; i++) {
-            delete[] lattice[i];
+//    for(int i = 0; i<nSpin+2;i++) {
+//        for(int j = 0; j<nSpin+2;j++) {
+//            printf("%i  ", *pseudoLattice[i][j]);
+//        }  printf("\n");
+//    }
+    for(int i = 0; i<nSpin; i++) {
+        lattice[i] = NULL;
+        delete[] lattice[i];
         }
-        delete[] lattice;
-        lattice = NULL;
+    for(int i = 0; i<nSpin+2 ; i++) {
+        for(int j = 0; j<nSpin+2;j++) {
+            pseudoLattice[i][j] = NULL;
+            delete[] pseudoLattice[i][j];
+        }
+        pseudoLattice[i] = NULL;
+        delete[] pseudoLattice[i];
     }
+    pseudoLattice = NULL;
 }
 
-void Ising2D::generate(int start, int end, double temperature){
-    //Initialize and precalculate probabilities
+double *Ising2D::Metropolis(int start, int end, double temperature){
+    // Initialize the seed and call the Mersienne algo
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    // Set up the uniform distribution for x \in [[0, 1]
+    std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
+    // Set up array for possible energy transitions
+    w = new double[17];
     for( int de =-8; de <= 8; de++) w[de+8] = 0;
-    for( int de =-8; de <= 8; de+=4) {
-        printf("%f   ",exp(-de/temperature));
-        w[de+8] = exp(-de/temperature);
-    }
-    printf("\n");
+    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
 
-    //Initialize average
-    for( int i = 0; i < 5; i++) average[i] = 0.0;
+    // Initialize storage variables
+    expectationValues = new double[5];
+    for( int i=0; i<5; i++) expectationValues[i]=0;
 
+    // Do Monte Carlo calculations
     for (int cycles = start; cycles <= end; cycles++){
-        //Initialize energy and magnetic moment for each cycle
-        energy = 0;
-        magneticMoment = 0;
-        InitializeGroundState();
-        Metropolis();
-        delteLattice();
-        //Update average values locally
-        average[0] += energy;
-        average[1] += energy*energy;
-        average[2] += magneticMoment;
-        average[3] += magneticMoment*magneticMoment;
-        average[4] += fabs(magneticMoment);
-        //printf("E:%f E2:%f M:%f M2:%f abs(M):%f \n",average[0],average[1],average[2],average[3],average[4]);
-    }
+      for(int x =1; x < nSpin+1; x++) {
+        for (int y= 1; y < nSpin+1; y++){
 
-}
+          // Chose a random spin to flip
+          int ix = (int) (randomGenerator(gen)*(double)nSpin)+1;
+          int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
 
-double *Ising2D::fetch(){
-    return average;
-}
-
-void Ising2D::Metropolis(){
-    if(nSpin>0){
-        int deltaE, rand_i,rand_j;
-        int counter = 0;
-        for(int i = 0;i<nSpin;i++){
-            for(int j = 0;j<nSpin;j++){
-                rand_i = (int) (rand()%nSpin);
-                rand_j = (int) (rand()%nSpin);
-                deltaE =  2*lattice[rand_i][rand_j]*
-                     (lattice[rand_i][periodic(rand_j,nSpin,-1)]+
-                     lattice[periodic(rand_i,nSpin,-1)][rand_j] +
-                     lattice[rand_i][periodic(rand_j,nSpin,1)] +
-                     lattice[periodic(rand_i,nSpin,1)][rand_j]);
-
-                printf("dE=%i, P:%.8f  <= w: %f \n",deltaE,(rand()%nSpin)/nSpin),(w[deltaE+8]);
-                if ( (double) (rand()%nSpin)/nSpin <= w[deltaE+8] ) {
-                    lattice[rand_i][rand_j] *= -1;  // flip one spin and accept new spin config
-                    magneticMoment += (double) 2*lattice[rand_i][rand_j];
-                    energy += (double) fabs(deltaE);
-                }
-                //printf("C:%i  ,E:%f \n",counter,energy);
-                //counter++;
-            }
+          // Calculate the energy difference of flipping the chosen spin
+          int deltaE =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+          // Perform the Metropolis criteria
+          if ( randomGenerator(gen) <= w[deltaE+8] ) {
+            // Flip the spin
+            lattice[ix-1][iy-1] *= -1.0;
+            // Save new properties
+            magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
+            energy += (double) deltaE;
+          }
         }
-    } else {
-        printf("Bad usage of Metropolis, number of spin is zero or negative.");
+      }
+
+      // Update expectation values  for local node
+      expectationValues[0] += energy;
+      expectationValues[1] += energy*energy;
+      expectationValues[2] += magneticMoment;
+      expectationValues[3] += magneticMoment*magneticMoment;
+      expectationValues[4] += fabs(magneticMoment);
     }
+    return expectationValues;
 }
 
+void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
+  std::ofstream ofile;
+  ofile.open(outputFile);
+  double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
+  double E_ExpectationValues = totalResult[0]*norm;
+  double E2_ExpectationValues = totalResult[1]*norm;
+  double M_ExpectationValues = totalResult[2]*norm;
+  double M2_ExpectationValues = totalResult[3]*norm;
+  double Mabs_ExpectationValues = totalResult[4]*norm;
+  // all expectation values are per spin, divide by 1/NSpins/NSpins
+  double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/nSpin/nSpin;
+  double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/nSpin/nSpin;
+  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
+  ofile << std::setw(15) << std::setprecision(8) << temperature;
+  ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/nSpin/nSpin;
+  ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
+  ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
+  ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
+  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << std::endl;
+} // end output function
