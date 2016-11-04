@@ -77,16 +77,20 @@ void Ising2D::delteLattice(){
 void Ising2D::generate(int start, int end, double temperature){
     //Initialize and precalculate probabilities
     for( int de =-8; de <= 8; de++) w[de+8] = 0;
-    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
+    for( int de =-8; de <= 8; de+=4) {
+        printf("%f   ",exp(-de/temperature));
+        w[de+8] = exp(-de/temperature);
+    }
+    printf("\n");
 
     //Initialize average
-    for( int i = 0; i < 5; i++) average[i] = 0.;
+    for( int i = 0; i < 5; i++) average[i] = 0.0;
 
     for (int cycles = start; cycles <= end; cycles++){
         //Initialize energy and magnetic moment for each cycle
         energy = 0;
         magneticMoment = 0;
-        InitializeRandomState();
+        InitializeGroundState();
         Metropolis();
         delteLattice();
         //Update average values locally
@@ -95,7 +99,9 @@ void Ising2D::generate(int start, int end, double temperature){
         average[2] += magneticMoment;
         average[3] += magneticMoment*magneticMoment;
         average[4] += fabs(magneticMoment);
+        //printf("E:%f E2:%f M:%f M2:%f abs(M):%f \n",average[0],average[1],average[2],average[3],average[4]);
     }
+
 }
 
 double *Ising2D::fetch(){
@@ -105,6 +111,7 @@ double *Ising2D::fetch(){
 void Ising2D::Metropolis(){
     if(nSpin>0){
         int deltaE, rand_i,rand_j;
+        int counter = 0;
         for(int i = 0;i<nSpin;i++){
             for(int j = 0;j<nSpin;j++){
                 rand_i = (int) (rand()%nSpin);
@@ -114,11 +121,15 @@ void Ising2D::Metropolis(){
                      lattice[periodic(rand_i,nSpin,-1)][rand_j] +
                      lattice[rand_i][periodic(rand_j,nSpin,1)] +
                      lattice[periodic(rand_i,nSpin,1)][rand_j]);
+
+                printf("dE=%i, P:%.8f  <= w: %f \n",deltaE,(rand()%nSpin)/nSpin),(w[deltaE+8]);
                 if ( (double) (rand()%nSpin)/nSpin <= w[deltaE+8] ) {
                     lattice[rand_i][rand_j] *= -1;  // flip one spin and accept new spin config
                     magneticMoment += (double) 2*lattice[rand_i][rand_j];
-                    energy += (double) deltaE;
+                    energy += (double) fabs(deltaE);
                 }
+                //printf("C:%i  ,E:%f \n",counter,energy);
+                //counter++;
             }
         }
     } else {
