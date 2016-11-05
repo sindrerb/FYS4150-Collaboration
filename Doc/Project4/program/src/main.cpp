@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     int monteCarloCycles;
     double *myAverage, *totalAverage;
     double initTemp, finalTemp, tempStep;
-
+    double initTime=0, finalTime=0, totalTime=0;
     // Initialize MPI
     MPI_Init (&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
@@ -49,12 +49,12 @@ int main(int argc, char *argv[])
 
     Ising2D ising(nSpin);
     if(myRank == 0) {
+        initTime = MPI_Wtime();
         ising.initializeOutput(filename,monteCarloCycles);
     }
     ising.InitializeLattice();
 
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
-        cout << "My rank is "<<myRank<<" and i run from "<<myLoopStart<<" to "<<myLoopEnd<<endl;
         myAverage = ising.Metropolis(myLoopStart,myLoopEnd,temperature);
         for(int i = 0; i<5; i++) {
             MPI_Reduce(&myAverage[i],&totalAverage[i],1,MPI_DOUBLE,MPI_SUM,0,MPI_COMM_WORLD);
@@ -62,6 +62,11 @@ int main(int argc, char *argv[])
         if(myRank == 0) {
             ising.writeOutput(filename,monteCarloCycles,temperature,totalAverage);
         }
+    }
+    if(myRank == 0) {
+        finalTime = MPI_Wtime();
+        totalTime = finalTime-initTime;
+        cout << "Computed in "<<totalTime<<" seconds, usin "<<numprocs<<" processes."<<endl;
     }
     ising.delteLattice();
     MPI_Finalize();
