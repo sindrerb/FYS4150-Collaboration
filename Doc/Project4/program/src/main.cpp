@@ -17,7 +17,7 @@ int main()
         for(int j = 1; j <= i; j++){
             monteCarlo = pow(10,i);
         }
-        cout << i << setw(10) <<monteCarlo << endl;
+        cout << "Running test" << i << " with " << monteCarlo << " MC cicles." << endl;
         double *myAverage;
         double temp = 1;
         Ising2D test(nSpin);

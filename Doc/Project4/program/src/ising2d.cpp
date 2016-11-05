@@ -125,7 +125,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
 
 void Ising2D::output(std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult) {
   std::ofstream ofile;
-  ofile.open(outputFile, std::ofstream::out | std::ofstream::app);
+  ofile.open(outputFile, std::ofstream::out | std::ofstream::app); // enabeling appending to file in loop
   //ofile.open(outputFile);
   double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
   double E_ExpectationValues = totalResult[0]*norm;
