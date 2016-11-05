@@ -123,9 +123,10 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     return expectationValues;
 }
 
-void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
+void Ising2D::output(std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult) {
   std::ofstream ofile;
-  ofile.open(outputFile);
+  ofile.open(outputFile, std::ofstream::out | std::ofstream::app);
+  //ofile.open(outputFile);
   double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
   double E_ExpectationValues = totalResult[0]*norm;
   double E2_ExpectationValues = totalResult[1]*norm;
@@ -135,11 +136,12 @@ void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double t
   // all expectation values are per spin, divide by 1/NSpins/NSpins
   double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/nSpin/nSpin;
   double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/nSpin/nSpin;
-  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
+//  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
+  ofile << testNr;
   ofile << std::setw(15) << std::setprecision(8) << temperature;
   ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
-  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << std::endl;
+  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << "\n" << std::endl;
 } // end output function
