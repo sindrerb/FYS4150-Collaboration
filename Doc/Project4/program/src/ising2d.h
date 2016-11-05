@@ -20,7 +20,8 @@ private:
 public:
     Ising2D();
     Ising2D(int spins);
-    void InitializeLattice();
+    void InitializeRandomStateLattice();
+    void InitializeGroundStateLattice();
     double* Metropolis(int start, int end, double temperature);
     void delteLattice();
     void initializeOutput(std::string outputFile,int totalMonteCarloCycles);

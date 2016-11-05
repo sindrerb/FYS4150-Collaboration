@@ -11,32 +11,36 @@ ofstream ofile;
 int main(int argc, char *argv[])
 {
     string filename;
+    char state;
     int numprocs, myRank, nSpin;
     int monteCarloCycles;
     double *myAverage, *totalAverage;
     double initTemp, finalTemp, tempStep;
     double initTime=0, finalTime=0, totalTime=0;
+
     // Initialize MPI
     MPI_Init (&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-    if(myRank ==  0 && argc <= 6) {
-        cout << "Bad usage: " << argv[0] << ", read outputfile, number of spins, number of samples, initial temperature, final temp., temp. step.";
+    if(myRank ==  0 && argc <= 7) {
+        cout << "Bad usage: " << argv[0] << "\n Read:\n Name of output file\n Number of spins\n Initial state (G=ground or R=random)\n Number of samples\n Initial temperature\n Final temperature\n Temperature step\n \n";
         exit(1);
     }
-    if(myRank == 0 && argc > 6) {
+    if(myRank == 0 && argc > 7) {
         filename = argv[1];
         filename.append(argv[2]);
         nSpin = atoi(argv[2]);
-        monteCarloCycles = atol(argv[3]);
-        initTemp = atof(argv[4]);
-        finalTemp = atof(argv[5]);
-        tempStep = atof(argv[6]);
-        cout << "Writes to " << filename << endl;
+        state = *argv[3];
+        monteCarloCycles = atol(argv[4]);
+        initTemp = atof(argv[5]);
+        finalTemp = atof(argv[6]);
+        tempStep = atof(argv[7]);
+        cout << "Writes to " << filename << " with state "<<state<<endl;
     }
 
     // Broadcast common variables to all nodes
     MPI_Bcast (&monteCarloCycles, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast (&state, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Bcast (&nSpin, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast (&initTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast (&finalTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -52,7 +56,15 @@ int main(int argc, char *argv[])
         initTime = MPI_Wtime();
         ising.initializeOutput(filename,monteCarloCycles);
     }
-    ising.InitializeLattice();
+    if(state == 'R'){
+        ising.InitializeRandomStateLattice();
+    } else {
+        ising.InitializeGroundStateLattice();
+        if(myRank == 0 && state != 'G'){
+            cout << "Did not recognize "<<state<<" as an initial state, running with ground state."<<endl;
+        }
+    }
+
 
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
         myAverage = ising.Metropolis(myLoopStart,myLoopEnd,temperature);
@@ -66,7 +78,7 @@ int main(int argc, char *argv[])
     if(myRank == 0) {
         finalTime = MPI_Wtime();
         totalTime = finalTime-initTime;
-        cout << "Computed in "<<totalTime<<" seconds, usin "<<numprocs<<" processes."<<endl;
+        cout << "Computed in "<<totalTime<<" seconds, using "<<numprocs<<" processes."<<endl;
     }
     ising.delteLattice();
     MPI_Finalize();

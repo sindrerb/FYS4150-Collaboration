@@ -9,7 +9,7 @@ Ising2D::Ising2D(int spins) {
     energy = 0;
 }
 
-void Ising2D::InitializeLattice() {
+void Ising2D::InitializeGroundStateLattice() {
     // Initialize lattice with values
     lattice = new int*[nSpin];
     for(int i = 0; i<nSpin;i++) {
@@ -46,6 +46,60 @@ void Ising2D::InitializeLattice() {
     pseudoLattice[0][nSpin+1] = &corner;
     pseudoLattice[nSpin+1][0] = &corner;
     pseudoLattice[nSpin+1][nSpin+1] = &corner;
+
+//    for(int i = 0; i<nSpin+2;i++) {
+//        for(int j = 0; j<nSpin+2;j++) {
+//            printf("%i  ", *pseudoLattice[i][j]);
+//        }  printf("\n");
+//    }
+}
+
+void Ising2D::InitializeRandomStateLattice() {
+    // Initialize lattice with values
+    lattice = new int*[nSpin];
+    int spin;
+    for(int i = 0; i<nSpin;i++) {
+        lattice[i] = new int[nSpin];
+        for(int j = 0; j<nSpin;j++) {
+            spin = rand()%2;
+            lattice[i][j] = spin*2-1;
+        }
+    }
+    //Pseudo lattice containting pointers to the original lattice
+    int corner = 0;
+    //Initialize pseudo lattice with empty pointers
+    pseudoLattice = new int**[nSpin+2];
+    for(int i = 0; i<nSpin+2;i++) {
+        pseudoLattice[i] = new int*[nSpin+2];
+        for(int j = 0; j<nSpin+2;j++) {
+            pseudoLattice[i][j] = NULL;
+        }
+    }
+    //Set pointers to lattice
+    for(int i = 1; i<nSpin+1;i++) {
+        for(int j = 1; j<nSpin+1;j++) {
+            pseudoLattice[i][j] = &lattice[i-1][j-1];
+        }
+    }
+    for(int i = 1; i<nSpin+1;i++) {
+        pseudoLattice[0][i] = &lattice[nSpin-1][i-1];
+        pseudoLattice[nSpin+1][i] = &lattice[0][i-1];
+        pseudoLattice[i][0] = &lattice[i-1][nSpin-1];
+        pseudoLattice[i][nSpin+1] = &lattice[i-1][0];
+    }
+    pseudoLattice[0][0] = &corner;
+    pseudoLattice[0][nSpin+1] = &corner;
+    pseudoLattice[nSpin+1][0] = &corner;
+    pseudoLattice[nSpin+1][nSpin+1] = &corner;
+
+    energy = 0;
+    magneticMoment = 0;
+    for(int ix = 1; ix<nSpin+1;ix++) {
+        for(int iy = 1; iy<nSpin+1;iy++) {
+            energy += 2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+            magneticMoment += (*pseudoLattice[ix][iy]);
+        }
+    }
 
 //    for(int i = 0; i<nSpin+2;i++) {
 //        for(int j = 0; j<nSpin+2;j++) {
