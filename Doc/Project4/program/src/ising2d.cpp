@@ -7,7 +7,6 @@ Ising2D::Ising2D() {
 Ising2D::Ising2D(int spins) {
     nSpin = spins;
     energy = 0;
-
 }
 
 void Ising2D::InitializeLattice() {
@@ -123,9 +122,22 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     return expectationValues;
 }
 
-void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
+void Ising2D::initializeOutput(std::string outputFile,int totalMonteCarloCycles) {
+    std::ofstream ofile;
+    ofile.open(outputFile);
+    ofile << "Ising model with "<<nSpin<<" spins and "<<totalMonteCarloCycles<<" Monte Carlo samples."<< std::endl;
+    ofile << std::setw(15) << "T";
+    ofile << std::setw(15) << "E";
+    ofile << std::setw(15) << "Cv";
+    ofile << std::setw(15) << "M";
+    ofile << std::setw(15) << "X";
+    ofile << std::setw(15) << "abs(M)" << std::endl;
+    ofile.close();
+}
+
+void Ising2D::writeOutput(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
   std::ofstream ofile;
-  ofile.open(outputFile);
+  ofile.open(outputFile, std::ios_base::app);
   double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
   double E_ExpectationValues = totalResult[0]*norm;
   double E2_ExpectationValues = totalResult[1]*norm;
@@ -142,4 +154,5 @@ void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double t
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
   ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << std::endl;
+  ofile.close();
 } // end output function
