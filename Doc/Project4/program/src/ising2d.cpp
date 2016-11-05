@@ -143,5 +143,5 @@ void Ising2D::output(std::string outputFile, int testNr, int totalMonteCarloCycl
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
-  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << "\n" << std::endl;
+  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << std::endl;
 } // end output function
