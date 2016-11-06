@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
     char state;
     int numprocs, myRank, nSpin;
     int monteCarloCycles;
-    double *myAverage, *totalAverage;
+    double *myAverage = new double[6];
+    double *totalAverage = new double[6];
     double initTemp, finalTemp, tempStep;
     double initTime=0, finalTime=0, totalTime=0;
 
@@ -65,10 +66,9 @@ int main(int argc, char *argv[])
         }
     }
 
-
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
         myAverage = ising.Metropolis(myLoopStart,myLoopEnd,temperature);
-        for(int i = 0; i<5; i++) {
+        for(int i = 0; i<6; i++) {
             MPI_Reduce(&myAverage[i],&totalAverage[i],1,MPI_DOUBLE,MPI_SUM,0,MPI_COMM_WORLD);
         }
         if(myRank == 0) {

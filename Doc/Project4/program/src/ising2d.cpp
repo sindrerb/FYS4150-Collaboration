@@ -141,9 +141,11 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
 
     // Initialize storage variables
-    expectationValues = new double[5];
-    for( int i=0; i<5; i++) expectationValues[i]=0;
+    expectationValues = new double[6];
+    for( int i=0; i<6; i++) expectationValues[i]=0;
 
+    // Equilibrium
+    double acceptedChanges = 0;
     // Do Monte Carlo calculations
     for (int cycles = start; cycles <= end; cycles++){
       for(int x =1; x < nSpin+1; x++) {
@@ -162,6 +164,9 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
             // Save new properties
             magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
             energy += (double) deltaE;
+
+           // Log the number of accepted changes
+            acceptedChanges += 1;
           }
         }
       }
@@ -173,6 +178,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
       expectationValues[3] += magneticMoment*magneticMoment;
       expectationValues[4] += fabs(magneticMoment);
     }
+    expectationValues[5] += acceptedChanges;
     return expectationValues;
 }
 
@@ -185,7 +191,8 @@ void Ising2D::initializeOutput(std::string outputFile,int totalMonteCarloCycles)
     ofile << std::setw(15) << "Cv";
     ofile << std::setw(15) << "M";
     ofile << std::setw(15) << "X";
-    ofile << std::setw(15) << "abs(M)" << std::endl;
+    ofile << std::setw(15) << "abs(M)";
+    ofile << std::setw(15) << "Acceptance rate" << std::endl;
     ofile.close();
 }
 
@@ -198,6 +205,7 @@ void Ising2D::writeOutput(std::string outputFile, int totalMonteCarloCycles, dou
   double M_ExpectationValues = totalResult[2]*norm;
   double M2_ExpectationValues = totalResult[3]*norm;
   double Mabs_ExpectationValues = totalResult[4]*norm;
+  double acceptanceRate = totalResult[5]*norm;
   // all expectation values are per spin, divide by 1/NSpins/NSpins
   double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/nSpin/nSpin;
   double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/nSpin/nSpin;
@@ -207,6 +215,7 @@ void Ising2D::writeOutput(std::string outputFile, int totalMonteCarloCycles, dou
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
-  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin << std::endl;
+  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin;
+  ofile << std::setw(15) << std::setprecision(8) << acceptanceRate/nSpin/nSpin << std::endl;
   ofile.close();
 } // end output function
