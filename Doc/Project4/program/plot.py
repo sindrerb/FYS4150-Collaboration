@@ -9,26 +9,31 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def Z(T):
-    return (2*np.exp(-8/T)+2*np.exp(8/T)+12)
+#    return (2*np.exp(-8/T)+2*np.exp(8/T)+12)
+	return 12 + 4*np.cosh(8/T)
 
 def E(T):
-    return 16*(np.exp(-8/T)-np.exp(8/T))/Z(T)
+#    return 16*(np.exp(-8/T)-np.exp(8/T))/Z(T)
+	return -32*np.sinh(8/T)/Z(T)
 
 def E2(T):
-    return 128*(np.exp(-8/T)+np.exp(8/T))/Z(T)
+#    return 128*(np.exp(-8/T)+np.exp(8/T))/Z(T)
+	return 256*np.cosh(8/T)/Z(T)
 
 def CV(T):
     return (E2(T)-E(T)**2)/(T**2)
+
 
 def M2(T):
     return 32*(np.exp(8/T)+1)/Z(T)
 
 def absM(T):
     return 8*(np.exp(8/T)+2)/Z(T)
+
 def chi(T):
     return (M2(T)-absM(T)**2)/T
 
-print E(1)/4, CV(1)/4, 0, chi(1)/4, 0;
+print 'E = ', E(1)/4, 'Cv = ', CV(1)/4, 'X = ', chi(1)/4;
 
 
 """
