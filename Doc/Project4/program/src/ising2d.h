@@ -23,7 +23,7 @@ public:
     void InitializeLattice();
     double* Metropolis(int start, int end, double temperature);
     void delteLattice();
-    void output(std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult);
+    void output(double time, std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult);
 };
 
 #endif // ISING2D_H

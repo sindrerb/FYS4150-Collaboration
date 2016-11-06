@@ -123,7 +123,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     return expectationValues;
 }
 
-void Ising2D::output(std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult) {
+void Ising2D::output(double time,std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult) {
   std::ofstream ofile;
   ofile.open(outputFile, std::ofstream::out | std::ofstream::app); // enabeling appending to file in loop
   //ofile.open(outputFile);
@@ -138,6 +138,7 @@ void Ising2D::output(std::string outputFile, int testNr, int totalMonteCarloCycl
   double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/nSpin/nSpin;
 //  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
   ofile << testNr;
+  ofile << std::setw(15) << std::setprecision(8) << time;
   ofile << std::setw(15) << std::setprecision(8) << temperature;
   ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
