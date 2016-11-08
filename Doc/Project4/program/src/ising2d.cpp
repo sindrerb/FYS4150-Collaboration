@@ -83,13 +83,14 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     // Set up the uniform distribution for x \in [[0, 1]
     std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
     // Set up array for possible energy transitions
+    double acceptedFlips = 0;
     w = new double[17];
     for( int de =-8; de <= 8; de++) w[de+8] = 0;
     for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
 
     // Initialize storage variables
-    expectationValues = new double[5];
-    for( int i=0; i<5; i++) expectationValues[i]=0;
+    expectationValues = new double[6];
+    for( int i=0; i<=6; i++) expectationValues[i]=0;
 
     // Do Monte Carlo calculations
     for (int cycles = start; cycles <= end; cycles++){
@@ -109,6 +110,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
             // Save new properties
             magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
             energy += (double) deltaE;
+            acceptedFlips += 1;
           }
         }
       }
@@ -119,6 +121,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
       expectationValues[2] += magneticMoment;
       expectationValues[3] += magneticMoment*magneticMoment;
       expectationValues[4] += fabs(magneticMoment);
+      expectationValues[5] += acceptedFlips;
     }
     return expectationValues;
 }
@@ -133,13 +136,15 @@ void Ising2D::output(double time,std::string outputFile, int testNr, int totalMo
   double M_ExpectationValues = totalResult[2]*norm;
   double M2_ExpectationValues = totalResult[3]*norm;
   double Mabs_ExpectationValues = totalResult[4]*norm;
+  double numberOfFlips = totalResult[5]*norm;
   // all expectation values are per spin, divide by 1/NSpins/NSpins
   double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/nSpin/nSpin;
   double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/nSpin/nSpin;
-//  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
+  //  ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
   ofile << testNr;
   ofile << std::setw(15) << std::setprecision(8) << time;
   ofile << std::setw(15) << std::setprecision(8) << temperature;
+  ofile << std::setw(15) << std::setprecision(8) << numberOfFlips/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;

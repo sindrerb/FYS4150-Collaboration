@@ -10,17 +10,19 @@ int main()
 {
     //Solving task 4b finding MC convergence for 2x2 spins
     long monteCarlo; //Start # MC cicles
-    int N = 9;
-    int nSpin = 2;
+    int n = 10;
+    int N = 6;
+    int nSpin = 20;
+    double temp = 2.4;
+    for(int k = 0; k <= n; k++){
     for(int i = 1; i <= N; i++){
-        string filename = "test";
+        string filename = "test20_T2.4";
 
         for(int j = 1; j <= i; j++){
             monteCarlo = pow(10,i);
         }
-        cout << "Running test " << i << " with " << monteCarlo << " MC cicles." << endl;
+        cout << "Running test nr. " << i << " in the k = " << k <<" with " << monteCarlo << " MC cicles." << endl;
         double *myAverage;
-        double temp = 1;
         Ising2D test(nSpin);
 
         clock_t time;
@@ -31,5 +33,6 @@ int main()
         test.output(time, filename, i, monteCarlo, temp, myAverage);
         test.delteLattice();
         cout << "test nr. " << i << " with " << monteCarlo << " cycles took " << time/1000 << " sek." << endl;
+    }
     }
 }
