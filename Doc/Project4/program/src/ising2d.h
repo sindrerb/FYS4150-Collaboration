@@ -15,6 +15,7 @@ private:
     double *expectationValues;
     double energy;
     double magneticMoment;
+    double *hist;
 
 
 public:
@@ -22,6 +23,7 @@ public:
     Ising2D(int spins);
     void InitializeLattice();
     double* Metropolis(int start, int end, double temperature);
+    double* histogram(int monteCarloCycles, double temperature);
     void delteLattice();
     void output(std::string outputFile,int totalMonteCarloCycles, double temperature, double *totalResult);
 };

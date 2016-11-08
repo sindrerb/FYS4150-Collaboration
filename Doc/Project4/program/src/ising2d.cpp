@@ -93,6 +93,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
 
     // Do Monte Carlo calculations
     for (int cycles = start; cycles <= end; cycles++){
+
       for(int x =1; x < nSpin+1; x++) {
         for (int y= 1; y < nSpin+1; y++){
 
@@ -121,6 +122,65 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
       expectationValues[4] += fabs(magneticMoment);
     }
     return expectationValues;
+}
+
+double* Ising2D::histogram(int monteCarloCycles, double temperature) {
+    // Initialize the seed and call the Mersienne algo
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    // Set up the uniform distribution for x \in [[0, 1]
+    std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
+    // Set up array for possible energy transitions
+    w = new double[17];
+    for( int de =-8; de <= 8; de++) w[de+8] = 0;
+    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
+
+//##################################################
+    int maxEnergy = 2*nSpin*nSpin;
+    hist = new double[maxEnergy];
+    int occurence = 0;
+    for( int i = 0;i<maxEnergy;i++) hist[i]=0;
+    int accepted = 0;
+    std::ofstream ofile;
+    ofile.open("outputFile.txt",std::ios::app);
+
+    // Initialize storage variables
+    expectationValues = new double[5];
+    for( int i=0; i<5; i++) expectationValues[i]=0;
+    int triesTotal = 0;
+    // Do Monte Carlo calculations
+    for (int cycles = 0; cycles <= monteCarloCycles; cycles++){
+        for(int x =1; x < nSpin+1; x++) {
+        for (int y=1; y < nSpin+1; y++) {
+
+          // Chose a random spin to flip
+          int ix = (int) (randomGenerator(gen)*(double)nSpin)+1;
+          int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
+
+          occurence = (energy+maxEnergy)/4;
+          hist[occurence] += 1;
+          // Calculate the energy difference of flipping the chosen spin
+          int deltaE =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+          // Perform the Metropolis criteria
+          if ( randomGenerator(gen) <= w[deltaE+8] ) {
+            // Flip the spin
+            lattice[ix-1][iy-1] *= -1.0;
+            // Save new properties
+            magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
+            energy += (double) deltaE;
+            accepted ++;
+          }
+          triesTotal ++;
+        }
+      }
+    ofile << setiosflags(std::ios::showpoint | std::ios::uppercase);
+    ofile << std::setw(15) << std::setprecision(8) << triesTotal;
+    ofile << std::setw(15) << std::setprecision(8) << energy;
+    ofile << std::setw(15) << std::setprecision(8) << accepted;
+    ofile << std::setw(15) << std::setprecision(8) << ((double) accepted/triesTotal) << std::endl;
+    }
+    ofile.close();
+    return hist;
 }
 
 void Ising2D::output(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
