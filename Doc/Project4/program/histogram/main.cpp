@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
     }
 
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
-        myHistogram = ising.histogram(filename, myLoopStart,myLoopEnd,temperature);
-        for(int i = 0; i<6; i++) {
+        myHistogram = ising.histogram(filename, myLoopStart,myLoopEnd, temperature);
+        for(int i = 0; i<nSpin*nSpin; i++) {
             MPI_Reduce(&myHistogram[i],&totalHistogram[i],1,MPI_DOUBLE,MPI_SUM,0,MPI_COMM_WORLD);
         }
         if(myRank == 0) {

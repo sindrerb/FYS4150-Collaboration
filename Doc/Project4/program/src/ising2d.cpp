@@ -179,7 +179,7 @@ double *Ising2D::metropolis(int start, int end, double temperature){
     return expectationValues;
 }
 
-int *Ising2D::histogram(std::string outputFile, int start, int end, double temperature) {
+int *Ising2D::histogram(std::string outputFile, int start, int end,double temperature) {
     //Write equilibrium grahp to this file
     std::ofstream ofile;
     outputFile += "eq";
@@ -242,18 +242,19 @@ int *Ising2D::histogram(std::string outputFile, int start, int end, double tempe
 
           // Log the number of tries in total
           triesTotal ++;
-
-          // Add the new energy in a histogram
-          histPosition = (energy+energyMax)/4;
-          histogramList[histPosition] ++;
-        }
+      }
+    }
+      // Add the new energy in a histogram
+      if ( cycles > (end-start)/3 ) {
+          histPosition = ((int) energy+energyMax)/4;
+          histogramList[histPosition] += 1;
       }
       counterOutput++;
       if(counterOutput == counterMax) {
         ofile.open(outputFile,std::ios_base::app);
-        ofile<<std::setw(15) << triesTotal; //DET ER FEIL HER!!
+        ofile<<std::setw(15) << cycles;
         ofile<<std::setw(15) << triesAccepted;
-        ofile<<std::setw(15) << ((double) triesAccepted/triesTotal);
+        ofile<<std::setw(15) << ((double) triesAccepted/cycles);
         ofile<<std::setw(15) << energy;
         ofile<<std::setw(15) << energy/triesTotal << std::endl;
         counterOutput = 0;
