@@ -13,6 +13,7 @@ private:
     int ***pseudoLattice;
     double *w;
     double *expectationValues;
+    int *histogramList;
     double energy;
     double magneticMoment;
 
@@ -20,12 +21,25 @@ private:
 public:
     Ising2D();
     Ising2D(int spins);
-    void InitializeRandomStateLattice();
-    void InitializeGroundStateLattice();
-    double* Metropolis(int start, int end, double temperature);
+
+    //Various initial states
+    void initializeRandomStateLattice();
+    void initializeGroundStateLattice();
+
+    double* metropolis(int start, int end, double temperature);
+    int* histogram(std::string outputFile, int start, int end, double temperature);
     void delteLattice();
     void initializeOutput(std::string outputFile,int totalMonteCarloCycles);
     void writeOutput(std::string outputFile,int totalMonteCarloCycles, double temperature, double *totalResult);
+
+    void initializeOutputHistogram(std::string outputFile,int totalMonteCarloCycles, int equilibriumCycle);
+    void writeHistogram(std::string outputFile,int temperature, int *totalHistogram);
+
+    //Setters
+    void setSpin(int spins);
+
+    //Getters
+    int getSpin();
 };
 
 #endif // ISING2D_H

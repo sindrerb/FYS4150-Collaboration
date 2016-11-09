@@ -9,7 +9,7 @@ Ising2D::Ising2D(int spins) {
     energy = 0;
 }
 
-void Ising2D::InitializeGroundStateLattice() {
+void Ising2D::initializeGroundStateLattice() {
     // Initialize lattice with values
     lattice = new int*[nSpin];
     for(int i = 0; i<nSpin;i++) {
@@ -54,7 +54,7 @@ void Ising2D::InitializeGroundStateLattice() {
 //    }
 }
 
-void Ising2D::InitializeRandomStateLattice() {
+void Ising2D::initializeRandomStateLattice() {
     // Initialize lattice with values
     lattice = new int*[nSpin];
     int spin;
@@ -129,7 +129,7 @@ void Ising2D::delteLattice(){
     pseudoLattice = NULL;
 }
 
-double *Ising2D::Metropolis(int start, int end, double temperature){
+double *Ising2D::metropolis(int start, int end, double temperature){
     // Initialize the seed and call the Mersienne algo
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -141,12 +141,13 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
 
     // Initialize storage variables
-    expectationValues = new double[6];
-    for( int i=0; i<6; i++) expectationValues[i]=0;
+    expectationValues = new double[5];
+    for( int i=0; i<5; i++) expectationValues[i]=0;
 
-    // Equilibrium
-    double acceptedChanges = 0;
+
+
     // Do Monte Carlo calculations
+    int energyDelta;
     for (int cycles = start; cycles <= end; cycles++){
       for(int x =1; x < nSpin+1; x++) {
         for (int y= 1; y < nSpin+1; y++){
@@ -156,31 +157,141 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
           int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
 
           // Calculate the energy difference of flipping the chosen spin
-          int deltaE =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+          energyDelta =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
           // Perform the Metropolis criteria
-          if ( randomGenerator(gen) <= w[deltaE+8] ) {
+          if ( randomGenerator(gen) <= w[energyDelta+8] ) {
             // Flip the spin
             lattice[ix-1][iy-1] *= -1.0;
             // Save new properties
             magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
-            energy += (double) deltaE;
-
-           // Log the number of accepted changes
-            acceptedChanges += 1;
+            energy += (double) energyDelta;
           }
         }
       }
 
-      // Update expectation values  for local node
+      // Add values to storage for local node
       expectationValues[0] += energy;
       expectationValues[1] += energy*energy;
       expectationValues[2] += magneticMoment;
       expectationValues[3] += magneticMoment*magneticMoment;
       expectationValues[4] += fabs(magneticMoment);
     }
-    expectationValues[5] += acceptedChanges;
     return expectationValues;
 }
+
+int *Ising2D::histogram(std::string outputFile, int start, int end, double temperature) {
+    //Write equilibrium grahp to this file
+    std::ofstream ofile;
+    outputFile += "eq";
+    ofile.open(outputFile);
+    ofile<<std::setw(15) << "tries";
+    ofile<<std::setw(15) << "accepted";
+    ofile<<std::setw(15) << "a/t";
+    ofile<<std::setw(15) << "energy";
+    ofile<<std::setw(15) << "e/t" << std::endl;
+    ofile.close();
+
+    // Initialize the seed and call the Mersienne algo
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    // Set up the uniform distribution for x \in [[0, 1]
+    std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
+    // Set up array for possible energy transitions
+    w = new double[17];
+    for( int de =-8; de <= 8; de++) w[de+8] = 0;
+    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
+
+    // Initialize histogram
+    histogramList = new int[nSpin*nSpin];
+    for( int i=0; i<nSpin*nSpin; i++) histogramList[i]=0;
+    int energyMax = 2*nSpin*nSpin;
+    int histPosition; //Used to add one count in the right position
+
+    //Initialize output counter
+    int counterOutput = 0;
+    int counterMax = 100;
+
+    // Equilibrium conditions
+    double triesAccepted = 0;
+    double triesTotal = 0;
+
+    // Do Monte Carlo calculations
+    int energyDelta;
+    for (int cycles = start; cycles <= end; cycles++){
+      for(int x =1; x < nSpin+1; x++) {
+        for (int y= 1; y < nSpin+1; y++){
+
+          // Chose a random spin to flip
+          int ix = (int) (randomGenerator(gen)*(double)nSpin)+1;
+          int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
+
+          // Calculate the energy difference of flipping the chosen spin
+          energyDelta =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+
+          // Perform the Metropolis criteria
+          if ( randomGenerator(gen) <= w[energyDelta+8] ) {
+            // Flip the spin
+            lattice[ix-1][iy-1] *= -1.0;
+            // Save new properties
+            magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
+            energy += (double) energyDelta;
+
+           // Log the number of accepted tries
+            triesAccepted ++;
+          }
+
+          // Log the number of tries in total
+          triesTotal ++;
+
+          // Add the new energy in a histogram
+          histPosition = (energy+energyMax)/4;
+          histogramList[histPosition] ++;
+        }
+      }
+      counterOutput++;
+      if(counterOutput == counterMax) {
+        ofile.open(outputFile,std::ios_base::app);
+        ofile<<std::setw(15) << triesTotal; //DET ER FEIL HER!!
+        ofile<<std::setw(15) << triesAccepted;
+        ofile<<std::setw(15) << ((double) triesAccepted/triesTotal);
+        ofile<<std::setw(15) << energy;
+        ofile<<std::setw(15) << energy/triesTotal << std::endl;
+        counterOutput = 0;
+        ofile.close();
+      }
+    }
+    return histogramList;
+}
+
+
+void Ising2D::initializeOutputHistogram(std::string outputFile,int totalMonteCarloCycles, int equilibriumCycle) {
+    outputFile.append("hist");
+    std::ofstream ofile;
+    ofile.open(outputFile);
+    ofile << "Histogram over energy occurence in a lattice with "<<nSpin<<" spins with "<<totalMonteCarloCycles<<" Monte Carlo samples."<< std::endl;
+    ofile << "Counting from the "<<equilibriumCycle<<" MC-Cycle, assumed to represent equlibrium."<< std::endl;
+    ofile << std::setw(15) << "T";
+    ofile << std::setw(15) << "E (J)" << std::endl;
+    ofile << std::setw(15) << 0;
+    for(int energyCounter = -2*nSpin*nSpin; energyCounter <= 2*nSpin*nSpin; energyCounter+=4) {
+        ofile << std::setw(15) << energyCounter;
+    }
+    ofile << std::endl;
+    ofile.close();
+}
+
+void Ising2D::writeHistogram(std::string outputFile,int temperature, int *totalHistogram) {
+    outputFile.append("hist");
+    std::ofstream ofile;
+    ofile.open(outputFile, std::ios_base::app);
+    ofile << std::setw(15) << temperature;
+    for(int i = 0; i <= nSpin*nSpin; i++) {
+        ofile << std::setw(15) << totalHistogram[i];
+    }
+    ofile << std::endl;
+    ofile.close();
+}
+
 
 void Ising2D::initializeOutput(std::string outputFile,int totalMonteCarloCycles) {
     std::ofstream ofile;
@@ -218,4 +329,15 @@ void Ising2D::writeOutput(std::string outputFile, int totalMonteCarloCycles, dou
   ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << acceptanceRate/nSpin/nSpin << std::endl;
   ofile.close();
-} // end output function
+}
+
+
+//Setters
+void Ising2D::setSpin(int spins) {
+    nSpin = spins;
+}
+
+//Getters
+int Ising2D::getSpin() {
+    return nSpin;
+}
