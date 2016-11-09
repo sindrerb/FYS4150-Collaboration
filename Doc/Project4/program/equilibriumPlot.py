@@ -16,9 +16,12 @@ rnd = np.loadtxt(filename,dtype='float', skiprows=2,usecols=cols)
 
 fig = plt.figure()
 plt.title("Calculations from a random state at T=1")
+
 for i in range(1,len(labels)):
     plt.subplot(len(labels)-1,1,i)
-    plt.ylabel(labels[i])
+    #plt.ylabel(labels[i])
     plt.ylim(min(rnd[:,i])-abs(min(rnd[:,i]))*0.01,max(rnd[:,i])+abs(max(rnd[:,i]))*0.01)
     plt.plot(rnd[:,0],rnd[:,i])
-plt.xlabel(labels[0])
+#plt.xlabel(labels[0])
+plt.ylabel("Accepted tries")
+plt.xlabel("Total tries")
