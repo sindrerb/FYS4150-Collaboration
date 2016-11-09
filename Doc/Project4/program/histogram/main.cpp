@@ -1,4 +1,4 @@
-#include "mpi/mpi.h"
+#include "mpi.h"
 #include "../src/ising2d.h"
 #include <iostream>
 #include <fstream>

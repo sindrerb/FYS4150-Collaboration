@@ -8,14 +8,14 @@
 class Ising2D
 {
 private:
-    int nSpin=0;
-    int **lattice;
-    int ***pseudoLattice;
-    double *w;
-    double *expectationValues;
-    int *histogramList;
-    double energy;
-    double magneticMoment;
+    int m_nSpin=0;
+    int **m_lattice;
+    int ***m_pseudoLattice;
+    double *m_w;
+    double *m_expectationValues;
+    int *m_histogramList;
+    double m_energy;
+    double m_magneticMoment;
 
 
 public:
@@ -40,6 +40,7 @@ public:
 
     //Getters
     int getSpin();
+    int **getLattice() const;
 };
 
 #endif // ISING2D_H

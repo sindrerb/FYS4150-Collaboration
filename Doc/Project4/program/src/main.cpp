@@ -1,4 +1,4 @@
-#include "mpi/mpi.h"
+#include "mpi.h"
 #include "ising2d.h"
 #include <iostream>
 #include <fstream>
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     if(myRank == 0 && argc > 7) {
         filename = argv[1];
         filename.append(argv[2]);
+        filename.append(".txt");
         nSpin = atoi(argv[2]);
         state = *argv[3];
         monteCarloCycles = atol(argv[4]);
