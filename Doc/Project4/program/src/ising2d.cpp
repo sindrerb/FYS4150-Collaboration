@@ -281,7 +281,7 @@ void Ising2D::initializeOutputHistogram(std::string outputFile,int totalMonteCar
     ofile.close();
 }
 
-void Ising2D::writeHistogram(std::string outputFile,int temperature, int *totalHistogram) {
+void Ising2D::writeHistogram(std::string outputFile,double temperature, int *totalHistogram) {
     outputFile.append("hist");
     std::ofstream ofile;
     ofile.open(outputFile, std::ios_base::app);

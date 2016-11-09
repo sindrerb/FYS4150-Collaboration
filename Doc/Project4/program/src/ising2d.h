@@ -33,7 +33,7 @@ public:
     void writeOutput(std::string outputFile,int totalMonteCarloCycles, double temperature, double *totalResult);
 
     void initializeOutputHistogram(std::string outputFile,int totalMonteCarloCycles, int equilibriumCycle);
-    void writeHistogram(std::string outputFile,int temperature, int *totalHistogram);
+    void writeHistogram(std::string outputFile,double temperature, int *totalHistogram);
 
     //Setters
     void setSpin(int spins);
