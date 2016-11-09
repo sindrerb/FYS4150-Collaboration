@@ -58,16 +58,16 @@ int main(int argc, char *argv[])
         ising.initializeOutput(filename,monteCarloCycles);
     }
     if(state == 'R'){
-        ising.InitializeRandomStateLattice();
+        ising.initializeRandomStateLattice();
     } else {
-        ising.InitializeGroundStateLattice();
+        ising.initializeGroundStateLattice();
         if(myRank == 0 && state != 'G'){
             cout << "Did not recognize "<<state<<" as an initial state, running with ground state."<<endl;
         }
     }
 
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
-        myAverage = ising.Metropolis(myLoopStart,myLoopEnd,temperature);
+        myAverage = ising.metropolis(myLoopStart,myLoopEnd,temperature);
         for(int i = 0; i<6; i++) {
             MPI_Reduce(&myAverage[i],&totalAverage[i],1,MPI_DOUBLE,MPI_SUM,0,MPI_COMM_WORLD);
         }
