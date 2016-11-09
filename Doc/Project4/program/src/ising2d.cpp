@@ -84,6 +84,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
     // Set up array for possible energy transitions
     double acceptedFlips = 0;
+    double triesTotal = 0;
     w = new double[17];
     for( int de =-8; de <= 8; de++) w[de+8] = 0;
     for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
@@ -112,6 +113,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
             energy += (double) deltaE;
             acceptedFlips += 1;
           }
+          triesTotal += 1;
         }
       }
 
@@ -121,7 +123,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
       expectationValues[2] += magneticMoment;
       expectationValues[3] += magneticMoment*magneticMoment;
       expectationValues[4] += fabs(magneticMoment);
-      expectationValues[5] += acceptedFlips;
+      expectationValues[5] += acceptedFlips/triesTotal;
     }
     return expectationValues;
 }
@@ -144,7 +146,7 @@ void Ising2D::output(double time,std::string outputFile, int testNr, int totalMo
   ofile << testNr;
   ofile << std::setw(15) << std::setprecision(8) << time;
   ofile << std::setw(15) << std::setprecision(8) << temperature;
-  ofile << std::setw(15) << std::setprecision(8) << numberOfFlips/nSpin/nSpin;
+  ofile << std::setw(15) << std::setprecision(8) << numberOfFlips;
   ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/nSpin/nSpin;
   ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
   ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/nSpin/nSpin;
