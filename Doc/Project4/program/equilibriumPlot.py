@@ -4,7 +4,7 @@ Created on Tue Nov  8 11:37:40 2016
 
 @author: sindrerb
 """
-filename = "./release/histogram/lattice20eq"
+filename = "./release/histogram/latt20eq"
 
 cols = [0,2]
 import matplotlib.pyplot as plt
