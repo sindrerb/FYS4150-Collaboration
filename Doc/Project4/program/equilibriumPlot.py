@@ -4,9 +4,9 @@ Created on Tue Nov  8 11:37:40 2016
 
 @author: sindrerb
 """
-filename = "./benchmarks/lattice140TEMPSWEEP" #"./release/src/lattice60"
+filename = "./release/histogram/lattice20eq"
 
-cols = [0,2,4]
+cols = [0,2]
 import matplotlib.pyplot as plt
 import numpy as np
 
