@@ -22,8 +22,10 @@ public:
     Ising2D(int spins);
     void InitializeLattice();
     double* Metropolis(int start, int end, double temperature);
+    void MetropolisConvergence(int start, int end, double temperature, std::string filename);
     void delteLattice();
     void output(double time, std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult);
+
 };
 
 #endif // ISING2D_H

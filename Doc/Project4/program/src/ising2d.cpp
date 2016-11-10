@@ -90,8 +90,8 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
     for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
 
     // Initialize storage variables
-    expectationValues = new double[6];
-    for( int i=0; i<=6; i++) expectationValues[i]=0;
+    expectationValues = new double[5];
+    for( int i=0; i<=5; i++) expectationValues[i]=0;
 
     // Do Monte Carlo calculations
     for (int cycles = start; cycles <= end; cycles++){
@@ -111,9 +111,7 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
             // Save new properties
             magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
             energy += (double) deltaE;
-            acceptedFlips += 1;
           }
-          triesTotal += 1;
         }
       }
 
@@ -126,6 +124,77 @@ double *Ising2D::Metropolis(int start, int end, double temperature){
       expectationValues[5] += acceptedFlips/triesTotal;
     }
     return expectationValues;
+}
+
+void Ising2D::MetropolisConvergence(int start, int end, double temperature, std::string filename) {
+    std::ofstream ofile;
+    ofile.open(filename, std::ofstream::out | std::ofstream::app); // enabeling appending to file in loop
+    // Initialize the seed and call the Mersienne algo
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    // Set up the uniform distribution for x \in [[0, 1]
+    std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
+    // Set up array for possible energy transitions
+    w = new double[17];
+    for( int de =-8; de <= 8; de++) w[de+8] = 0;
+    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
+
+    // Initialize storage variables
+    expectationValues = new double[6];
+    //Initialize header of outputfile
+    ofile << "cycle(t)" << std::setw(15) << "loc_en" << std::setw(15) << "loc_en_sq" << std::setw(15) << "loc_mag" << std::setw(15) << "loc_mag_sq"  << std::setw(15)
+          << "|loc_mag|" << std::setw(15) << "<E>" << std::setw(15) << "<E^2>" << std::setw(15) << "<M>" << std::setw(15) << "<M^2>" << std::setw(15) << "<|M|>"
+          << std::setw(15) << "Flips" << std::endl;
+    int counter = 0;
+    for( int i=0; i<=6; i++) expectationValues[i]=0;
+
+    // Do Monte Carlo calculations
+    for (int cycles = start; cycles <= end; cycles++){
+      double acceptedFlips = 0;
+      for(int x =1; x < nSpin+1; x++) {
+        for (int y= 1; y < nSpin+1; y++){
+
+          // Chose a random spin to flip
+          int ix = (int) (randomGenerator(gen)*(double)nSpin)+1;
+          int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
+
+          // Calculate the energy difference of flipping the chosen spin
+          int deltaE =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+          // Perform the Metropolis criteria
+          if ( randomGenerator(gen) <= w[deltaE+8] ) {
+            // Flip the spin
+            lattice[ix-1][iy-1] *= -1.0;
+            // Save new properties
+            magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
+            energy += (double) deltaE;
+            acceptedFlips += 1;
+          }
+        }
+      }//end of one MonteCarlo cycle
+      if(counter == 100){
+      // Update expectation values  for local node
+      ofile << cycles;
+      ofile << std::setw(15) << std::setprecision(8) << energy/(nSpin*nSpin);
+      ofile << std::setw(15) << std::setprecision(8) << energy*energy/(nSpin*nSpin);
+      ofile << std::setw(15) << std::setprecision(8) << magneticMoment/(nSpin*nSpin);
+      ofile << std::setw(15) << std::setprecision(8) << magneticMoment*magneticMoment/(nSpin*nSpin);
+      ofile << std::setw(15) << std::setprecision(8) << fabs(magneticMoment)/(nSpin*nSpin);
+      expectationValues[0] += energy/(nSpin*nSpin);
+      expectationValues[1] += energy*energy/(nSpin*nSpin);
+      expectationValues[2] += magneticMoment/(nSpin*nSpin);
+      expectationValues[3] += magneticMoment*magneticMoment/(nSpin*nSpin);
+      expectationValues[4] += fabs(magneticMoment)/(nSpin*nSpin);
+      ofile << std::setw(15) << std::setprecision(8) << expectationValues[0]/(cycles+1);
+      ofile << std::setw(15) << std::setprecision(8) << expectationValues[1]/(cycles+1);
+      ofile << std::setw(15) << std::setprecision(8) << expectationValues[2]/(cycles+1);
+      ofile << std::setw(15) << std::setprecision(8) << expectationValues[3]/(cycles+1);
+      ofile << std::setw(15) << std::setprecision(8) << expectationValues[4]/(cycles+1);
+      ofile << std::setw(15) << std::setprecision(8) << acceptedFlips/cycles << std::endl;
+      counter = 0;
+    }
+      counter ++;
+    }
+
 }
 
 void Ising2D::output(double time,std::string outputFile, int testNr, int totalMonteCarloCycles, double temperature, double *totalResult) {
