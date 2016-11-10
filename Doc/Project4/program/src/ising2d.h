@@ -13,7 +13,7 @@ private:
     int ***pseudoLattice;
     double *w;
     double *expectationValues;
-    int *histogramList;
+    unsigned long *histogramList;
     double energy;
     double magneticMoment;
 
@@ -27,13 +27,14 @@ public:
     void initializeGroundStateLattice();
 
     double* metropolis(int start, int end, double temperature);
-    int* histogram(std::string outputFile, int start, int end, double temperature);
+    unsigned long* histogram(std::string outputFile, int start, int end, double temperature);
+    void equilibrium(std::string outputFile, int totalMonteCarloCycles, double temperature);
     void delteLattice();
     void initializeOutput(std::string outputFile,int totalMonteCarloCycles);
     void writeOutput(std::string outputFile,int totalMonteCarloCycles, double temperature, double *totalResult);
 
     void initializeOutputHistogram(std::string outputFile,int totalMonteCarloCycles, int equilibriumCycle);
-    void writeHistogram(std::string outputFile,double temperature, int *totalHistogram);
+    void writeHistogram(std::string outputFile,double temperature, unsigned long *totalHistogram);
 
     //Setters
     void setSpin(int spins);

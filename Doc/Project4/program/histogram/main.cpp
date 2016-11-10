@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
         tempStep = atof(argv[7]);
         cout << "Writes to " << filename << " with state "<<state<<endl;
     }
-    int *myHistogram = new int[nSpin*nSpin];
-    int *totalHistogram = new int[nSpin*nSpin];
+    unsigned long *myHistogram = new unsigned long[nSpin*nSpin];
+    unsigned long *totalHistogram = new unsigned long[nSpin*nSpin];
 
     // Broadcast common variables to all nodes
     MPI_Bcast (&myHistogram, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -68,7 +68,16 @@ int main(int argc, char *argv[])
             cout << "Did not recognize "<<state<<" as an initial state, running with ground state."<<endl;
         }
     }
-
+    if(myRank==0) {
+        for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
+           ising.equilibrium(filename, 5e5,temperature);
+        }
+        if(state == 'R'){
+            ising.initializeRandomStateLattice();
+        } else {
+            ising.initializeGroundStateLattice();
+        }
+    }
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
         myHistogram = ising.histogram(filename, myLoopStart,myLoopEnd, temperature);
         for(int i = 0; i<nSpin*nSpin; i++) {
