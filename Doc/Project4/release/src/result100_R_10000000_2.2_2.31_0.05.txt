@@ -1,0 +1,2 @@
+Ising model with 100 spins and 10000000 Monte Carlo samples.
+              T              E             Cv              M              X         abs(M)Acceptance rate

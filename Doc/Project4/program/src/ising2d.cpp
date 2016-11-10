@@ -1,16 +1,7 @@
 #include "ising2d.h"
 
 
-
 Ising2D::Ising2D() {
-    m_nSpin=0;
-    **m_lattice = 0;
-    ***m_pseudoLattice = 0;
-    *m_w = 0;
-    *m_expectationValues = 0;
-    *m_histogramList = 0;
-    m_energy = 0;
-    m_magneticMoment = 0;
 }
 
 Ising2D::Ising2D(int spins) {
@@ -30,7 +21,9 @@ void Ising2D::initializeGroundStateLattice() {
     m_energy = -2*m_nSpin*m_nSpin;
     m_magneticMoment = m_nSpin*m_nSpin;
     //Pseudo lattice containting pointers to the original lattice
-    int corner = 0;
+
+    int *corner = new int[1];
+    corner[0] = 0;
     //Initialize pseudo lattice with empty pointers
     m_pseudoLattice = new int**[m_nSpin+2];
     for(int i = 0; i<m_nSpin+2;i++) {
@@ -51,10 +44,11 @@ void Ising2D::initializeGroundStateLattice() {
         m_pseudoLattice[i][0] = &m_lattice[i-1][m_nSpin-1];
         m_pseudoLattice[i][m_nSpin+1] = &m_lattice[i-1][0];
     }
-    m_pseudoLattice[0][0] = &corner;
-    m_pseudoLattice[0][m_nSpin+1] = &corner;
-    m_pseudoLattice[m_nSpin+1][0] = &corner;
-    m_pseudoLattice[m_nSpin+1][m_nSpin+1] = &corner;
+    m_pseudoLattice[0][0] = corner;
+    m_pseudoLattice[0][m_nSpin+1] = corner;
+    m_pseudoLattice[m_nSpin+1][0] = corner;
+    m_pseudoLattice[m_nSpin+1][m_nSpin+1] = corner;
+
 
 //    for(int i = 0; i<nSpin+2;i++) {
 //        for(int j = 0; j<nSpin+2;j++) {
@@ -70,12 +64,14 @@ void Ising2D::initializeRandomStateLattice() {
     for(int i = 0; i<m_nSpin;i++) {
         m_lattice[i] = new int[m_nSpin];
         for(int j = 0; j<m_nSpin;j++) {
+            srand(std::clock());
             spin = rand()%2;
             m_lattice[i][j] = spin*2-1;
         }
     }
     //Pseudo lattice containting pointers to the original lattice
-    int corner = 0;
+    int *corner = new int[1];
+    corner[0] = 0;
     //Initialize pseudo lattice with empty pointers
     m_pseudoLattice = new int**[m_nSpin+2];
     for(int i = 0; i<m_nSpin+2;i++) {
@@ -84,6 +80,7 @@ void Ising2D::initializeRandomStateLattice() {
             m_pseudoLattice[i][j] = NULL;
         }
     }
+
     //Set pointers to lattice
     for(int i = 1; i<m_nSpin+1;i++) {
         for(int j = 1; j<m_nSpin+1;j++) {
@@ -96,16 +93,16 @@ void Ising2D::initializeRandomStateLattice() {
         m_pseudoLattice[i][0] = &m_lattice[i-1][m_nSpin-1];
         m_pseudoLattice[i][m_nSpin+1] = &m_lattice[i-1][0];
     }
-    m_pseudoLattice[0][0] = &corner;
-    m_pseudoLattice[0][m_nSpin+1] = &corner;
-    m_pseudoLattice[m_nSpin+1][0] = &corner;
-    m_pseudoLattice[m_nSpin+1][m_nSpin+1] = &corner;
+    m_pseudoLattice[0][0] = corner;
+    m_pseudoLattice[0][m_nSpin+1] = corner;
+    m_pseudoLattice[m_nSpin+1][0] = corner;
+    m_pseudoLattice[m_nSpin+1][m_nSpin+1] = corner;
 
     m_energy = 0;
     m_magneticMoment = 0;
     for(int ix = 1; ix<m_nSpin+1;ix++) {
         for(int iy = 1; iy<m_nSpin+1;iy++) {
-            m_energy += 2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
+            m_energy += -0.5*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
             m_magneticMoment += (*m_pseudoLattice[ix][iy]);
         }
     }
@@ -355,3 +352,10 @@ int **Ising2D::getLattice() const {
     return m_lattice;
 }
 
+double Ising2D::getEnergy() const {
+    return m_energy;
+}
+
+int ***Ising2D::getPseudoLattice() const {
+    return m_pseudoLattice;
+}

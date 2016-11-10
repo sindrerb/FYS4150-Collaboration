@@ -41,6 +41,9 @@ public:
     //Getters
     int getSpin();
     int **getLattice() const;
+    double getEnergy() const;
+    int ***getPseudoLattice() const;
+
 };
 
 #endif // ISING2D_H

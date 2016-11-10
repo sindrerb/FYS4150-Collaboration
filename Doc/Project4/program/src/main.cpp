@@ -30,13 +30,23 @@ int main(int argc, char *argv[])
     if(myRank == 0 && argc > 7) {
         filename = argv[1];
         filename.append(argv[2]);
-        filename.append(".txt");
         nSpin = atoi(argv[2]);
         state = *argv[3];
         monteCarloCycles = atol(argv[4]);
         initTemp = atof(argv[5]);
         finalTemp = atof(argv[6]);
         tempStep = atof(argv[7]);
+        filename.append("_");
+        filename.append(argv[3]);
+        filename.append("_");
+        filename.append(argv[4]);
+        filename.append("_");
+        filename.append(argv[5]);
+        filename.append("_");
+        filename.append(argv[6]);
+        filename.append("_");
+        filename.append(argv[7]);
+        filename.append(".txt");
         cout << "Writes to " << filename << " with state "<<state<<endl;
     }
 
