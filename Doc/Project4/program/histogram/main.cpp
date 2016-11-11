@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     string filename;
     char state;
     int numprocs, myRank, nSpin;
-    int monteCarloCycles;
+    int monteCarloCycles, equilibrium;
     double initTemp, finalTemp, tempStep;
     double initTime=0, finalTime=0, totalTime=0;
 
@@ -21,19 +21,20 @@ int main(int argc, char *argv[])
     MPI_Init (&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-    if(myRank ==  0 && argc <= 7) {
-        cout << "Bad usage: " << argv[0] << "\n Read:\n Name of output file\n Number of spins\n Initial state (G=ground or R=random)\n Number of samples\n Initial temperature\n Final temperature\n Temperature step\n \n";
+    if(myRank ==  0 && argc <= 8) {
+        cout << "Bad usage: " << argv[0] << "\n Read:\n Name of output file\n Number of spins\n Initial state (G=ground or R=random)\n Number of samples\n Equilibrium time (cycles)\n Initial temperature\n Final temperature\n Temperature step\n \n";
         exit(1);
     }
-    if(myRank == 0 && argc > 7) {
+    if(myRank == 0 && argc > 8) {
         filename = argv[1];
         filename.append(argv[2]);
         nSpin = atoi(argv[2]);
         state = *argv[3];
-        monteCarloCycles = atol(argv[4]);
-        initTemp = atof(argv[5]);
-        finalTemp = atof(argv[6]);
-        tempStep = atof(argv[7]);
+        monteCarloCycles = atoi(argv[4]);
+        equilibrium = atoi(argv[5]);
+        initTemp = atof(argv[6]);
+        finalTemp = atof(argv[7]);
+        tempStep = atof(argv[8]);
         cout << "Writes to " << filename << " with state "<<state<<endl;
     }
     unsigned long *myHistogram = new unsigned long[nSpin*nSpin];
@@ -66,16 +67,6 @@ int main(int argc, char *argv[])
         ising.initializeGroundStateLattice();
         if(myRank == 0 && state != 'G'){
             cout << "Did not recognize "<<state<<" as an initial state, running with ground state."<<endl;
-        }
-    }
-    if(myRank==0) {
-        for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
-           ising.equilibrium(filename, 5e5,temperature);
-        }
-        if(state == 'R'){
-            ising.initializeRandomStateLattice();
-        } else {
-            ising.initializeGroundStateLattice();
         }
     }
     for(double temperature = initTemp; temperature<finalTemp; temperature+= tempStep) {
