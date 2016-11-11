@@ -215,8 +215,8 @@ void Ising2D::equilibrium(std::string outputFile, int totalMonteCarloCycles, dou
     expectationValues = new double[5];
     for( int i=0; i<5; i++) expectationValues[i]=0;
 
-
-
+    //Normalizing
+    double norm = 1.0/nSpin/nSpin;
     // Do Monte Carlo calculations
     int energyDelta;
     for (int cycles = 0; cycles <= totalMonteCarloCycles; cycles++){
@@ -245,26 +245,27 @@ void Ising2D::equilibrium(std::string outputFile, int totalMonteCarloCycles, dou
         }
       }
 
+      //Writes to file for the previous cycle
+      if(counterOutput == counterMax) {
+        ofile.open(outputFile,std::ios_base::app);
+        ofile<<std::setw(15) << cycles;
+        ofile<<std::setw(15) << triesAccepted;
+        ofile<<std::setw(15) << ((double) triesAccepted/cycles);
+        ofile<<std::setw(15) << (expectationValues[0]*norm);
+        ofile<<std::setw(15) << (expectationValues[0]*norm/cycles);
+        ofile<<std::setw(15) << (expectationValues[4]*norm);
+        ofile<<std::setw(15) << (expectationValues[4]*norm/cycles) << std::endl;
+        counterOutput = 0;
+        ofile.close();
+      }
+      counterOutput++;
+
       // Add values to storage for local node
       expectationValues[0] += energy;
       expectationValues[1] += energy*energy;
       expectationValues[2] += magneticMoment;
       expectationValues[3] += magneticMoment*magneticMoment;
       expectationValues[4] += fabs(magneticMoment);
-
-      if(counterOutput == counterMax) {
-        ofile.open(outputFile,std::ios_base::app);
-        ofile<<std::setw(15) << cycles;
-        ofile<<std::setw(15) << triesAccepted;
-        ofile<<std::setw(15) << ((double) triesAccepted/cycles);
-        ofile<<std::setw(15) << expectationValues[0];
-        ofile<<std::setw(15) << expectationValues[0]/cycles;
-        ofile<<std::setw(15) << expectationValues[4];
-        ofile<<std::setw(15) << expectationValues[4]/cycles << std::endl;
-        counterOutput = 0;
-        ofile.close();
-      }
-      counterOutput++;
     }
 }
 
