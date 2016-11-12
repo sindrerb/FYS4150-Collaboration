@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     MPI_Bcast (&finalTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast (&tempStep, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
+
     int intervals = monteCarloCycles/numprocs;
     int myLoopStart = myRank*intervals+1;
     int myLoopEnd = (myRank+1)*intervals;
@@ -94,4 +95,7 @@ int main(int argc, char *argv[])
     ising.delteLattice();
     MPI_Finalize();
     return 0;
+
+    delete[] totalAverage;
+    delete[] myAverage;
 }

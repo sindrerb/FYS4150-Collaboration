@@ -50,11 +50,11 @@ void Ising2D::initializeGroundStateLattice() {
     m_pseudoLattice[m_nSpin+1][m_nSpin+1] = corner;
 
 
-//    for(int i = 0; i<nSpin+2;i++) {
-//        for(int j = 0; j<nSpin+2;j++) {
-//            printf("%i  ", *pseudoLattice[i][j]);
-//        }  printf("\n");
-//    }
+    //    for(int i = 0; i<nSpin+2;i++) {
+    //        for(int j = 0; j<nSpin+2;j++) {
+    //            printf("%i  ", *pseudoLattice[i][j]);
+    //        }  printf("\n");
+    //    }
 }
 
 void Ising2D::initializeRandomStateLattice() {
@@ -102,28 +102,29 @@ void Ising2D::initializeRandomStateLattice() {
     m_magneticMoment = 0;
     for(int ix = 1; ix<m_nSpin+1;ix++) {
         for(int iy = 1; iy<m_nSpin+1;iy++) {
-            m_energy += -0.5*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
+//            m_energy += -0.5*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
+            m_energy -= (*m_pseudoLattice[ix][iy]) * ((*m_pseudoLattice[ix+1][iy]) + (*m_pseudoLattice[ix][iy+1]) );
             m_magneticMoment += (*m_pseudoLattice[ix][iy]);
         }
     }
 
-//    for(int i = 0; i<nSpin+2;i++) {
-//        for(int j = 0; j<nSpin+2;j++) {
-//            printf("%i  ", *pseudoLattice[i][j]);
-//        }  printf("\n");
-//    }
+    //    for(int i = 0; i<nSpin+2;i++) {
+    //        for(int j = 0; j<nSpin+2;j++) {
+    //            printf("%i  ", *pseudoLattice[i][j]);
+    //        }  printf("\n");
+    //    }
 }
 
 void Ising2D::delteLattice(){
-//    for(int i = 0; i<nSpin+2;i++) {
-//        for(int j = 0; j<nSpin+2;j++) {
-//            printf("%i  ", *pseudoLattice[i][j]);
-//        }  printf("\n");
-//    }
+    //    for(int i = 0; i<nSpin+2;i++) {
+    //        for(int j = 0; j<nSpin+2;j++) {
+    //            printf("%i  ", *pseudoLattice[i][j]);
+    //        }  printf("\n");
+    //    }
     for(int i = 0; i<m_nSpin; i++) {
         m_lattice[i] = NULL;
         delete[] m_lattice[i];
-        }
+    }
     for(int i = 0; i<m_nSpin+2 ; i++) {
         for(int j = 0; j<m_nSpin+2;j++) {
             m_pseudoLattice[i][j] = NULL;
@@ -155,34 +156,36 @@ double *Ising2D::metropolis(int start, int end, double temperature){
     // Do Monte Carlo calculations
     int energyDelta;
     for (int cycles = start; cycles <= end; cycles++){
-      for(int x =1; x < m_nSpin+1; x++) {
-        for (int y= 1; y < m_nSpin+1; y++){
+        for(int x =1; x < m_nSpin+1; x++) {
+            for (int y= 1; y < m_nSpin+1; y++){
 
-          // Chose a random spin to flip
-          int ix = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
-          int iy = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
+                // Chose a random spin to flip
+                int ix = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
+                int iy = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
 
-          // Calculate the energy difference of flipping the chosen spin
-          energyDelta =  2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
-          // Perform the Metropolis criteria
-          if ( randomGenerator(gen) <= m_w[energyDelta+8] ) {
-            // Flip the spin
-            m_lattice[ix-1][iy-1] *= -1.0;
-            // Save new properties
-            m_magneticMoment += (double) 2*(*m_pseudoLattice[ix][iy]);
-            m_energy += (double) energyDelta;
-          }
+                // Calculate the energy difference of flipping the chosen spin
+                energyDelta =  2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
+                // Perform the Metropolis criteria
+                if ( randomGenerator(gen) <= m_w[energyDelta+8] ) {
+                    // Flip the spin
+                    m_lattice[ix-1][iy-1] *= -1.0;
+                    // Save new properties
+                    m_magneticMoment += (double) 2*(*m_pseudoLattice[ix][iy]);
+                    m_energy += (double) energyDelta;
+                }
+            }
         }
-      }
 
-      // Add values to storage for local node
-      m_expectationValues[0] += m_energy;
-      m_expectationValues[1] += m_energy*m_energy;
-      m_expectationValues[2] += m_magneticMoment;
-      m_expectationValues[3] += m_magneticMoment*m_magneticMoment;
-      m_expectationValues[4] += fabs(m_magneticMoment);
+        // Add values to storage for local node
+        m_expectationValues[0] += m_energy;
+        m_expectationValues[1] += m_energy*m_energy;
+        m_expectationValues[2] += m_magneticMoment;
+        m_expectationValues[3] += m_magneticMoment*m_magneticMoment;
+        m_expectationValues[4] += fabs(m_magneticMoment);
     }
     return m_expectationValues;
+
+    delete[] m_w;
 }
 
 int *Ising2D::histogram(std::string outputFile, int start, int end, double temperature) {
@@ -224,47 +227,47 @@ int *Ising2D::histogram(std::string outputFile, int start, int end, double tempe
     // Do Monte Carlo calculations
     int energyDelta;
     for (int cycles = start; cycles <= end; cycles++){
-      for(int x =1; x < m_nSpin+1; x++) {
-        for (int y= 1; y < m_nSpin+1; y++){
+        for(int x =1; x < m_nSpin+1; x++) {
+            for (int y= 1; y < m_nSpin+1; y++){
 
-          // Chose a random spin to flip
-          int ix = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
-          int iy = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
+                // Chose a random spin to flip
+                int ix = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
+                int iy = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
 
-          // Calculate the energy difference of flipping the chosen spin
-          energyDelta =  2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
+                // Calculate the energy difference of flipping the chosen spin
+                energyDelta =  2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
 
-          // Perform the Metropolis criteria
-          if ( randomGenerator(gen) <= m_w[energyDelta+8] ) {
-            // Flip the spin
-            m_lattice[ix-1][iy-1] *= -1.0;
-            // Save new properties
-            m_magneticMoment += (double) 2*(*m_pseudoLattice[ix][iy]);
-            m_energy += (double) energyDelta;
+                // Perform the Metropolis criteria
+                if ( randomGenerator(gen) <= m_w[energyDelta+8] ) {
+                    // Flip the spin
+                    m_lattice[ix-1][iy-1] *= -1.0;
+                    // Save new properties
+                    m_magneticMoment += (double) 2*(*m_pseudoLattice[ix][iy]);
+                    m_energy += (double) energyDelta;
 
-           // Log the number of accepted tries
-            triesAccepted ++;
-          }
+                    // Log the number of accepted tries
+                    triesAccepted ++;
+                }
 
-          // Log the number of tries in total
-          triesTotal ++;
+                // Log the number of tries in total
+                triesTotal ++;
 
-          // Add the new energy in a histogram
-          histPosition = (m_energy+energyMax)/4;
-          m_histogramList[histPosition] ++;
+                // Add the new energy in a histogram
+                histPosition = (m_energy+energyMax)/4;
+                m_histogramList[histPosition] ++;
+            }
         }
-      }
-      counterOutput++;
-      if(counterOutput == counterMax) {
-        ofile.open(outputFile,std::ios_base::app);
-        ofile<<std::setw(15) << triesTotal; //DET ER FEIL HER!!
-        ofile<<std::setw(15) << triesAccepted;
-        ofile<<std::setw(15) << ((double) triesAccepted/triesTotal);
-        ofile<<std::setw(15) << m_energy;
-        ofile<<std::setw(15) << m_energy/triesTotal << std::endl;
-        counterOutput = 0;
-        ofile.close();
-      }
+        counterOutput++;
+        if(counterOutput == counterMax) {
+            ofile.open(outputFile,std::ios_base::app);
+            ofile<<std::setw(15) << triesTotal; //DET ER FEIL HER!!
+            ofile<<std::setw(15) << triesAccepted;
+            ofile<<std::setw(15) << ((double) triesAccepted/triesTotal);
+            ofile<<std::setw(15) << m_energy;
+            ofile<<std::setw(15) << m_energy/triesTotal << std::endl;
+            counterOutput = 0;
+            ofile.close();
+        }
     }
     return m_histogramList;
 }
@@ -314,27 +317,27 @@ void Ising2D::initializeOutput(std::string outputFile,int totalMonteCarloCycles)
 }
 
 void Ising2D::writeOutput(std::string outputFile, int totalMonteCarloCycles, double temperature, double *totalResult) {
-  std::ofstream ofile;
-  ofile.open(outputFile, std::ios_base::app);
-  double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
-  double E_ExpectationValues = totalResult[0]*norm;
-  double E2_ExpectationValues = totalResult[1]*norm;
-  double M_ExpectationValues = totalResult[2]*norm;
-  double M2_ExpectationValues = totalResult[3]*norm;
-  double Mabs_ExpectationValues = totalResult[4]*norm;
-  double acceptanceRate = totalResult[5]*norm;
-  // all expectation values are per spin, divide by 1/NSpins/NSpins
-  double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/m_nSpin/m_nSpin;
-  double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/m_nSpin/m_nSpin;
-  ofile << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
-  ofile << std::setw(15) << std::setprecision(8) << temperature;
-  ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/m_nSpin/m_nSpin;
-  ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
-  ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/m_nSpin/m_nSpin;
-  ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
-  ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/m_nSpin/m_nSpin;
-  ofile << std::setw(15) << std::setprecision(8) << acceptanceRate/m_nSpin/m_nSpin << std::endl;
-  ofile.close();
+    std::ofstream ofile;
+    ofile.open(outputFile, std::ios_base::app);
+    double norm = 1.0/((double) (totalMonteCarloCycles));  // divided by  number of cycles
+    double E_ExpectationValues = totalResult[0]*norm;
+    double E2_ExpectationValues = totalResult[1]*norm;
+    double M_ExpectationValues = totalResult[2]*norm;
+    double M2_ExpectationValues = totalResult[3]*norm;
+    double Mabs_ExpectationValues = totalResult[4]*norm;
+    double acceptanceRate = totalResult[5]*norm;
+    // all expectation values are per spin, divide by 1/NSpins/NSpins
+    double Evariance = (E2_ExpectationValues- E_ExpectationValues*E_ExpectationValues)/m_nSpin/m_nSpin;
+    double Mvariance = (M2_ExpectationValues - Mabs_ExpectationValues*Mabs_ExpectationValues)/m_nSpin/m_nSpin;
+    ofile << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
+    ofile << std::setw(15) << std::setprecision(8) << temperature;
+    ofile << std::setw(15) << std::setprecision(8) << E_ExpectationValues/m_nSpin/m_nSpin;
+    ofile << std::setw(15) << std::setprecision(8) << Evariance/temperature/temperature;
+    ofile << std::setw(15) << std::setprecision(8) << M_ExpectationValues/m_nSpin/m_nSpin;
+    ofile << std::setw(15) << std::setprecision(8) << Mvariance/temperature;
+    ofile << std::setw(15) << std::setprecision(8) << Mabs_ExpectationValues/m_nSpin/m_nSpin;
+    ofile << std::setw(15) << std::setprecision(8) << acceptanceRate/m_nSpin/m_nSpin << std::endl;
+    ofile.close();
 }
 
 
