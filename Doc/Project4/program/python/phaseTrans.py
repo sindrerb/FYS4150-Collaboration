@@ -13,6 +13,7 @@ def fit(x,y):
     return np.polyval(p,x)    
     
 j = 2
+"""
 plt.style.use("ggplot")
 fig = plt.figure(figsize=(15,20))
 ax1 = fig.add_subplot(4,1,1)
@@ -21,7 +22,7 @@ ax3 = fig.add_subplot(4,1,3)
 ax4 = fig.add_subplot(4,1,4)
 
 fig.suptitle("Probability distributions at different temperature",size=20)
-
+"""
 S40 = np.loadtxt("./data/spin40",skiprows=3)
 S60 = np.loadtxt("./data/spin60",skiprows=3)
 S100 = np.loadtxt("./data/spin100",skiprows=3)
@@ -41,12 +42,21 @@ TC100M = S100[S100[:,4]==max(S100[:,4])][0,0]
 TC140M = S140[S140[:,4]==max(S140[:,4])][0,0]
 
 TCM = np.array([TC40M,TC60M,TC100M,TC140M])
-
 S = np.array([40.0,60.0,100.0,140.0])
+TC = TCM
+a = []
+for i in range(0,len(TC)-1):
+    for j in range(i+1,len(TC)):
+        a.append((TC[i]-TC[j])/(S[i]**-1-S[j]**-1))
+a = np.average(a)
+print a
 
-print TCC
-print TCM
+Tc = 0
 
+for i in range(0,len(TC)):
+    Tc += TC[i]-a*S[i]**-1
+print Tc/4
+"""
 a = np.array([0.0,0.0,0.0,0.0])
 for i in range(len(a)):
     a[i] = (1.0/S[i]-TCC[i])
@@ -62,9 +72,12 @@ print 1+np.mean(a)/2.269
 a = np.array([0.0,0.0,0.0,0.0])
 for i in range(len(a)):
     a[i] = (1.0/S[i]-(TCM[i]+TCC[i])/2)
-print "TCM=",np.mean(a)
+print "TC=",np.mean(a)
 print 1+np.mean(a)/2.269
+"""
 
+
+"""
 #scatter
 ax1.plot(S40[:,0],fit(S40[:,0],S40[:,1]),color='red')
 ax1.plot(S60[:,0],fit(S60[:,0],S60[:,1]),color='blue')
@@ -76,10 +89,10 @@ ax1.scatter(S100[:,0],S100[:,1],label='n=100',color='purple',marker='x')
 ax1.scatter(S140[:,0],S140[:,1],label='n=140',color='green',marker='s')
 #scatter
 ax2.plot()
-ax2.plot(S40[:,0],fit(S40[:,0],S40[:,5]),':',color='red')
-ax2.plot(S60[:,0],fit(S60[:,0],S60[:,5]),':',color='blue')
-ax2.plot(S100[:,0],fit(S100[:,0],S100[:,5]),':',color='purple')
-ax2.plot(S140[:,0],fit(S140[:,0],S140[:,5]),':',color='green')
+ax2.plot(S40[:,0],fit(S40[:,0],S40[:,5]),color='red')
+ax2.plot(S60[:,0],fit(S60[:,0],S60[:,5]),color='blue')
+ax2.plot(S100[:,0],fit(S100[:,0],S100[:,5]),color='purple')
+ax2.plot(S140[:,0],fit(S140[:,0],S140[:,5]),color='green')
 ax2.scatter(S40[:,0],S40[:,5],label='n=40',color='red',marker='^')
 ax2.scatter(S60[:,0],S60[:,5],label='n=60',color='blue',marker='d')
 ax2.scatter(S100[:,0],S100[:,5],label='n=100',color='purple',marker='x')
@@ -114,7 +127,7 @@ ax1.legend()
 ax2.legend()
 ax3.legend()
 ax4.legend()
-
+"""
 #fig.savefig("PhaseTrans.eps",bbox_inches='tight',format='eps')
 
 
