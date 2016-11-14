@@ -5,7 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
     ../src/ising2d.cpp \    
-    ../src/main.cpp \
+    ising2d_test.cpp
 
 HEADERS += \
     catch.hpp \

@@ -398,3 +398,16 @@ void Ising2D::setSpin(int spins) {
 int Ising2D::getSpin() {
     return nSpin;
 }
+
+int **Ising2D::getLattice() const {
+    return lattice;
+}
+
+double Ising2D::getEnergy() const {
+    return energy;
+}
+
+int ***Ising2D::getPseudoLattice() const {
+    return pseudoLattice;
+}
+
