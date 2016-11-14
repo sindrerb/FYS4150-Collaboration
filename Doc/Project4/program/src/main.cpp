@@ -1,4 +1,4 @@
-#include "mpi/mpi.h"
+#include "mpi.h"
 #include "ising2d.h"
 #include <iostream>
 #include <fstream>
@@ -36,6 +36,17 @@ int main(int argc, char *argv[])
         initTemp = atof(argv[5]);
         finalTemp = atof(argv[6]);
         tempStep = atof(argv[7]);
+        filename.append("_");
+        filename.append(argv[3]);
+        filename.append("_");
+        filename.append(argv[4]);
+        filename.append("_");
+        filename.append(argv[5]);
+        filename.append("_");
+        filename.append(argv[6]);
+        filename.append("_");
+        filename.append(argv[7]);
+        filename.append(".txt");
         cout << "Writes to " << filename << " with state "<<state<<endl;
     }
 
@@ -46,6 +57,7 @@ int main(int argc, char *argv[])
     MPI_Bcast (&initTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast (&finalTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast (&tempStep, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
 
     int intervals = monteCarloCycles/numprocs;
     int myLoopStart = myRank*intervals+1;
@@ -83,4 +95,7 @@ int main(int argc, char *argv[])
     ising.delteLattice();
     MPI_Finalize();
     return 0;
+
+    delete[] totalAverage;
+    delete[] myAverage;
 }
