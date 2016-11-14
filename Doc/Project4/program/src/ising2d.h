@@ -13,7 +13,7 @@ private:
     int ***m_pseudoLattice;
     double *m_w;
     double *m_expectationValues;
-    int *m_histogramList;
+    unsigned long *m_histogramList;
     double m_energy;
     double m_magneticMoment;
 

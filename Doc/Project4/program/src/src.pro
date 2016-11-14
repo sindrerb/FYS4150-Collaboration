@@ -9,21 +9,21 @@ SOURCES += main.cpp \
 HEADERS += \
     ising2d.h
 
-#MPI OSX
-INCLUDEPATH += /usr/local/include
-#INCLUDEPATH += /usr/local/Cellar/open-mpi/2.0.1/include
+##MPI OSX
+#INCLUDEPATH += /usr/local/include
+##INCLUDEPATH += /usr/local/Cellar/open-mpi/2.0.1/include
 
-LIBS += -L/usr/local/opt/libevent/lib -L/usr/local/Cellar/open-mpi/2.0.1/lib -lmpi
+#LIBS += -L/usr/local/opt/libevent/lib -L/usr/local/Cellar/open-mpi/2.0.1/lib -lmpi
 
 
-## MPI Settings UBUNTU
-#QMAKE_CXX = mpicxx
-#QMAKE_CXX_RELEASE = $$QMAKE_CXX
-#QMAKE_CXX_DEBUG = $$QMAKE_CXX
-#QMAKE_LINK = $$QMAKE_CXX
-#QMAKE_CC = mpicc
+# MPI Settings UBUNTU
+QMAKE_CXX = mpicxx
+QMAKE_CXX_RELEASE = $$QMAKE_CXX
+QMAKE_CXX_DEBUG = $$QMAKE_CXX
+QMAKE_LINK = $$QMAKE_CXX
+QMAKE_CC = mpicc
 
-#QMAKE_CFLAGS += $$system(mpicc --showme:compile)
-#QMAKE_LFLAGS += $$system(mpicxx --showme:link)
-#QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
-#QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
+QMAKE_CFLAGS += $$system(mpicc --showme:compile)
+QMAKE_LFLAGS += $$system(mpicxx --showme:link)
+QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
+QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK

@@ -221,14 +221,14 @@ void Ising2D::equilibrium(std::string outputFile, int totalMonteCarloCycles, dou
     for( int de =-8; de <= 8; de+=4) m_w[de+8] = exp(-de/temperature);
 
     // Initialize storage variables
-    expectationValues = new double[5];
-    for( int i=0; i<5; i++) expectationValues[i]=0;
+    m_expectationValues = new double[5];
+    for( int i=0; i<5; i++) m_expectationValues[i]=0;
 
     //Normalizing
-    double norm = 1.0/nSpin/nSpin;
+    double norm = 1.0/m_nSpin/m_nSpin;
     // Do Monte Carlo calculations
     int energyDelta;
-    for (int cycles = start; cycles <= end; cycles++){
+    for (int cycles = 0; cycles <= totalMonteCarloCycles; cycles++){
         for(int x =1; x < m_nSpin+1; x++) {
             for (int y= 1; y < m_nSpin+1; y++){
 
@@ -261,73 +261,71 @@ void Ising2D::equilibrium(std::string outputFile, int totalMonteCarloCycles, dou
         ofile<<std::setw(15) << cycles;
         ofile<<std::setw(15) << triesAccepted;
         ofile<<std::setw(15) << ((double) triesAccepted/cycles);
-        ofile<<std::setw(15) << (expectationValues[0]*norm);
-        ofile<<std::setw(15) << (expectationValues[0]*norm/cycles);
-        ofile<<std::setw(15) << (expectationValues[4]*norm);
-        ofile<<std::setw(15) << (expectationValues[4]*norm/cycles) << std::endl;
+        ofile<<std::setw(15) << (m_expectationValues[0]*norm);
+        ofile<<std::setw(15) << (m_expectationValues[0]*norm/cycles);
+        ofile<<std::setw(15) << (m_expectationValues[4]*norm);
+        ofile<<std::setw(15) << (m_expectationValues[4]*norm/cycles) << std::endl;
         counterOutput = 0;
         ofile.close();
       }
       counterOutput++;
 
       // Add values to storage for local node
-      expectationValues[0] += energy;
-      expectationValues[1] += energy*energy;
-      expectationValues[2] += magneticMoment;
-      expectationValues[3] += magneticMoment*magneticMoment;
-      expectationValues[4] += fabs(magneticMoment);
+      m_expectationValues[0] += m_energy;
+      m_expectationValues[1] += m_energy*m_energy;
+      m_expectationValues[2] += m_magneticMoment;
+      m_expectationValues[3] += m_magneticMoment*m_magneticMoment;
+      m_expectationValues[4] += fabs(m_magneticMoment);
     }
 }
 
 unsigned long *Ising2D::histogram(std::string outputFile, int start, int end,double temperature) {
-
-
     // Initialize the seed and call the Mersienne algo
     std::random_device rd;
     std::mt19937_64 gen(rd());
     // Set up the uniform distribution for x \in [[0, 1]
     std::uniform_real_distribution<double> randomGenerator(0.0,1.0);
     // Set up array for possible energy transitions
-    w = new double[17];
-    for( int de =-8; de <= 8; de++) w[de+8] = 0;
-    for( int de =-8; de <= 8; de+=4) w[de+8] = exp(-de/temperature);
+    m_w = new double[17];
+    for( int de =-8; de <= 8; de++) m_w[de+8] = 0;
+    for( int de =-8; de <= 8; de+=4) m_w[de+8] = exp(-de/temperature);
 
     // Initialize histogram
-    histogramList = new unsigned long[nSpin*nSpin];
-    for( int i=0; i<nSpin*nSpin; i++) histogramList[i]=0;
-    int energyMax = 2*nSpin*nSpin;
+    m_histogramList = new unsigned long[m_nSpin*m_nSpin];
+    for( int i=0; i<m_nSpin*m_nSpin; i++) m_histogramList[i]=0;
+    int energyMax = 2*m_nSpin*m_nSpin;
     int histPosition; //Used to add one count in the right position
 
     // Do Monte Carlo calculations
     int energyDelta;
     for (int cycles = start; cycles <= end; cycles++){
-      for(int x =1; x < nSpin+1; x++) {
-        for (int y= 1; y < nSpin+1; y++){
+      for(int x =1; x < m_nSpin+1; x++) {
+        for (int y= 1; y < m_nSpin+1; y++){
 
           // Chose a random spin to flip
-          int ix = (int) (randomGenerator(gen)*(double)nSpin)+1;
-          int iy = (int) (randomGenerator(gen)*(double)nSpin)+1;
+          int ix = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
+          int iy = (int) (randomGenerator(gen)*(double)m_nSpin)+1;
 
           // Calculate the energy difference of flipping the chosen spin
-          energyDelta =  2*(*pseudoLattice[ix][iy])*((*pseudoLattice[ix+1][iy])+(*pseudoLattice[ix-1][iy])+(*pseudoLattice[ix][iy+1])+(*pseudoLattice[ix][iy-1]));
+          energyDelta =  2*(*m_pseudoLattice[ix][iy])*((*m_pseudoLattice[ix+1][iy])+(*m_pseudoLattice[ix-1][iy])+(*m_pseudoLattice[ix][iy+1])+(*m_pseudoLattice[ix][iy-1]));
 
           // Perform the Metropolis criteria
-          if ( randomGenerator(gen) <= w[energyDelta+8] ) {
+          if ( randomGenerator(gen) <= m_w[energyDelta+8] ) {
             // Flip the spin
-            lattice[ix-1][iy-1] *= -1.0;
+            m_lattice[ix-1][iy-1] *= -1.0;
             // Save new properties
-            magneticMoment += (double) 2*(*pseudoLattice[ix][iy]);
-            energy += (double) energyDelta;
+            m_magneticMoment += (double) 2*(*m_pseudoLattice[ix][iy]);
+            m_energy += (double) energyDelta;
           }
       }
     }
       // Add the new energy in a histogram
       if ( cycles > (end-start)/3 ) {
-          histPosition = ((int) energy+energyMax)/4;
-          histogramList[histPosition] += 1;
+          histPosition = ((int) m_energy+energyMax)/4;
+          m_histogramList[histPosition] += 1;
       }
     }
-    return histogramList;
+    return m_histogramList;
 }
 
 
