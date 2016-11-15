@@ -1,0 +1,12 @@
+Analytical expectationvalue for the (total) energy of a 2 by 2 spin system
+at T=1 (J/k) is -7.98392834375 (J). The Monte Carlo sampling 
+approaches this value with increasing amount of sapmles.
+MC-sam	Num. <E>
+1e1	-8.0
+1e2	-8.0
+1e3	-7.992
+1e4	-7.9904
+1e5	-7.9852
+1e6	-7.983816
+1e7	-7.9839768
+1e8	-7.9839858
